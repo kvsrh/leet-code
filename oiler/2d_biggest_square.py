@@ -18,8 +18,8 @@ def generate_array(size1):
 	return array
 
 def print_array(array):
-	print "array.{}".format(array)
-
+	print "array - {} \n".format(array)
+	print "invalid- {} \n".format(array[-1,-1])
 def find_largest_1_matrix(array):
 	size = array.shape
 	max_square = 0 
@@ -29,7 +29,7 @@ def find_largest_1_matrix(array):
 	column = size[1]
 	for i in xrange(row):
 		for j in xrange(column):
-			#print "value - {} \n".format(array[i,j])
+			print "value - {} \n".format(array[i-1,j-1])
 			if (array[i,j] == 1):
 				dp[i,j] = min(dp[i,j-1], dp[i-1,j], dp[i-1,j-1]) + 1
 				max_square = max(dp[i,j], max_square)         
