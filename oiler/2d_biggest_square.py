@@ -1,3 +1,13 @@
+"Problem: 
+ Given a 2d array find the largest square within the array, which has all 1's.
+ [0 0 0 0]
+ [0 0 1 1]   
+ [1 1 1 1]
+ [0 1 0 1]
+ 
+ Ans: 2	
+"
+
 import numpy as np
 import argparse as arg
     
