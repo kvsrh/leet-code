@@ -13,6 +13,9 @@
  *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
  * };
  */
+
+// Consider the solution as a top-down solution - we need to verify if it is a BST at every node point.
+
 class Solution {
 public:
     bool isValidBST(TreeNode* root) {
