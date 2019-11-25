@@ -24,14 +24,13 @@ Node* findInOrderSuccessor( Node *inputNode )
    // no-op if have left child.
    // no right child - if node == node->parent->left -- node->parent
    //                  if node == node->parent->right -- got to parent's parent. repeat logic.
-    if (inputNode->right != nullptr) { 
-      Node * curr = inputNode->right;
-          while (curr->left != nullptr) {
-          curr = curr->left;
-          
+   if (inputNode->right != nullptr) { 
+        Node * curr = inputNode->right;
+        while (curr->left != nullptr) {
+            curr = curr->left;
         }
       return curr;
-    }
+   }
    
    while (inputNode != NULL) {
       if (inputNode->parent == nullptr) return nullptr;
@@ -41,5 +40,5 @@ Node* findInOrderSuccessor( Node *inputNode )
            inputNode = inputNode->parent;        
       }
    }
-  return inputNode;
+   return inputNode;
 }
