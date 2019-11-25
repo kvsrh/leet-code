@@ -26,7 +26,7 @@ Node* findInOrderSuccessor( Node *inputNode )
    //                  if node == node->parent->right -- got to parent's parent. repeat logic.
     if (inputNode->right != nullptr) { 
       Node * curr = inputNode->right;
-        while (curr->left != nullptr) {
+          while (curr->left != nullptr) {
           curr = curr->left;
           
         }
