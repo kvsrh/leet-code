@@ -14,3 +14,37 @@ int minMeetingRooms(vector<Interval>& intervals) {
         }
         return room;
     }
+
+# Vector based solution #
+
+class Solution {
+public:
+    int minMeetingRooms(vector<vector<int>>& intervals) {
+        
+        int size = intervals.size();
+        
+        if (size  <= 1) return size;
+        
+        sort(intervals.begin(), intervals.end());
+        
+        vector<vector<int>> results;
+        
+        results.push_back(intervals[0]);
+        
+        bool new_room = 0;
+        
+        for (int i = 1; i < size; i++) {
+            new_room = 1;
+            for (auto & room : results) {
+                if (intervals[i][0] >= room[1]) {
+                    room = intervals[i];
+                    new_room = 0;
+                    break;
+                }  
+            }
+            if (new_room == 1) results.push_back(intervals[i]);
+        }
+        return results.size();
+    }
+};  
+
