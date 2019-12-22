@@ -3,6 +3,11 @@ Cheat sheet -
 permutation formula - 
 combination formula -  
 
+vector constructor -
+constructor list: 
+
+
+
 -- Comeback -- 
 
 Pramp -- 
@@ -10,6 +15,8 @@ Levinstein Distance.
 Drone planner.
 Meeting Planner.
 Quadrant Sum.
+
+
 
 
 
