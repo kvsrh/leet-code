@@ -1,0 +1,12 @@
+Cheat sheet - 
+
+permutation formula - 
+combination formula -  
+
+-- Comeback -- 
+Pramp -- 
+Levinstein Distance.
+Drone planner.
+Meeting Planner.
+
+
