@@ -34,3 +34,26 @@ public:
         return res;
     }
 };
+
+class Solution {
+    public:
+    vector<vector<string>> groupAnagrams(vector<string>& strs) {
+        unordered_map<string,int> map;
+        vector<vector<string>> result;
+        
+        for (int i = 0; i < strs.size(); i++) {
+            string temp = strs[i];
+            sort(temp.begin(), temp.end());
+            
+            if (!map.count(temp)) {
+                map[temp] = result.size();    
+                result.push_back({});
+            } 
+            result[map[temp]].push_back(strs[i]);
+        }
+        return  result;
+    }
+};
+
+Notes: We previously used a hash which isn't necessary. We could use a map to store the index in the result index where all 
+the strings are with the same anagram pattern are inserted in the results vector.
