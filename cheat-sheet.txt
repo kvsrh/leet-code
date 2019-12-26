@@ -16,6 +16,8 @@ Drone planner.
 Meeting Planner.
 Quadrant Sum.
 EOP dynamic programming. 
+Aditya's Problem --
+Leadership questions. 
 
 
 
