@@ -1,0 +1,47 @@
+I am putting this post in place to track the problems I am solving on leetcode. Consistently checkmark if we are hitting these
+goals. 
+
+1) Being able to solve 2 problems under 20-30 mins.
+2) Being able to solve 2 new problems. 
+3) Repetition factor for a problem - can we work on logic diagrams in the head.
+4) Eventually need to focus on system design. 
+
+Jan 8th 2020:
+
+2 Medium, New, ~40 mins. 
+
+#####
+
+-- 560. Subarray Sum Equals K
+Medium
+
+Given an array of integers and an integer k, you need to find the total number of continuous subarrays whose sum equals to k.
+
+Example 1:
+
+Input:nums = [1,1,1], k = 2
+Output: 2
+
+Note:
+
+    The length of the array is in range [1, 20,000].
+    The range of numbers in the array is [-1000, 1000] and the range of the integer k is [-1e7, 1e7].
+
+-- 394. Decode String
+Medium
+
+Given an encoded string, return its decoded string.
+
+The encoding rule is: k[encoded_string], where the encoded_string inside the square brackets is being repeated exactly k times. Note that k is guaranteed to be a positive integer.
+
+You may assume that the input string is always valid; No extra white spaces, square brackets are well-formed, etc.
+
+Furthermore, you may assume that the original data does not contain any digits and that digits are only for those repeat numbers, k. For example, there won't be input like 3a or 2[4].
+
+Examples:
+
+s = "3[a]2[bc]", return "aaabcbc".
+s = "3[a2[c]]", return "accaccacc".
+s = "2[abc]3[cd]ef", return "abcabccdcdcdef".
+
+#####
