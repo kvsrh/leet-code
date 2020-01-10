@@ -45,3 +45,19 @@ s = "3[a2[c]]", return "accaccacc".
 s = "2[abc]3[cd]ef", return "abcabccdcdcdef".
 
 #####
+
+Jan 9th 2020
+
+Solved 3 M problems from the top facebook questions. 
+
+1) LC# Next permutation - Worked around 4 hrs. Eventual answer was false. Comeback. 
+
+2) LC# Right view of a Binary Tree - Easy question. With the ability to do level-order traversal. 
+
+3) LC# 621: Task Scheduler - Tried to come with a logic. But wasn't able to come with a solution within half and hour. Got
+logic in the second 20 mins slot. Wrote answer, but missed one pop condition and had some errors. Fixed it and all pass in 
+second try.
+
+Comeback to check best solution.
+
+#####
