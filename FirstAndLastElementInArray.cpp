@@ -61,3 +61,5 @@ public:
         return {-1,-1};
     }
 };
+
+equal_range in C++ gives back the same result.
