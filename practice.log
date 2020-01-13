@@ -63,3 +63,45 @@ second try.
 Comeback to check best solution.
 
 #####
+
+Jan 10th 2020: 
+
+1) LC 986: Interval List Intersection: Start time - 12:33 PM. Suprisingly struggling with these. Comeback.
+
+2) LC 863: All Nodes Distance K in Binary Tree - 2:30 PM. 3:10 problem still not solved. 
+Totally got the signature wrong. We don't have the parent node.
+
+Eventually solved it at 4:10 PM. But made too many errors. CANN'T do this nana. Draw the diagrams - before you work on the
+code.
+
+3) LC 34: Find First and Last Position of Element in Sorted Array
+
+Given an array of integers nums sorted in ascending order, find the starting and ending position of a given target value.
+
+Your algorithm's runtime complexity must be in the order of O(log n).
+
+If the target is not found in the array, return [-1, -1].
+
+Example 1:
+
+Input: nums = [5,7,7,8,8,10], target = 8
+Output: [3,4]
+
+4) LC # 438. Find All Anagrams in a String
+
+   A modification of the Robin Karp algorithms. 
+   
+Jan 11th 2020, Jan 12th 2020:
+
+LC #71 : Simplify Path -- Made a couple of errors. 
+Didn't properly append the result string. And didn't take care of checking if the curr will go beyond size. 
+
+LC #351. Android Unlock Patterns
+Need bactracking. Lets understand the concept.
+
+LC # Design hit Counter
+
+
+
+
+
