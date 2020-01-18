@@ -101,6 +101,15 @@ Need bactracking. Lets understand the concept.
 
 LC # Design hit Counter
 
+Jan 18th 2020: 
+
+Domino rotation problem - Tried super optimizing it. But simpler solution worked.
+
+Find first and last index with the target value. Binary search followed by linear scan to the left and right to find the 
+end indexes. 
+
+
+
 
 
 
