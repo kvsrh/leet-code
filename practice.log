@@ -108,6 +108,10 @@ Domino rotation problem - Tried super optimizing it. But simpler solution worked
 Find first and last index with the target value. Binary search followed by linear scan to the left and right to find the 
 end indexes. 
 
+Jan 22th 2020: 
+
+LC Koko Bananas : Binary search of what would be the best rate. 
+LC Combination sum : Backtracking.
 
 
 
