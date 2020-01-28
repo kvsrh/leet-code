@@ -126,6 +126,12 @@ DP problem.
 
 Jan 27th 2020: 
 
+LC Knight problem - 3-d dp problem where we have to store the computation of how much is the probablility of staying within the board at a given location in N number of steps. 
+
+Jan 28th 2020: 
+
+Mourya's problem with having to find the best discount we can get for a set of books - dp problem once you have sorted the input array.
+
 
 
  
