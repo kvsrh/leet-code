@@ -1,0 +1,38 @@
+Given an array of strings arr. String s is a concatenation of a sub-sequence of arr which have unique characters.
+
+Return the maximum possible length of s.
+
+class Solution {
+public:
+    int max = 0;
+    
+    int maxLength(vector<string>& arr) {
+        dfs (0, arr, "");
+        return max;
+    }
+
+    void dfs (int start, vector<string> & arr, string s) {
+        if (!isUnique(s)) {
+            return;
+        }
+        
+        max = s.size() > max ? s.size() : max;
+        
+        for (int i = start; i < arr.size(); i++) {
+            dfs(i+1, arr, s+arr[i]);
+        }
+    }
+    
+    bool isUnique(string s) {
+        unordered_set <char> set;
+        
+        for (char c : s) {
+            if (set.count(c) > 0) {
+                return false;
+            } else {
+                set.insert(c);
+            }
+        }
+        return true;
+    }
+};
