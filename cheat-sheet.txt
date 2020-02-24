@@ -20,10 +20,9 @@ Aditya's Problem --
 Leadership questions. 
 
 
+Grid declarations -- 
 
+vector<vector<int>> grid(3, vector<>(3,0));
 
-
-
-
-
+Making pairs -- 
 
