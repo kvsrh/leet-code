@@ -100,3 +100,15 @@ public:
         return true;
     }
 };
+
+# better solution for the inner for loop: 
+
+while (indexS >= 0) {
+    if (S[indexS] == '#') {
+        SbackSpace++; indexS--;
+    } else if (SbackSpace > 0) {
+        SbackSpace--; indexS--;
+    } else {
+        break;
+    }
+}
