@@ -26,5 +26,9 @@ vector<vector<int>> grid(3, vector<>(3,0));
 
 Making pairs -- make_pair()
 
+abs() .. -> get absolute value.
+
+isalpha to see if a character is an alpbhet. 
+
 https://thispointer.com/c-how-to-compare-two-vectors-stdequal-comparators/ - comparison function on vectors. == is overloaded to compare the content of int arrays. 
 
