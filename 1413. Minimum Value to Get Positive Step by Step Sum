@@ -1,0 +1,33 @@
+1413. Minimum Value to Get Positive Step by Step Sum
+
+    User Accepted: 4403
+    User Tried: 4644
+    Total Accepted: 4532
+    Total Submissions: 7309
+    Difficulty: Easy
+
+Given an array of integers nums, you start with an initial positive value startValue.
+
+In each iteration, you calculate the step by step sum of startValue plus elements in nums (from left to right).
+
+Return the minimum positive value of startValue such that the step by step sum is never less than 1.
+
+class Solution {
+public:
+    int minStartValue(vector<int>& nums) {
+        // [-3  2 -3 4 2]
+        // [-3 -1 -4 0 2]
+        
+        if (nums.size() == 0) return 1;
+        
+        int minL = nums[0];
+        int rSum = nums[0];
+        for (int i = 1; i < nums.size(); i++) {
+            rSum += nums[i];
+            minL = min(minL, rSum);
+            //cout << " rSum : " << rSum << "minL : " << minL << endl;
+        }
+        if (minL >= 0) return 1;
+        return abs(minL) + 1;
+    }
+};
