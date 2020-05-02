@@ -1,0 +1,108 @@
+1415. The k-th Lexicographical String of All Happy Strings of Length n
+Medium
+
+A happy string is a string that:
+
+    consists only of letters of the set ['a', 'b', 'c'].
+    s[i] != s[i + 1] for all values of i from 1 to s.length - 1 (string is 1-indexed).
+
+For example, strings "abc", "ac", "b" and "abcbabcbcb" are all happy strings and strings "aa", "baa" and "ababbc" are not happy strings.
+
+Given two integers n and k, consider a list of all happy strings of length n sorted in lexicographical order.
+
+Return the kth string of this list or return an empty string if there are less than k happy strings of length n.
+
+ 
+
+Example 1:
+
+Input: n = 1, k = 3
+Output: "c"
+Explanation: The list ["a", "b", "c"] contains all happy strings of length 1. The third string is "c".
+
+Example 2:
+
+Input: n = 1, k = 4
+Output: ""
+Explanation: There are only 3 happy strings of length 1.
+
+Example 3:
+
+Input: n = 3, k = 9
+Output: "cab"
+Explanation: There are 12 different happy string of length 3 ["aba", "abc", "aca", "acb", "bab", "bac", "bca", "bcb", "cab", "cac", "cba", "cbc"]. You will find the 9th string = "cab"
+
+Example 4:
+
+Input: n = 2, k = 7
+Output: ""
+
+Example 5:
+
+Input: n = 10, k = 100
+Output: "abacbabacb"
+
+ 
+
+Constraints:
+
+    1 <= n <= 10
+    1 <= k <= 100
+
+    
+    
+    Given a string of size n, the number of permutations of the string following the lexographic ordering is 3*2^(n-1).
+    The lexographic ordering of the string can be arranged as a tree. The kth string in the lexographic ordering is the same as the kth leaf in the tree.
+    Evaluate the left-right walk to reach the kth leaf and correspondingly append the result string with the nodes encountered.
+
+class Solution {
+public:
+    string getHappyString(int n, int k) {
+	
+	    // At level 1 :  split into 3 buckets:  [1 .. 2^(n-1)] [2^(n-1)+1 .. 2*2^(n-1)] [2*2^(n-1)+1 ... 3*2^(n-1)]
+		// For all the other levels (2 to n) split into buckets of 2. 
+		// Consider for n = 3, the following tree: 
+		//
+        //          a           b          c                  : Level - 1 
+		//         / \         / \        / \ 
+        //       b     c     a     c     a    b               : Level - 2
+		//      / \   / \   / \   / \   / \   / \
+        //     a   c a   b b   c a   b b   c a   c            : Level - 3
+        //     1   2 3   4 5   6 7   8     ...   12           : Lexographic ordering. 
+     
+        if (k > 3*pow(2,n-1)) return "";
+    
+        unordered_map <char, vector<char>> map;
+        
+        string result = "";
+        
+        map['a'] = {'b','c'};
+        map['b'] = {'a','c'};
+        map['c'] = {'a','b'};
+        
+        int powL = pow(2,n-1);
+        
+        if (k <= powL) {
+            result.append("a");        
+        } else if (k <= 2*powL) {
+            result.append("b");
+            k = k - powL;
+        } else {
+            result.append("c");
+            k = k - 2*powL;
+        }
+     
+        while (result.size() < n) {
+            char lastChar = result[result.size()-1];
+            powL = powL/2;
+            if (k <= powL) {
+                result += map[lastChar][0];
+            } else {
+                result += map[lastChar][1];
+                k = k-powL;
+            }
+        }
+        
+        return result;
+    }
+};
