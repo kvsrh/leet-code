@@ -1,0 +1,123 @@
+1438. Longest Continuous Subarray With Absolute Diff Less Than or Equal to Limit
+Medium
+
+Given an array of integers nums and an integer limit, return the size of the longest continuous subarray such that the absolute difference between any two elements is less than or equal to limit.
+
+In case there is no subarray satisfying the given condition return 0.
+
+ 
+
+Example 1:
+
+Input: nums = [8,2,4,7], limit = 4
+Output: 2 
+Explanation: All subarrays are: 
+[8] with maximum absolute diff |8-8| = 0 <= 4.
+[8,2] with maximum absolute diff |8-2| = 6 > 4. 
+[8,2,4] with maximum absolute diff |8-2| = 6 > 4.
+[8,2,4,7] with maximum absolute diff |8-2| = 6 > 4.
+[2] with maximum absolute diff |2-2| = 0 <= 4.
+[2,4] with maximum absolute diff |2-4| = 2 <= 4.
+[2,4,7] with maximum absolute diff |2-7| = 5 > 4.
+[4] with maximum absolute diff |4-4| = 0 <= 4.
+[4,7] with maximum absolute diff |4-7| = 3 <= 4.
+[7] with maximum absolute diff |7-7| = 0 <= 4. 
+Therefore, the size of the longest subarray is 2.
+
+Example 2:
+
+Input: nums = [10,1,2,4,7,2], limit = 5
+Output: 4 
+Explanation: The subarray [2,4,7,2] is the longest since the maximum absolute diff is |2-7| = 5 <= 5.
+
+Example 3:
+
+Input: nums = [4,2,2,2,4,4,2,2], limit = 0
+Output: 3
+
+ 
+
+Constraints:
+
+    1 <= nums.length <= 10^5
+    1 <= nums[i] <= 10^9
+    0 <= limit <= 10^9
+
+Accepted
+4,525
+Submissions
+14,441
+
+// template<typename T>
+// class custom_priority_queue : public std::priority_queue<T, std::vector<T>>
+// {
+//   public:
+
+//       bool remove(const T& value) {
+//         auto it = std::find(this->c.begin(), this->c.end(), value);
+//         if (it != this->c.end()) {
+//             this->c.erase(it);
+//             std::make_heap(this->c.begin(), this->c.end(), this->comp);
+//             return true;
+//        }
+//        else {
+//         return false;
+//        }
+//  }
+// };
+
+class Solution {
+public:
+    int longestSubarray(vector<int>& nums, int limit) {
+        
+        // Given a contiguous array we have to find the maximum absolute value and it should be less than limit. 
+        
+        int start = 0; int end = 0;
+        
+        int size = nums.size();
+        
+        if (size == 0) return 0;
+        if (size == 1) return 1;
+        
+        // custom_priority_queue<int, vector<int>> maxHeap;
+        // custom_priority_queue<int, vector<int>, greater<int>> minHeap; 
+        
+        multiset<int> pq;
+        
+        pq.insert(nums[start]);
+        
+        // maxHeap.emplace(nums[start]);
+        // minHeap.emplace(nums[start]);
+        
+        int result = 0;
+        
+        while (end < size-1 || start < size-1) {
+            // int minL = minHeap.top();
+            // int maxL = maxHeap.top();
+            // cout << "start : " << start << " end : " << end << " result : " << result << endl;
+            int minL = *pq.begin();
+            int maxL = *pq.rbegin();
+            
+            
+            if (maxL - minL <= limit) {
+                result = max(result, end-start+1);
+                if (end < size-1) {
+                    end++;
+                    pq.insert(nums[end]);
+                } else {
+                    auto it = pq.find(nums[start]);
+                    pq.erase(it);
+                    start++;
+                }
+            } else {             
+                auto it = pq.find(nums[start]);
+                pq.erase(it);
+                start++;
+            }
+
+            
+        }
+        
+        return result;
+    }
+};
