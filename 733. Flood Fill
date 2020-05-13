@@ -1,0 +1,89 @@
+733. Flood Fill
+Easy
+
+An image is represented by a 2-D array of integers, each integer representing the pixel value of the image (from 0 to 65535).
+
+Given a coordinate (sr, sc) representing the starting pixel (row and column) of the flood fill, and a pixel value newColor, "flood fill" the image.
+
+To perform a "flood fill", consider the starting pixel, plus any pixels connected 4-directionally to the starting pixel of the same color as the starting pixel, plus any pixels connected 4-directionally to those pixels (also with the same color as the starting pixel), and so on. Replace the color of all of the aforementioned pixels with the newColor.
+
+At the end, return the modified image.
+
+Example 1:
+
+Input: 
+image = [[1,1,1],[1,1,0],[1,0,1]]
+sr = 1, sc = 1, newColor = 2
+Output: [[2,2,2],[2,2,0],[2,0,1]]
+Explanation: 
+From the center of the image (with position (sr, sc) = (1, 1)), all pixels connected 
+by a path of the same color as the starting pixel are colored with the new color.
+Note the bottom corner is not colored 2, because it is not 4-directionally connected
+to the starting pixel.
+
+Note:
+The length of image and image[0] will be in the range [1, 50].
+The given starting pixel will satisfy 0 <= sr < image.length and 0 <= sc < image[0].length.
+The value of each color in image[i][j] and newColor will be an integer in [0, 65535].
+
+class Solution {
+public:
+    vector<vector<int>> floodFill(vector<vector<int>>& image, int sr, int sc, int newColor) {
+        // A simple bfs algorithm --
+        
+        int rowSize = image.size();
+        
+        if (rowSize == 0) return image;
+        
+        int colSize = image[0].size();
+        
+        int  currColor = image[sr][sc];
+        
+        if (currColor == newColor) return image; // super key poooooint. 
+        
+        queue<pair<int,int>> q; 
+        
+        // cout  << "Current color - " << currColor << endl;
+        
+        image[sr][sc] = newColor;
+        q.push(make_pair(sr,sc));
+        
+        while (!q.empty()) {
+            int size = q.size();
+            // cout << "Size - " << size << endl;
+            for (int i = 0; i < size; i++) {
+                auto elem = q.front();
+                int r = elem.first;
+                int c = elem.second;
+                
+                // cout << "row - " << r << " col - " << c << endl;
+                
+                q.pop();
+                
+                if ((r-1 >= 0) && (image[r-1][c] == currColor)) {
+                    cout << "r-1 : " << r-1 << " c : " << c << " Color - " << image[r-1][c] << endl; 
+                    q.push(make_pair(r-1,c));
+                    image[r-1][c] = newColor;
+                }
+                if ((r+1 < rowSize) && (image[r+1][c] == currColor)) {
+                    // cout << "r+1 : " << r+1 << " c : " << c << " Color - " << image[r+1][c] << endl; 
+
+                    q.push(make_pair(r+1,c));
+                    image[r+1][c] = newColor;
+                }
+                if ((c-1 >= 0) && (image[r][c-1] == currColor)) {
+                    // cout << "r : " << r << " c-1 : " << c-1 << " Color - " << image[r][c-1] << endl;
+                    q.push(make_pair(r,c-1));
+                    image[r][c-1] = newColor;
+                }
+                if ((c+1 < colSize) && (image[r][c+1] == currColor)) {
+                    // cout << "r : " << r << " c+1 : " << c+1 << " Color - " << image[r][c+1] << endl;
+                    q.push(make_pair(r,c+1));
+                    image[r][c+1] = newColor;
+                }
+            }
+        }
+       
+        return image;          
+    }
+};
