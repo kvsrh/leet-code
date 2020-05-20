@@ -1,0 +1,106 @@
+234. Palindrome Linked List
+Easy
+
+Given a singly linked list, determine if it is a palindrome.
+
+Example 1:
+
+Input: 1->2
+Output: false
+
+Example 2:
+
+Input: 1->2->2->1
+Output: true
+
+Follow up:
+Could you do it in O(n) time and O(1) space?
+Accepted
+394,366
+Submissions
+1,021,476
+
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode() : val(0), next(nullptr) {}
+ *     ListNode(int x) : val(x), next(nullptr) {}
+ *     ListNode(int x, ListNode *next) : val(x), next(next) {}
+ * };
+ */
+class Solution {
+public:
+    bool isPalindrome(ListNode* head) {
+        // 1->2->2->1->null
+        //       s        
+        //             f
+        //    c
+        // using exta o(n) space, I can keep the linked-list nodes in a stack
+        // and then tell if the linked-list is a palindrome.
+        
+        ListNode * print = head; 
+        
+        ListNode * fast = head;
+        ListNode * slow = head;
+        
+        bool result = true;
+        
+        if (head == NULL || head->next == NULL) return result;
+        
+        bool even = false;
+
+        while (fast != NULL && fast->next != NULL) {
+            slow = slow->next;
+            fast = fast->next->next;
+        }
+        
+        
+       if (fast == NULL) even = true;
+        
+        // Slow will be the pointer for the beginning of the second half of the list. 
+        // If it is even start from slow, else start from slow->next. 
+        
+        // Reverse the first half until you find the slow ptr.
+        
+        ListNode * next = NULL;
+        ListNode * curr = head;
+        ListNode * prev = NULL;
+        
+        while (curr != slow) {
+            next = curr->next;
+            curr->next = prev;
+            prev = curr;
+            curr = next;
+        }
+        
+        ListNode * firstHead = prev;
+        ListNode * firstTail = prev;
+        ListNode * secondHead = even == true ? slow : slow->next;
+
+        while (firstHead != NULL) {
+            if (firstHead->val != secondHead->val) {
+                result = false;
+                break;    
+            }
+            firstHead = firstHead->next;
+            secondHead = secondHead->next;
+        }
+        
+        next = curr->next;
+        prev = NULL;
+        
+        while (next != NULL) {
+            next = curr->next;
+            curr->next = prev;
+            prev = curr;
+            curr = next;
+        }
+        // Make the end of the first half of the string connect to the head
+        // of the second half of the string. 
+        firstTail->next = slow;
+        
+          return result;
+    }
+};
