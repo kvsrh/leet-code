@@ -83,3 +83,11 @@ public:
         return true;
     }
 };
+
+##
+
+The crux is we work with only two colors and then in a bfs we keep coloring until we find color[curr] == color[next] ... if
+not the given graph can be partitioned into two sets. 
+
+There is another logic - a graph cann't be bipartition if the the loop count in a graph is even. We could go over in a loop and
+and check if the all loop counts are even. 
