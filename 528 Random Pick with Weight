@@ -26,6 +26,7 @@ Explanation of Input Syntax:
 
 The input is two lists: the subroutines called and their arguments. Solution's constructor has one argument, the array w. pickIndex has no arguments. Arguments are always wrapped with a list, even if there aren't any.
 
+
 class Solution {
 public:
     int rollingSum = 0;
@@ -40,18 +41,31 @@ public:
         int size = sums.size();
         
         int left = 0;
-        int right = size -1; 
+        int right = size - 1; 
         
-        if (index <= sums[0]) {
-            return 0;
-        }
+        // Find the bucket in which it falls. Interesting new way for finding the bucket.
         
-        for (int i = 1; i < sums.size(); i++) {
-            if (index > sums[i-1] && index <= sums[i]) {
-                return i;
+        while (left < right) {
+            int mid = left + (right - left)/2;
+            if (index > sums[mid]) {
+                left = mid+1;
+            } else {
+                right = mid;
             }
         }
-        return -1;   
+        
+        return left;
+        
+//         if (index <= sums[0]) {
+//             return 0;
+//         }
+        
+//         for (int i = 1; i < sums.size(); i++) {
+//             if (index > sums[i-1] && index <= sums[i]) {
+//                 return i;
+//             }
+//         }
+//         return -1;   
     }
     
     Solution(vector<int>& w) {
