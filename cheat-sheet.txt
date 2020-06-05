@@ -32,3 +32,10 @@ isalpha to see if a character is an alpbhet.
 
 https://thispointer.com/c-how-to-compare-two-vectors-stdequal-comparators/ - comparison function on vectors. == is overloaded to compare the content of int arrays. 
 
+### Picking random number in a range in c++ ###
+
+generate seed - srand() - call it only once in the init() and then keep calling the new values. 
+generate random numbers - rand()
+
+########
+
