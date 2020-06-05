@@ -1,0 +1,97 @@
+Random Pick with Weight
+
+Given an array w of positive integers, where w[i] describes the weight of index i, write a function pickIndex which randomly picks an index in proportion to its weight.
+
+Note:
+
+    1 <= w.length <= 10000
+    1 <= w[i] <= 10^5
+    pickIndex will be called at most 10000 times.
+
+Example 1:
+
+Input: 
+["Solution","pickIndex"]
+[[[1]],[]]
+Output: [null,0]
+
+Example 2:
+
+Input: 
+["Solution","pickIndex","pickIndex","pickIndex","pickIndex","pickIndex"]
+[[[1,3]],[],[],[],[],[]]
+Output: [null,0,1,1,1,0]
+
+Explanation of Input Syntax:
+
+The input is two lists: the subroutines called and their arguments. Solution's constructor has one argument, the array w. pickIndex has no arguments. Arguments are always wrapped with a list, even if there aren't any.
+
+class Solution {
+public:
+    int rollingSum = 0;
+    vector<int> sums;
+    
+    int find (int index) {
+        // do a binary search on the sums such that you find where the index lies. 
+        // ex: w - [1,3]. rollingSum [1,4] - (0,1], (1,4] 
+        
+        // find the index between which our number will lie. 
+        
+        int size = sums.size();
+        
+        int left = 0;
+        int right = size -1; 
+        
+        if (index <= sums[0]) {
+            return 0;
+        }
+        
+        for (int i = 1; i < sums.size(); i++) {
+            if (index > sums[i-1] && index <= sums[i]) {
+                return i;
+            }
+        }
+        return -1;   
+    }
+    
+    Solution(vector<int>& w) {
+        // Give priority to weight. Simplest way is to insert a given elem, 
+        // weight number of times and then, pick with random probability.
+
+        // the downside is for really large numbers we end up generating real large numbers. 
+        
+        // but do we have to generate the entire array??
+        
+        // compute the sum - then keep context of the rolling sum and the index at which 
+        // a given number starts and based of the picked random value - find the num. 
+        // We need to be able to give a sum and then find the range in which it will lie.
+        // modified binary search. 
+        
+        rollingSum = 0;
+        sums = {};
+        
+        for (auto & num : w) {
+            rollingSum += num;
+            sums.emplace_back(rollingSum);
+        }
+        
+//         for (auto val : sums) {
+//             cout << val << " ";
+//         }
+        
+//         cout << endl;
+        srand(time(0)); // seed only once. 
+    }
+    
+    int pickIndex() {
+        int result = (rand() % rollingSum) + 1; // we keep the sums starting from 1 to size. 
+        // cout << result << endl;
+        return find(result);
+    }
+};
+
+/**
+ * Your Solution object will be instantiated and called as such:
+ * Solution* obj = new Solution(w);
+ * int param_1 = obj->pickIndex();
+ */
