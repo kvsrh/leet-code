@@ -1,0 +1,64 @@
+Queue Reconstruction by Height
+
+Suppose you have a random list of people standing in a queue. Each person is described by a pair of integers (h, k), where h is the height of the person and k is the number of people in front of this person who have a height greater than or equal to h. Write an algorithm to reconstruct the queue.
+
+Note:
+The number of people is less than 1,100.
+ 
+
+Example
+
+Input:
+[[7,0], [4,4], [7,1], [5,0], [6,1], [5,2]]
+
+Output:
+[[5,0], [7,0], [5,2], [6,1], [4,4], [7,1]]
+
+bool comp (vector<int> & a, vector<int> & b) {
+    return (a[0] == b[0]) ? a[1] < b[1] : a[0] < b[0]; 
+    // if the heights match, sort based on the number of people ahead of them. 
+}
+class Solution {
+public:
+    vector<vector<int>> reconstructQueue(vector<vector<int>>& people) {
+        // If the number of people in front of me are 0 .. then sort by the increasing height
+        // order. 
+        // some sort of toplogical sorting. 
+        // The number of people ahead of me such that - 
+        // 7 7 6 5 5 4 -- so 7 : (0,1), 6 : (0,1,2) 5 : (0 ... [3,4]) 4 : (0, 5)
+        
+        // - - - - 4 -
+        // 5 7 5 6 4 7
+        // 
+        
+        // sort the initial array -
+        
+        int size = people.size();
+        
+        vector<vector<int>> result (size, vector<int>(2,-1)); 
+        
+        sort(people.begin(), people.end(), comp);
+        
+        for (auto & elem : people) {
+            cout << elem[0] << " " << elem[1] << endl;
+        }
+        
+        for (int i = 0; i < size; i++) {
+            // cout << "Processing person : " << people[i][0] << " " << people[i][1] << endl;
+            int offset = 0;
+            for (int j = 0; j < size; j++) {
+                if (result[j][0] == -1 && offset == people[i][1]) {
+                    result[j][0] = people[i][0];
+                    result[j][1] = people[i][1];
+                    break;
+                }
+                if (result[j][0] == -1 || result[j][0] == people[i][0]) {
+                    offset++;
+                }
+            }
+        }
+    
+        return result;
+        
+    }
+};
