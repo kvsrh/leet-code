@@ -6,21 +6,7 @@ combination formula -
 vector constructor -
 constructor list: 
 
-
-
--- Comeback -- 
-
-Pramp -- 
-Levinstein Distance.
-Drone planner.
-Meeting Planner.
-Quadrant Sum.
-EOP dynamic programming. 
-Aditya's Problem --
-Leadership questions. 
-
-
-Grid declarations -- 
+## Grid declarations ##
 
 vector<vector<int>> grid(3, vector<>(3,0));
 
@@ -32,10 +18,19 @@ isalpha to see if a character is an alpbhet.
 
 https://thispointer.com/c-how-to-compare-two-vectors-stdequal-comparators/ - comparison function on vectors. == is overloaded to compare the content of int arrays. 
 
-### Picking random number in a range in c++ ###
+### RANDOM FUNCTION ###
 
 generate seed - srand() - call it only once in the init() and then keep calling the new values. 
 generate random numbers - rand()
 
-########
+### MOD FUNCTION ###
 
+int mod(int a, int b) { --> mod for both negative and positive numbers.
+    return (b + (a%b)) % b;
+}
+
+### SET APIS ### 
+1) cleanup all elements in a set:
+    set.erase(set.begin(), set.end()); 
+2) find if an element is in a set: 
+    set.count(num) > 0
