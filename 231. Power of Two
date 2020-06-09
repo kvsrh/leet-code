@@ -1,0 +1,55 @@
+ Power of Two
+
+Given an integer, write a function to determine if it is a power of two.
+
+Example 1:
+
+Input: 1
+Output: true 
+Explanation: 20 = 1
+
+Example 2:
+
+Input: 16
+Output: true
+Explanation: 24 = 16
+
+Example 3:
+
+Input: 218
+Output: false
+
+class Solution {
+  public:
+  bool isPowerOfTwo(int n) {
+    if (n == 0) return false;
+    long x = n;
+    return (x & (x - 1)) == 0; // nice max - if it is an 2 power number - then x-1 will have all 1's and therefore (x & (x-1))
+                               // is 0.
+  }
+};
+
+class Solution {
+public:
+    bool isPowerOfTwo(int n) {
+        // left shift make sure there is only one 1 other than t
+        
+        if (n <= 0) return false; // important point. 
+        
+        int count = 0;
+        
+        while (n > 0) {
+            
+            if (n & 1 == 1) {
+                count++;
+            }
+            
+            if (count > 1) {
+                return false;
+            }
+            
+            n = n >> 1;
+        }
+        return true;
+    }
+};
