@@ -6,9 +6,26 @@ combination formula -
 vector constructor -
 constructor list: 
 
-## Grid declarations ##
+## GRID DECLARATION AND GRID TRAVERSAL ##
 
 vector<vector<int>> grid(3, vector<>(3,0));
+
+Lookup adjacent elems: 
+
+vector<vector<int>> dirs = {{-1,0}, {1,0}, {0,-1}, {0,1}};
+
+for (auto & dir : dirs) {
+                int nr = r+dir[0];
+                int nc = c+dir[1];
+                if (nr >= 0 && nr < rows && 
+                    nc >= 0 && nc < cols &&
+                    grid[nr][nc] == 'O')
+                    q.push({nr,nc});
+            }
+            
+
+## ~~~ ##
+
 
 Making pairs -- make_pair()
 
@@ -24,7 +41,7 @@ generate seed - srand() - call it only once in the init() and then keep calling 
 generate random numbers - rand()
 
 ### MOD FUNCTION ###
-
+This mod function works  for when a and b are negative. 
 int mod(int a, int b) { --> mod for both negative and positive numbers.
     return (b + (a%b)) % b;
 }
