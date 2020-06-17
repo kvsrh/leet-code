@@ -34,3 +34,34 @@ int mod(int a, int b) { --> mod for both negative and positive numbers.
     set.erase(set.begin(), set.end()); 
 2) find if an element is in a set: 
     set.count(num) > 0
+
+### QUEUE APIS ###
+
+q.push() --> insert an element. 
+q.front() --> peek the front element.
+q.pop() --> Remove the front element.
+
+~~~~ PATTERNS ~~~~ 
+
+## Level order traversal ##
+
+queue<int> q; 
+q.push(elem);
+
+while (q.empty()) {
+    int size = q.size();
+    for (int i = 0; i < size; i++) {
+        auto & curr = q.front();
+        curr.pop()
+        
+        // Do something with curr.
+        // Add new element based on wheather question is grid or tree.
+        
+    }
+}
+
+## ##
+
+## Processing unequal length strings or linked-list ## 
+
+## ##
