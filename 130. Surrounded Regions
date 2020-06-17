@@ -1,0 +1,105 @@
+130. Surrounded Regions
+Medium
+
+Given a 2D board containing 'X' and 'O' (the letter O), capture all regions surrounded by 'X'.
+
+A region is captured by flipping all 'O's into 'X's in that surrounded region.
+
+Example:
+
+X X X X
+X O O X
+X X O X
+X O X X
+
+After running your function, the board should be:
+
+X X X X
+X X X X
+X X X X
+X O X X
+
+Explanation:
+
+Surrounded regions shouldn’t be on the border, which means that any 'O' on the border of the board are not flipped to 'X'. Any 'O' that is not on the border and it is not connected to an 'O' on the border will be flipped to 'X'. Two cells are connected if they are adjacent cells connected horizontally or vertically.
+Accepted
+222,756
+Submissions
+822,036
+
+class Solution {
+public:
+    void solve(vector<vector<char>>& board) {
+        // Solve a 2D maze. 
+        // Go over the edge matrix and mark all places,
+        // where we see a 0 mark it 0. 
+        
+        vector<vector<char>> grid = board; 
+        
+        int rows = board.size();
+        if (rows == 0) return;
+        int cols = board[0].size();
+
+        queue<vector<int>> q; // vector<int> to make a tuple.   
+        
+        for (int c = 0; c < cols; c++) {
+            if (board[0][c] == 'O')
+                q.push({0,c});
+            if (board[rows-1][c] == 'O')
+                q.push({rows-1,c});
+        }    
+        
+        for (int r = 1; r < rows-1; r++) {
+            if (board[r][0] == 'O') 
+                q.push({r,0});
+            if (board[r][cols-1] == 'O')
+                q.push({r,cols-1});
+        }
+        
+        // cout << "q size" << q.size() << endl;
+        
+       vector<vector<int>> dirs = {{-1,0}, {1,0}, {0,-1}, {0,1}};
+        
+        while (!q.empty()) {
+            auto & curr = q.front();
+            int r = curr[0];
+            int c = curr[1];
+            q.pop();
+            grid[r][c] = '1';
+            
+            for (auto & dir : dirs) {
+                int nr = r+dir[0];
+                int nc = c+dir[1];
+                if (nr >= 0 && nr < rows && 
+                    nc >= 0 && nc < cols &&
+                    grid[nr][nc] == 'O')
+                    q.push({nr,nc});
+            }
+            
+                // if (r-1 >= 0 && grid[r-1][c] == 'O') {
+                //     q.push({r-1,c});
+                // } 
+                // if (r+1 < rows && grid[r+1][c] == 'O') {
+                //     q.push({r+1,c});
+                // }
+                // if (c-1 >= 0 && grid[r][c-1] == 'O') {
+                //     q.push({r,c-1});
+                // }
+                // if (c+1 < cols && grid[r][c+1] == 'O') {
+                //     q.push({r,c+1});
+                // }
+        }
+    
+        // Could have converted the '1' too to 'O' after it is done. 
+        
+        for (int r = 0; r < rows; r++) {
+            for (int c = 0; c < cols; c++) {
+                if (grid[r][c] == 'O') {
+                    board[r][c] = 'X';
+                }
+            }
+        }
+        
+        return;
+    }
+};
