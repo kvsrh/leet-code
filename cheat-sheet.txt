@@ -26,14 +26,19 @@ for (auto & dir : dirs) {
 
 ## ~~~ ##
 
-
 Making pairs -- make_pair()
+
+## UTILITY FUNCTIONS ##
 
 abs() .. -> get absolute value.
 
 isalpha to see if a character is an alpbhet. 
 
 https://thispointer.com/c-how-to-compare-two-vectors-stdequal-comparators/ - comparison function on vectors. == is overloaded to compare the content of int arrays. 
+
+int minL = *min_elem(res.begin(), res.end()); // what is returned is an iterator.  
+
+## ~~~ ##
 
 ### RANDOM FUNCTION ###
 
