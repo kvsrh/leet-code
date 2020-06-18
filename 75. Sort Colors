@@ -1,0 +1,44 @@
+class Solution {
+public:
+    void sortColors(vector<int>& nums) {
+        // in place sorting using quick sort? But that will be o(nlogn) -- can do 
+        // better job with dutch flag problem. 
+        int size = nums.size();
+        if (size == 0)
+            return;
+        
+        int start = 0, mid = 0, end = size-1;
+        
+        while (mid <= end) {
+            switch(nums[mid]) {
+                case 0: 
+                    swap(nums[start], nums[mid]);
+                    start++; mid++;
+                case 1:
+                    mid++;
+                case 2:
+                    swap(nums[end], nums[mid]);
+                    end--;
+            }
+        }
+        
+        return;
+        
+    }
+};
+
+/*
+
+Crux: 
+
+Keep three pointers, namely curr, p0, p2:
+current element being processed - curr.
+Position where the next 0 found, should be inserted - p0.
+Position where the next 2 found, should be inserted - p2.
+
+If curr value is 0 - swap(nums[curr], nums[p0]) .. curr++ and p0++.
+If curr value is 1 - move curr forward .. no swap needed.
+If curr value is 2 - swap(nums[curr], nums[p2]) .. p2--. Don't move curr since the new number swapped in has to be
+evaluated again. 
+
+*/
