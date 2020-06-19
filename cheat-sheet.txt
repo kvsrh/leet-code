@@ -87,3 +87,11 @@ while (q.empty()) {
 ## Processing unequal length strings or linked-list ## 
 
 ## ##
+
+## STRING APIS ##
+
+to_string() --> convert an integer value to string. 
+string.substr(int startindex, int len) --> get a substring of type string.
+
+##
+
