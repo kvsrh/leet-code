@@ -55,7 +55,6 @@ public:
 /*
 Draw a chart with citations numbers and the paper id. 
 The main thing is: imagine a "size-n" line which intersects ... the citation and paper-id.
+*/
 
 ![concept](https://github.com/kvsrh/leet-code/blob/master/images/Screen%20Shot%202020-06-18%20at%204.49.26%20PM.png)
-
-*/
