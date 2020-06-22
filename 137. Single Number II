@@ -1,0 +1,66 @@
+137. Single Number II
+Medium
+
+Given a non-empty array of integers, every element appears three times except for one, which appears exactly once. Find that single one.
+
+Note:
+
+Your algorithm should have a linear runtime complexity. Could you implement it without using extra memory?
+
+Example 1:
+
+Input: [2,2,3,2]
+Output: 3
+
+Example 2:
+
+Input: [0,1,0,1,0,1,99]
+Output: 99
+
+class Solution {
+public:
+    int singleNumber(vector<int>& nums) {
+        // xor magic.
+        
+        // The key idea is - if you want to swap two elements
+        // without a temp variable how to do you do it. 
+        
+        // int a = a^b;  a = a^b;
+        // int b = a^b;  b = (a^b)^b;
+        // int a = a^b ; a = a^b^a = b;
+        
+        // Keep two numbers: 
+        // seenFirst - if the number is seen for the first time. 
+        // seenSecond - if the number is seen  for the second time. 
+        
+        // SLOWLY READ THIS // 
+        
+        // when number is being processed first time.
+        
+        // seenFirst = ~(seenSecond (false)) & (seenFirst(false) ^ num) --> seenFirst = true;
+        // seenSecond = ~(seenFirst (true)) & (seenSecond(false) ^ num) --> seenSecond = false;
+         
+        // when number is being processed second time.
+        
+        // seenFirst = ~(seenSecond (false)) & (seenFirst(true) ^ num) --> seenFirst = false;
+        // seenSecond = ~(seenFirst (false)) & (seenSecond(false) ^ num) --> seenSecond = true;
+        
+        // when number is being processed third time.
+        
+        // seenFirst = ~(seenSecond (true)) & (seenFirst(false) ^ num) --> seenFirst = false;
+        // seenSecond = ~(seenFirst (false)) & (seenSecond(true) ^ num) --> seenSecond = false;
+        
+        
+        // any number that will be left only in the seen second will be sifted out. 
+        
+        int seenFirst = 0;
+        int seenSecond = 0;
+        for (auto & num : nums) {
+            seenFirst = ~seenSecond & (seenFirst ^ num);
+            seenSecond = ~seenFirst & (seenSecond ^ num);
+        }
+        
+        return seenFirst;
+    }
+};
+
