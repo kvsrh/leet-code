@@ -1,0 +1,90 @@
+60. Permutation Sequence
+
+Medium
+
+The set [1,2,3,...,n] contains a total of n! unique permutations.
+
+By listing and labeling all of the permutations in order, we get the following sequence for n = 3:
+
+    "123"
+    "132"
+    "213"
+    "231"
+    "312"
+    "321"
+
+Given n and k, return the kth permutation sequence.
+
+Note:
+
+    Given n will be between 1 and 9 inclusive.
+    Given k will be between 1 and n! inclusive.
+
+Example 1:
+
+Input: n = 3, k = 3
+Output: "213"
+
+Example 2:
+
+Input: n = 4, k = 9
+Output: "2314"
+
+Accepted
+197,439
+Submissions
+520,483
+
+int factorial (int n) {
+    
+    int result = 1;
+    while (n > 1) {
+        result *= n;
+        n--;
+    }
+    return result;
+}
+
+int findNum (int search, vector<bool> & nums) { // return index.
+    int found = 0;
+    for (int i = 0; i < nums.size(); i++) {
+        if (nums[i] == false) {
+            found++;
+            if (found == search) {
+                return i;
+            }
+        }
+    }
+    return -1;
+}
+
+class Solution {
+public:
+    string getPermutation(int n, int k) {
+        // Keep a list of the used numbers.
+        // Compute (n-1)! and then used that as a beginning point
+        // to work with in which bucket the number will fall in.
+        
+        string result = "";
+        
+        vector<bool> used (n, 0);
+        // The limit of a factorial that be stored in a uint32_t is 20. 
+        int fact = factorial (n-1);
+        
+        int index = k-1;
+        
+        
+        for (int i = 0; i < n; i++) {
+            int bucket = index/fact;
+            int resultL = findNum(bucket+1, used);
+            result += to_string (resultL+1);
+            used[resultL] = true;
+            index = index%fact;
+            if (i != n-1)
+                fact = fact/(n-1-i);
+        }
+        
+        return result;
+        
+    }
+};
