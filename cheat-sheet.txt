@@ -6,6 +6,13 @@ combination formula -
 vector constructor -
 constructor list: 
 
+## VECTOR APIS ##
+
+accumulate(nums.begin(), nums.end(), 0) --> to accumulate the sum of all the numbers in nums. (TARGET SUM)
+max_element (nums.begin(), nums.end()) --> Find the iterator for the element which is the max in a vector. (PANCAKE SORT)
+
+## ## 
+
 ## GRID DECLARATION AND GRID TRAVERSAL ##
 
 vector<vector<int>> grid(3, vector<>(3,0));
