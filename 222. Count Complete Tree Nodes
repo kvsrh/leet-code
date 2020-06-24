@@ -124,3 +124,5 @@ public:
         
     }
 };
+
+Notes: Absolute blunders during the finding of pathHeight. Made too many rookie mistakes. Got idea under 5 mins. Failed at execution poorly. 
