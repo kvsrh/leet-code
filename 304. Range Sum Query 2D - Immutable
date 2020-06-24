@@ -98,5 +98,26 @@ public:
  */
  
  There is a better solution -- of using the dp of the rolling sum from the (0,0) to the index (r,c).
- 
- 
+
+
+class NumMatrix {
+    public:
+    vector<vector<int>> dp;
+    NumMatrix(vector<vector<int>>& matrix) {
+        int rows = matrix.size();
+        if (rows == 0) 
+            return;
+        int cols = matrix[0].size();
+        
+        dp = vector<vector<int>>(rows+1, vector<int>(cols+1,0));
+        for (int r = 1; r < rows+1; r++) {
+            for (int c =1; c < cols+1; c++) {
+                dp[r][c] = dp[r-1][c] + dp[r][c-1] - dp[r-1][c-1] + matrix[r-1][c-1];
+            }
+        }
+        
+    }
+    int sumRegion(int row1, int col1, int row2, int col2) {
+        return dp[row2+1][col2+1] - dp[row1][col2+1] - dp[row2+1][col1] + dp[row1][col1];
+    }
+};
