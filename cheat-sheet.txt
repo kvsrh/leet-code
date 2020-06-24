@@ -100,5 +100,7 @@ while (q.empty()) {
 to_string() --> convert an integer value to string. 
 string.substr(int startindex, int len) --> get a substring of type string.
 
-##
+# BIT APIS #
+
+cout << bitset<8>(x) << endl; --> prints the number in bit representation. 
 
