@@ -1,0 +1,126 @@
+222. Count Complete Tree Nodes
+Medium
+
+Given a complete binary tree, count the number of nodes.
+
+Note:
+
+Definition of a complete binary tree from Wikipedia:
+In a complete binary tree every level, except possibly the last, is completely filled, and all nodes in the last level are as far left as possible. It can have between 1 and 2h nodes inclusive at the last level h.
+
+Example:
+
+Input: 
+    1
+   / \
+  2   3
+ / \  /
+4  5 6
+
+Output: 6
+
+Accepted
+228,245
+Submissions
+502,269
+
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+ * };
+ */
+
+int pathHeight (TreeNode * root, int path, int size) {
+    
+    TreeNode * curr = root;
+    int height = -1;
+    // cout << " path : " << path << endl;
+    while (curr != NULL) {
+        size = size >> 1;
+        // cout << "val : " << curr->val << " (" << path << ")"  << " (" << size << ")" << " ";
+        
+        if (path < size) {
+            curr = curr->left;
+        } else {
+            curr = curr->right;
+            path = path - size;
+        }
+        height++;
+    } 
+    // cout << endl;
+    // cout << " height : " << height << endl;
+    return height;
+    
+}
+
+class Solution {
+public:
+    int countNodes(TreeNode* root) {
+        // Do a recursive walk such that we can access all the elements first
+        // on the right side, then on the left side. 
+        
+        // One trick could be to use binary search to decide which direction to go in,
+        // and then we can check the height of the tree at that position. 
+        // we reduce the search to o(hlog(2))
+        
+        // This has a limitation on the size of the tree. Assume that the tree is no bigger than the size the of uint32_t.
+        
+        // Initial find the height. 
+        
+        if (root == NULL) {
+            return 0;
+        }
+        
+        int height = -1;
+        
+        TreeNode * curr = root;
+        
+        while (curr != NULL) {
+            curr = curr->left; 
+            height++;
+        }
+        
+        // cout << "height : " << height << endl;
+        
+        int left = 0;
+        int size = pow(2,height);
+        int right = size-1;
+        while (left <= right) {
+            int mid = left + (right-left)/2;
+            // cout << "Start left : " << left << " right : " << right << " mid : " << mid << endl;
+            int mHeight = pathHeight (root, mid, size);
+            // cout << "midHeight : " << mHeight << endl;
+            if (mHeight == height) {
+                left = mid+1;
+            } else {
+                right = mid-1;
+            }
+            // cout << "End left : " << left << " right : " << right << endl;
+        }
+        
+        // cout << left << endl;
+        
+        //  0 1 2 3 4 5 6 7
+        // [3 3 2 2 2 2 2 2]
+        //      l
+        //      m
+        //    r   
+        //  0 1 2 3
+        // [2,2,2,1]
+        //   l 
+              // r
+              //   m
+                
+        // position of left is the index of the number where height differs. 
+        
+        return pow(2,height) + left - 1;
+
+        
+    }
+};
