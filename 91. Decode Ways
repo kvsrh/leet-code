@@ -1,0 +1,68 @@
+
+91. Decode Ways
+Medium
+
+A message containing letters from A-Z is being encoded to numbers using the following mapping:
+
+'A' -> 1
+'B' -> 2
+...
+'Z' -> 26
+
+Given a non-empty string containing only digits, determine the total number of ways to decode it.
+
+Example 1:
+
+Input: "12"
+Output: 2
+Explanation: It could be decoded as "AB" (1 2) or "L" (12).
+
+Example 2:
+
+Input: "226"
+Output: 3
+Explanation: It could be decoded as "BZ" (2 26), "VF" (22 6), or "BBF" (2 2 6).
+
+Accepted
+389,306
+Submissions
+1,600,544
+class Solution {
+public:
+    int numDecodings(string s) {
+        // Use recursion and keep prev value to evaluate if you want to keep colasce the 
+        // previous value or keep it as a seperate value. 
+        
+        // 0 1 2
+        // 3 2 6
+    //  dp 1   
+    //           ^
+                   
+        // clean input to remove initial zeros in the string if present. 
+        int size = s.size();
+        
+        if (size == 0)
+            return 0;
+        
+        vector<int> dp (size+1, 0);
+        dp[0] = 1; --> // Seeding this is super important. Since the ones later on will be using this.
+        dp[1] = s[0] == '0' ? 0 : 1;
+        
+        for (int i = 2; i < size+1; i++) {
+            int curr = s[i-1]-'0';
+            int last = s[i-2]-'0';
+            if (curr != 0) 
+                dp[i] = dp[i-1];
+            int twoDigit = last * 10 + curr;
+            if (twoDigit >= 10 && twoDigit <= 26) {
+                dp[i] += dp[i-2];
+            }
+        }
+        
+        // for (auto & elem : dp) {
+        //     cout << elem << " ";
+        // } 
+        
+        return dp[size];
+    }
+};
