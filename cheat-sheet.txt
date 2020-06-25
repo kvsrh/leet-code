@@ -11,6 +11,8 @@ constructor list:
 accumulate(nums.begin(), nums.end(), 0) --> to accumulate the sum of all the numbers in nums. (TARGET SUM)
 max_element (nums.begin(), nums.end()) --> Find the iterator for the element which is the max in a vector. (PANCAKE SORT)
 
+or max ({ .. Range of elems .. })
+
 ## ## 
 
 ## GRID DECLARATION AND GRID TRAVERSAL ##
