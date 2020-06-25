@@ -31,6 +31,19 @@ for (auto & dir : dirs) {
                     grid[nr][nc] == 'O')
                     q.push({nr,nc});
             }
+
+Graph directions for a knight on a phone pad. 
+
+        vector<vector<int>> graph =  {{4,6},    
+                                      {8,6},
+                                      {7,9},
+                                      {8,4},
+                                      {3,9,0},
+                                      {},
+                                      {1,0,7},
+                                      {6,2},
+                                      {1,3},
+                                      {4,2}};
             
 
 ## ~~~ ##
@@ -105,4 +118,10 @@ string.substr(int startindex, int len) --> get a substring of type string.
 # BIT APIS #
 
 cout << bitset<8>(x) << endl; --> prints the number in bit representation. 
+
+# Declaring big constants # 
+
+int MOD = 10e9+7 // 1000,000,000 + 7.
+#define MOD 1000000007
+# ~~ #
 
