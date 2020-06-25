@@ -91,3 +91,5 @@ public:
         return ans;
     }
 };
+
+https://leetcode.com/problems/knight-dialer/discuss/705341/c-easy-solution-with-diagram
