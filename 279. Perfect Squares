@@ -1,0 +1,56 @@
+279. Perfect Squares
+Medium
+
+Given a positive integer n, find the least number of perfect square numbers (for example, 1, 4, 9, 16, ...) which sum to n.
+
+Example 1:
+
+Input: n = 12
+Output: 3 
+Explanation: 12 = 4 + 4 + 4.
+
+Example 2:
+
+Input: n = 13
+Output: 2
+Explanation: 13 = 4 + 9.
+
+Accepted
+292,556
+Submissions
+629,959
+
+class Solution {
+public:
+    int numSquares(int n) {
+        vector<int> dp (n+1, 0);
+        
+        // Keep a table of all the perfect squares until the current number. 
+        
+        int pSize = (int)sqrt(n);
+        
+        // cout << pSize << endl;
+        vector<int> ps (pSize, 0);
+        
+        for (int i = 0; i < pSize; i++) {
+            ps[i] = (i+1)*(i+1);
+        }
+        
+        
+        for (int num = 1; num < n+1; num++) {
+            int minL = INT_MAX;
+            for (int j = 0; j < pSize; j++) {
+                if (ps[j] > num)
+                    break;
+                minL = min(minL, dp[num-ps[j]]+1);           
+            }
+            dp[num] = minL;
+        }
+        
+        // for (auto & elem : dp) {
+        //     cout << elem << " ";
+        // }
+        
+        return dp[n];
+    }
+};
