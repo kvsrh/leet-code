@@ -86,7 +86,7 @@ int mod(int a, int b) { --> mod for both negative and positive numbers.
 
 ### QUEUE APIS ###
 
-q.push() --> insert an element. 
+q.push() --> insert an element. or q.emplace() --> If you are using a queue<pair<int,int>> -- you could just say q.emplace(i,j); instead of saying q.push(make_pair(i,j));
 q.front() --> peek the front element.
 q.pop() --> Remove the front element.
 
