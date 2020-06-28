@@ -1,0 +1,107 @@
+// /*
+// // Definition for a Node.
+// class Node {
+// public:
+//     int val;
+//     Node* left;
+//     Node* right;
+
+//     Node() {}
+
+//     Node(int _val) {
+//         val = _val;
+//         left = NULL;
+//         right = NULL;
+//     }
+
+//     Node(int _val, Node* _left, Node* _right) {
+//         val = _val;
+//         left = _left;
+//         right = _right;
+//     }
+// };
+// */
+
+// void recurse (Node* root, Node** head, Node** tail, Node** firstHead) {
+    
+//     if (root == NULL) {
+//         return;
+//     }
+    
+//     // cout << "root - " << root->val << endl;
+    
+//     if (root->left != NULL) {
+//         recurse (root->left, head, tail, firstHead);
+//         // cout << "left done for node - " << root->val << " head - " << (*head)->val << " tail - " << (*tail)->val << endl; 
+//          (*tail)->right = root;
+//          root->left = *tail;
+//          (*tail) = root;
+//     } else {
+//         if (*firstHead == NULL) {
+//             *firstHead = root;
+//         }
+//         *head = root;
+//         *tail = root;
+//         // cout << "Left most node - " << (*firstHead)->val << " tail - " << (*tail)->val << endl;
+//     }
+    
+//     if (root->right != NULL) {
+//         recurse (root->right, head, tail, firstHead);
+//         root->right = *head;
+//         (*head)->left = root;
+//         *head = root;
+//     }
+    
+//     // cout << "right done for node - " << root->val << " head - " << (*head)->val << " tail - " << (*tail)->val << endl;
+//     return;
+// }
+
+// class Solution {
+// public:
+//     Node* treeToDoublyList(Node* root) {
+        
+//         Node * head = NULL;
+//         Node * tail = NULL;
+//         Node * firstHead = NULL;
+        
+//         if (root == NULL) {
+//             return NULL;
+//         }
+        
+//         recurse (root, &head, &tail, &firstHead);
+//         tail->right = firstHead;
+//         firstHead->left = tail;
+        
+//         return firstHead;
+        
+//     }
+// };
+
+class Solution {
+public:
+    Node * first = NULL;
+    Node * last = NULL;
+    
+    void recurse (Node * node) {
+        if (node != NULL) {
+            recurse (node->left);
+            if (last) {
+                last->right = node;
+                node->left = last;
+                last = node;
+            } else {
+                first = node;
+                last = node;
+            }
+            recurse (node->right);
+        }
+    }
+    
+    Node* treeToDoublyList(Node* root) {
+        if (!root) return NULL;
+        recurse (root);
+        last->right = first;
+        first->left = last;
+        return first;
+    }
+};
