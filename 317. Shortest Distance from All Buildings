@@ -1,0 +1,279 @@
+// void bfs (vector<vector<int>> grid, int r, int c, vector<vector<int>> & cost,
+//                                                   vector<vector<int>> & reach) {
+//     int rows = grid.size();
+//     int cols = grid[0].size();
+    
+//     queue<pair<int,int>> q;
+//     q.push(make_pair(r,c));
+//     int level = 0;
+    
+//     while (!q.empty()) {
+//         int size = q.size();
+//         for (int i = 0; i < size; i++) {
+//             auto & curr = q.front();
+            
+//             int row = curr.first;
+//             int col = curr.second;
+            
+//             q.pop();
+            
+//             cost[row][col] += level;
+//             reach[row][col] += 1;
+            
+//             vector<vector<int>> dirs = {{0,1}, {1,0}, {-1,0}, {0,-1}};
+            
+//             for (auto & dir : dirs) {
+//                 int nr = row+dir[0];
+//                 int nc = col+dir[1];
+//                 if ((nr >= 0) && (nr < rows) && 
+//                     (nc >= 0) && (nc < cols) &&
+//                     grid[nr][nc] == 0) {
+//                     grid[nr][nc] = 1;
+//                     q.push(make_pair(nr,nc));
+//                 }
+//             }
+//         }
+//         level++;
+//     }
+    
+//     // cout << "Building location : " << r << " " << c << endl;
+//     // for (auto & row : cost) {
+//     //     for (auto & elem : row) {
+//     //         cout << elem << " ";   
+//     //     }
+//     //     cout << endl;
+//     // }
+//     // cout << endl << endl;
+// }
+
+// class Solution {
+// public:
+    
+//     int shortestDistance(vector<vector<int>>& grid) {
+//         int rows = grid.size();
+//         int cols = grid[0].size();
+        
+//         int buildings = 0; 
+//         int empty = 0;
+        
+//         for (int r = 0; r < rows; r++) {
+//             for (int c = 0; c < cols; c++) {
+//                 if (grid[r][c] == 1) {
+//                     buildings += 1;
+//                 } else if (grid[r][c] == 0) {
+//                     empty += 1;
+//                 }
+//             }
+//         }
+        
+//         if (buildings == 0) 
+//             return -1;
+        
+//         vector<vector<int>> cost (rows, vector<int>(cols, 0));
+//         vector<vector<int>> reach (rows, vector<int>(cols, 0));
+        
+//         for (int r = 0; r < rows; r++) {
+//             for (int c = 0; c < cols; c++) {
+//                 if (grid[r][c] == 1) {
+//                     bfs(grid, r, c, cost, reach);
+//                 } 
+//             }
+//         }
+        
+//         int minL = INT_MAX;
+        
+//         for (int r = 0; r < rows; r++) {
+//             for (int c = 0; c < cols; c++) {
+//                 if (grid[r][c] == 0 && reach[r][c] == buildings) {
+//                     minL = min (minL, cost[r][c]);
+//                 }
+//             }
+//         } 
+        
+//         return minL == INT_MAX ? -1 : minL;
+//     }
+// };
+
+// class Solution {
+// public:
+//     int shortestDistance(vector<vector<int>> grid) {
+//     int m = grid.size(), n = grid[0].size();
+//     auto total = grid;
+//     int walk = 0, mindist, delta[] = {0, 1, 0, -1, 0};
+//     for (int i=0; i<m; ++i) {
+//         for (int j=0; j<n; ++j) {
+//             if (grid[i][j] == 1) {
+//                 mindist = -1;
+//                 auto dist = grid;
+//                 queue<pair<int, int>> q;
+//                 q.emplace(i, j);
+//                 while (q.size()) {
+//                     auto ij = q.front();
+//                     q.pop();
+//                     for (int d=0; d<4; ++d) {
+//                         int i = ij.first + delta[d];
+//                         int j = ij.second + delta[d+1];
+//                         if (i >= 0 && i < m && j >= 0 && j < n && grid[i][j] == walk) {
+//                             grid[i][j]--;
+//                             dist[i][j] = dist[ij.first][ij.second] + 1;
+//                             total[i][j] += dist[i][j] - 1;
+//                             q.emplace(i, j);
+//                             if (mindist < 0 || mindist > total[i][j])
+//                                 mindist = total[i][j];
+//                         }
+//                     }
+//                 }
+//                 walk--;
+//             }
+//         }
+//     }
+//     return mindist;
+// }
+    
+// };
+
+class Solution {
+public:
+    bool BFS(vector<vector<int>>& grid, int a, int b, int m, int n, vector<vector<int>>& values, vector<vector<int>>& nums, vector<pair<int, int>>& buildings){
+        queue<pair<int, int>> track;
+        vector<vector<bool>> visited(m, vector<bool>(n, 0));
+        int depth = 0;
+        track.push(make_pair(a, b));
+        while(!track.empty()){
+            int size = track.size();
+            for (int k = 0; k < size; k++){
+                pair<int, int> currPoint = track.front();
+                track.pop();
+                int i = currPoint.first;
+                int j = currPoint.second;
+                values[i][j] = values[i][j] == INT_MAX ? depth : values[i][j] + depth;
+                nums[i][j]++;
+                if (i - 1 >= 0 && !visited[i-1][j]) {
+                    visited[i-1][j] = 1;
+                    if (grid[i-1][j] == 0) track.push(make_pair(i-1, j));
+                }
+                if (i + 1 < m && !visited[i+1][j]) {
+                    visited[i+1][j] = 1;
+                    if (grid[i+1][j] == 0) track.push(make_pair(i+1, j));
+                }
+                if (j - 1 >= 0 && !visited[i][j-1]) {
+                    visited[i][j-1] = 1;
+                    if (grid[i][j-1] == 0) track.push(make_pair(i, j - 1));
+                }
+                if (j + 1 < n && !visited[i][j+1]) {
+                    visited[i][j+1] = 1;
+                    if (grid[i][j+1] == 0) track.push(make_pair(i, j + 1));
+                }
+            }
+            depth++;
+        }
+        for (int i = 0; i < buildings.size(); i++){
+            if (!visited[buildings[i].first][buildings[i].second])
+                return false;
+        }
+        return true;
+    }
+    int shortestDistance(vector<vector<int>>& grid) {
+        int m = grid.size();
+        if (m == 0) return -1;
+        int n = grid[0].size();
+        if (n == 0) return -1;
+        int minDis = INT_MAX;
+        vector<pair<int, int>> buildings;
+        vector<vector<int>> values(m, vector<int>(n, INT_MAX));
+        vector<vector<int>> nums(m, vector<int>(n, 0));
+        for (int i = 0; i < m; i++){
+            for (int j = 0; j < n; j++){
+                if (grid[i][j] == 1)
+                    buildings.push_back(make_pair(i, j));
+            }
+        }
+        for (int i = 0; i < buildings.size(); i++){
+            if (!BFS(grid, buildings[i].first, buildings[i].second, m, n, values, nums, buildings))
+                return -1;
+        }
+        
+        for (int i = 0; i < m; i++){
+            for (int j = 0; j < n; j++){
+                if (grid[i][j] == 0 && nums[i][j] == buildings.size()){
+                    minDis = values[i][j] > minDis ? minDis : values[i][j];
+                }
+            }
+        }
+        
+        return minDis == INT_MAX ? -1 : minDis;
+    }
+};
+
+class Solution {
+public:
+    bool BFS(vector<vector<int>>& grid, int a, int b, int m, int n, vector<vector<int>>& values, vector<vector<int>>& nums, vector<pair<int, int>>& buildings){
+        queue<pair<int, int>> track;
+        vector<vector<bool>> visited(m, vector<bool>(n, 0));
+        int depth = 0;
+        track.push(make_pair(a, b));
+        while(!track.empty()){
+            int size = track.size();
+            for (int k = 0; k < size; k++){
+                pair<int, int> currPoint = track.front();
+                track.pop();
+                int i = currPoint.first;
+                int j = currPoint.second;
+                values[i][j] = values[i][j] == INT_MAX ? depth : values[i][j] + depth;
+                nums[i][j]++;
+                if (i - 1 >= 0 && !visited[i-1][j]) {
+                    visited[i-1][j] = 1;
+                    if (grid[i-1][j] == 0) track.push(make_pair(i-1, j));
+                }
+                if (i + 1 < m && !visited[i+1][j]) {
+                    visited[i+1][j] = 1;
+                    if (grid[i+1][j] == 0) track.push(make_pair(i+1, j));
+                }
+                if (j - 1 >= 0 && !visited[i][j-1]) {
+                    visited[i][j-1] = 1;
+                    if (grid[i][j-1] == 0) track.push(make_pair(i, j - 1));
+                }
+                if (j + 1 < n && !visited[i][j+1]) {
+                    visited[i][j+1] = 1;
+                    if (grid[i][j+1] == 0) track.push(make_pair(i, j + 1));
+                }
+            }
+            depth++;
+        }
+        for (int i = 0; i < buildings.size(); i++){
+            if (!visited[buildings[i].first][buildings[i].second])
+                return false;
+        }
+        return true;
+    }
+    int shortestDistance(vector<vector<int>>& grid) {
+        int m = grid.size();
+        if (m == 0) return -1;
+        int n = grid[0].size();
+        if (n == 0) return -1;
+        int minDis = INT_MAX;
+        vector<pair<int, int>> buildings;
+        vector<vector<int>> values(m, vector<int>(n, INT_MAX));
+        vector<vector<int>> nums(m, vector<int>(n, 0));
+        for (int i = 0; i < m; i++){
+            for (int j = 0; j < n; j++){
+                if (grid[i][j] == 1)
+                    buildings.push_back(make_pair(i, j));
+            }
+        }
+        for (int i = 0; i < buildings.size(); i++){
+            if (!BFS(grid, buildings[i].first, buildings[i].second, m, n, values, nums, buildings))
+                return -1;
+        }
+        
+        for (int i = 0; i < m; i++){
+            for (int j = 0; j < n; j++){
+                if (grid[i][j] == 0 && nums[i][j] == buildings.size()){
+                    minDis = values[i][j] > minDis ? minDis : values[i][j];
+                }
+            }
+        }
+        
+        return minDis == INT_MAX ? -1 : minDis;
+    }
+};
