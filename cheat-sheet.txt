@@ -13,10 +13,35 @@ max_element (nums.begin(), nums.end()) --> Find the iterator for the element whi
 
 or max ({ .. Range of elems .. })
 
+resize a vector -->  
+
+result.resize(size*resultSize);
+
+for (int k = 1; k < size; k++) {
+     copy_n(result.begin(), resultSize, result.begin() + k*(resultSize));
+}
+
+copy_n () --> 
+
 SORT FUNCTION TEMPLATE: 
 
 
 
+
+## ##
+
+DFS TEMPLATE: 
+        for (int i = 0; i < nums.size(); i++) {
+            int local = nums[i];
+            curr.emplace_back(local);
+            nums.erase(nums.begin()+i); 
+            dfs (nums, curr);
+            nums.insert(nums.begin()+i, local);
+            curr.pop_back();
+        }
+
+        return;
+    }
 
 ## ## 
 
