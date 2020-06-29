@@ -1,0 +1,57 @@
+ Permutations
+
+Given a collection of distinct integers, return all possible permutations.
+
+Example:
+
+Input: [1,2,3]
+Output:
+[
+  [1,2,3],
+  [1,3,2],
+  [2,1,3],
+  [2,3,1],
+  [3,1,2],
+  [3,2,1]
+]
+
+class Solution {
+public:
+    
+    vector<vector<int>> result;
+    
+    void dfs (vector<int> & nums, vector<int> & curr) {
+        
+        if (nums.size() == 0) {
+            // for (auto & elem : curr) {
+            //     cout << elem << " ";
+            // }
+            // cout << endl;
+            result.emplace_back(curr);
+            return;
+        }
+        
+        for (int i = 0; i < nums.size(); i++) {
+            int local = nums[i];
+            curr.emplace_back(local);
+            nums.erase(nums.begin()+i); 
+            dfs (nums, curr);
+            nums.insert(nums.begin()+i, local);
+            curr.pop_back();
+        }
+        
+        return;
+    }
+    
+    vector<vector<int>> permute (vector<int>& nums) {
+        
+        if (nums.size() == 0) {
+            return {};
+        }
+        
+        vector<int> curr = {};
+        dfs (nums, curr);
+        
+        return result;
+    }
+};
