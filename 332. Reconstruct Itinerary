@@ -1,0 +1,95 @@
+332. Reconstruct Itinerary
+Medium
+
+Given a list of airline tickets represented by pairs of departure and arrival airports [from, to], reconstruct the itinerary in order. All of the tickets belong to a man who departs from JFK. Thus, the itinerary must begin with JFK.
+
+Note:
+
+    If there are multiple valid itineraries, you should return the itinerary that has the smallest lexical order when read as a single string. For example, the itinerary ["JFK", "LGA"] has a smaller lexical order than ["JFK", "LGB"].
+    All airports are represented by three capital letters (IATA code).
+    You may assume all tickets form at least one valid itinerary.
+    One must use all the tickets once and only once.
+
+Example 1:
+
+Input: [["MUC", "LHR"], ["JFK", "MUC"], ["SFO", "SJC"], ["LHR", "SFO"]]
+Output: ["JFK", "MUC", "LHR", "SFO", "SJC"]
+
+Example 2:
+
+Input: [["JFK","SFO"],["JFK","ATL"],["SFO","ATL"],["ATL","JFK"],["ATL","SFO"]]
+Output: ["JFK","ATL","JFK","SFO","ATL","SFO"]
+Explanation: Another possible reconstruction is ["JFK","SFO","ATL","JFK","ATL","SFO"].
+             But it is larger in lexical order.
+
+Accepted
+155,456
+Submissions
+429,881
+
+class Solution {
+public:
+    bool found=false;
+    
+    void dfs(string s,unordered_map<string,vector<string>> &adj, vector<string> &result,int n)
+    {
+        //when all the airports are visited
+        if(result.size()==n+1)
+        {
+            found=true;
+            return; 
+        }
+           
+        sort(adj[s].begin(),adj[s].end());
+        
+        for(string des : adj[s])
+        {
+            //add the destination to the result and remove it from the graph
+			result.push_back(des);
+            auto i = find(adj[s].begin(),adj[s].end(),des);
+            adj[s].erase(i);
+            dfs(des,adj,result,n);
+            if(found)
+                return;
+			//backtrack
+			//add the destination back to the graph and remove it from result
+            adj[s].insert(adj[s].begin(),des);
+            result.pop_back();           
+        }
+    }
+    
+    
+class Solution {
+private:
+    unordered_map<string, vector<string>> graph;
+    unordered_map<string, int> outgoing;
+    
+    void hierholzer(const string& curr, vector<string>& itinerary) {
+        cout << "curr - " << curr << " ";
+        while (outgoing[curr] > 0) {
+            hierholzer(graph[curr][--outgoing[curr]], itinerary);
+        }
+        
+        itinerary.push_back(curr);
+    }
+    
+public:
+    vector<string> findItinerary(const vector<vector<string>>& tickets) {
+        for (const auto& ticket : tickets) {
+            graph[ticket[0]].push_back(ticket[1]);
+            ++outgoing[ticket[0]];
+        }
+        
+        // Ensure smallest lexical eulerian path is found
+        for (auto& kv : graph) {
+            sort(kv.second.begin(), kv.second.end(), greater<string>());
+        }
+        
+        vector<string> itinerary;
+        hierholzer("JFK", itinerary);
+        
+        reverse(itinerary.begin(), itinerary.end());
+        
+        return itinerary;
+    }
+};
