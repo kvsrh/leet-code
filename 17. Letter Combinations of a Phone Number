@@ -1,0 +1,100 @@
+17. Letter Combinations of a Phone Number
+Medium
+
+Given a string containing digits from 2-9 inclusive, return all possible letter combinations that the number could represent.
+
+A mapping of digit to letters (just like on the telephone buttons) is given below. Note that 1 does not map to any letters.
+
+Example:
+
+Input: "23"
+Output: ["ad", "ae", "af", "bd", "be", "bf", "cd", "ce", "cf"].
+
+Note:
+
+Although the above answer is in lexicographical order, your answer could be in any order you want.
+Accepted
+603,133
+Submissions
+1,303,290
+
+class Solution {
+public:
+    vector<string> letterCombinations(string digits) {
+        
+        // Move backwards from the digits. 
+        
+        int size = digits.size();
+        
+        if (size == 0)
+             return {};
+        
+        unordered_map <int, string> map   ({{'2',"abc"},
+                                            {'3',"def"},
+                                            {'4',"ghi"},
+                                            {'5',"jkl"},
+                                            {'6',"mno"},
+                                            {'7',"pqrs"},
+                                            {'8',"tuv"},
+                                            {'9',"wxyz"}});
+  
+    
+        vector<string> result = {};
+        
+        for (auto & c : map[digits[0]]) {
+            
+            result.emplace_back(string (1,c));
+        }
+        
+        for (int i = 1; i < size; i++) {
+            
+            int resultSize = result.size();
+            int size = map[digits[i]].size();
+            
+            result.resize(size*resultSize);
+            
+            for (int k = 1; k < size; k++) {
+                copy_n(result.begin(), resultSize, result.begin() + k*(resultSize));
+            }
+            
+            int newSize = result.size();
+            
+            for (int k = 0; k < newSize; k++) {
+                int index = k / resultSize;
+                //cout << "digit - " << digits[i] << " index : " << index << endl;
+                result[k] += string(1,map[digits[i]][index]);
+            }
+        }
+        return result;
+    }
+};
+
+
+class Solution {
+public:
+    vector<string> ans;
+    map<char,string> m = {{'2',"abc"},{'3',"def"},{'4',"ghi"},{'5',"jkl"},{'6',"mno"},{'7',"pqrs"},{'8',"tuv"},{'9',"wxyz"}};
+    void comb(string digits,string req,int index)
+    {
+        if (index == digits.size())
+        {
+            ans.push_back(req);
+            return;
+        }
+        
+        for (int j = 0;j<m[digits[index]].size();j++)
+        {
+            req[index] = m[digits[index]][j];
+            comb(digits,req,index+1);
+        }
+    }
+    vector<string> letterCombinations(string digits) {
+        // ios_base::sync_with_stdio(false),cin.tie(0),cout.tie(0);
+        if (digits.size() == 0) return ans;
+        int n = digits.size();
+        string req (n,'\0');
+        comb(digits,req,0);
+        return ans;
+        
+    }
+};
