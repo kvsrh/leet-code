@@ -1,0 +1,68 @@
+https://leetcode.com/problems/strobogrammatic-number-ii/submissions/
+
+247. Strobogrammatic Number II
+Medium
+
+A strobogrammatic number is a number that looks the same when rotated 180 degrees (looked at upside down).
+
+Find all strobogrammatic numbers that are of length = n.
+
+Example:
+
+Input:  n = 2
+Output: ["11","69","88","96"]
+
+Accepted
+74,291
+Submissions
+157,013
+Seen this question in a real interview before?
+Contributor
+LeetCode
+
+
+class Solution {
+public:
+    
+    vector<char> oneSN = {'0','1','8'};
+    vector<string> twoSN = {"00","11","69","88","96"};
+    vector<string> result;
+    
+    void dfs (string curr, int begin, int end) {
+        // cout << "begin - " << begin << " end - " << end << endl;
+        if (begin > end) {
+            result.emplace_back(curr);
+            return;
+        }    
+        
+        if (begin == end) {
+            for (auto & one : oneSN) {
+                    curr[begin] = one;
+                    dfs (curr, begin+1, end-1);
+            }
+        } else {
+            for (auto & two : twoSN) {
+                if (begin == 0 && two == "00") {
+                    continue;
+                }
+                curr[begin] = two[0];
+                curr[end] = two[1];
+                dfs(curr, begin+1, end-1);
+            }
+        }
+        return;   
+    }
+
+    
+    vector<string> findStrobogrammatic(int n) {
+        // 1 0 8 6 9
+        if (n == 0)
+            return {};
+        int begin = 0;
+        int end = n-1;
+        
+        string curr =  string (n, '\0'); // nice trick .. 
+        dfs (curr, begin, end);
+        return result;    
+    }
+};
