@@ -1,0 +1,83 @@
+Permutations II
+
+Given a collection of numbers that might contain duplicates, return all possible unique permutations.
+
+Example:
+
+Input: [1,1,2]
+Output:
+[
+  [1,1,2],
+  [1,2,1],
+  [2,1,1]
+]
+
+class Solution {
+public:
+    vector<vector<int>> result;
+    void dfs(vector<int>& nums, vector<int> & curr) {
+        if (nums.size() == 0) {
+            result.emplace_back(curr);
+            return;
+        }
+        
+        unordered_set<int> set;
+        
+        for (int i = 0; i < nums.size(); i++) {
+            int local = nums[i];
+            if (set.count(local) == 0) {
+                set.insert(local);  
+                curr.emplace_back(local);
+                nums.erase(nums.begin()+i);
+                dfs(nums, curr);
+                curr.pop_back();
+                nums.insert(nums.begin()+i, local);
+            }
+        }
+        return;
+     }
+    
+    vector<vector<int>> permuteUnique(vector<int>& nums) {
+        // do a dfs with a unordered_set of all the values recursed so far.
+        
+        if (nums.size() == 0) {
+            return {};
+        }
+        
+        vector<int> curr = {};
+        dfs(nums, curr);
+        
+        return result;
+        
+    }
+};
+
+class Solution {
+private:
+    vector<vector<int>> permutations;
+    
+    void permute(vector<int>& nums, int start)
+    {
+        if (start == nums.size() - 1) { permutations.push_back(nums); }
+            
+        unordered_set<int> seen;  
+        for (int i = start; i < nums.size(); ++i)
+        {
+            if (seen.find(nums[i]) == seen.end())
+            {
+                swap(nums[start], nums[i]);
+                permute(nums, start+1);
+                swap(nums[start], nums[i]);  // backtrack
+                seen.insert(nums[i]);
+            }
+        }     
+    }
+    
+public:
+    vector<vector<int>> permuteUnique(vector<int>& nums)
+    {
+        if (nums.size() < 2) { return {nums}; }
+        permute(nums, 0);
+        return permutations;
+    }
+};
