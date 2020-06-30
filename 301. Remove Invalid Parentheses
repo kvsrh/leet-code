@@ -1,0 +1,222 @@
+301. Remove Invalid Parentheses
+Hard
+
+Remove the minimum number of invalid parentheses in order to make the input string valid. Return all possible results.
+
+Note: The input string may contain letters other than the parentheses ( and ).
+
+Example 1:
+
+Input: "()())()"
+Output: ["()()()", "(())()"]
+
+Example 2:
+
+Input: "(a)())()"
+Output: ["(a)()()", "(a())()"]
+
+Example 3:
+
+Input: ")("
+Output: [""]
+
+Accepted
+204,009
+Submissions
+475,214
+
+
+class Solution {
+public:
+    
+    unordered_set<string> result;
+    int originalSize;
+    // int maxG = 0;
+    
+    void dfs (string s, string curr, int index, int leftUsed, int rightUsed) {
+        
+        cout << "s - " << s << " curr - " << curr << " index - " << index << "leftUsed - " << leftUsed << " rightUsed - " << rightUsed << endl;
+        
+        if (index == originalSize && leftUsed == 0 && rightUsed == 0) {
+                // if (curr.size() > maxG) {
+                //     result = {};
+                //     result.insert(curr);
+                //     maxG = curr.size();
+                // } else if (curr.size() == maxG) {
+                //     result.insert(curr);
+                // }
+            cout << "curr - " << curr << endl; 
+            result.insert(curr);
+       
+            return;
+        }
+        
+        if (index == originalSize) {
+            return;
+        }
+        
+        char c = s[index];
+        
+        // cout << c << endl;
+        
+        if (c == '(') {
+            dfs (s, curr, index+1, leftUsed, rightUsed);
+            dfs (s, curr+c, index+1, leftUsed-1, rightUsed); 
+        } else if (c == ')') {
+            if (leftUsed > rightUsed) {
+                dfs (s, curr, index+1, leftUsed, rightUsed);
+                dfs (s, curr+c, index+1, leftUsed, rightUsed-1);
+            } else {
+                dfs (s, curr, index+1, leftUsed, rightUsed);
+            }
+        } else {
+            dfs (s, curr+c, index+1, leftUsed, rightUsed);
+            
+        }
+        return; 
+    }
+    
+    vector<string> removeInvalidParentheses(string s) {
+        // Can I do it as the other valid parantheses problem. 
+        // use a mix of backtracking and see if we can get a valid parantheses order. 
+        
+        int orginalSize = s.size();
+
+        int leftUsed=0 , rightUsed=0, l = 0, r = 0;
+        
+		for(int i=0;i<s.size();i++)
+		{
+			if(s[i]=='(') l++;
+			if(s[i]==')') r++;
+			if(r>l) 
+			{
+				rightUsed++;
+				r--;
+			}
+		}
+
+		leftUsed=l-r;
+        // cout << "left - " << l << "right - " << r << endl;
+        string curr = ""; 
+        
+        dfs (s, curr, 0, l, r);
+        
+        return vector<string>(result.begin(), result.end());
+        
+    }
+};
+
+
+// string validateString (string s, char open, char close) {
+    
+//     string result = "";
+//     int balance = 0;
+    
+//     for (auto & c : s) {
+//         if (c == open)
+//             balance++;
+//         if (c == close) {
+//             if (balance == 0) {
+//                 continue;
+//             } else {
+//                 balance--;
+//             }
+//         }   
+//         result += c;   
+//     }
+//     return result;
+// }
+
+// class Solution {
+// public:
+
+// 	vector<string> ans;
+// 	bool check(string& s)
+// 	{
+// 		int l=0, r=0;
+// 		for(int i=0;i<s.size();i++)
+// 		{
+// 			if(s[i]=='(') l++;
+// 			if(s[i]==')') r++;
+// 			if(r>l) return false;
+// 		}
+
+// 		return l==r;
+
+// 	}
+
+
+// 	void dfs(string& s,string cur,int idx, int left, int right )
+// 	{
+        
+// 		if(left==0 && right==0 && idx==s.size())
+// 		{
+//             cout << "curr - " << curr << endl; 
+// 			if(check(cur))
+// 			{
+// 				ans.push_back(cur);
+// 			}
+
+// 			return;
+// 		}
+
+// 		if(idx>=s.size())
+// 		{
+// 			return;
+// 		}
+
+// 		if(right>0)
+// 		{
+// 			if(s[idx]==')')
+// 			{
+// 				dfs(s,cur,idx+1,left,right-1);
+// 				dfs(s,cur+s[idx],idx+1,left,right);
+// 			}
+// 			else
+// 			{
+// 				dfs(s,cur+s[idx],idx+1,left,right);
+// 			}
+// 		}
+
+// 		else
+// 		{
+// 			if(s[idx]=='(')
+// 			{
+// 				dfs(s,cur,idx+1,left-1,right);
+// 				dfs(s,cur+s[idx],idx+1,left,right);
+// 			}
+// 			else
+// 			{
+// 				dfs(s,cur+s[idx],idx+1,left,right);
+// 			}
+// 		}
+
+// 	   // }
+
+
+// 	}
+
+// 	vector<string> removeInvalidParentheses(string s) {
+// 		int left=0 , right=0, l=0, r=0;
+// 		for(int i=0;i<s.size();i++)
+// 		{
+// 			if(s[i]=='(') l++;
+// 			if(s[i]==')') r++;
+// 			if(r>l) 
+// 			{
+// 				right++;
+// 				r--;
+// 			}
+// 		}
+
+// 		left=l-r;
+// 		string cur="";
+// 		dfs(s,cur,0,left,right);
+
+// 		unordered_set<string> a(ans.begin(),ans.end());
+// 		vector<string> res(a.begin(),a.end());
+// 		return res;
+
+
+// 	}
+// };
