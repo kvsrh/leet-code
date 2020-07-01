@@ -1,0 +1,70 @@
+63. Unique Paths II
+Medium
+
+A robot is located at the top-left corner of a m x n grid (marked 'Start' in the diagram below).
+
+The robot can only move either down or right at any point in time. The robot is trying to reach the bottom-right corner of the grid (marked 'Finish' in the diagram below).
+
+Now consider if some obstacles are added to the grids. How many unique paths would there be?
+
+An obstacle and empty space is marked as 1 and 0 respectively in the grid.
+
+Note: m and n will be at most 100.
+
+Example 1:
+
+Input:
+[
+  [0,0,0],
+  [0,1,0],
+  [0,0,0]
+]
+Output: 2
+Explanation:
+There is one obstacle in the middle of the 3x3 grid above.
+There are two ways to reach the bottom-right corner:
+1. Right -> Right -> Down -> Down
+2. Down -> Down -> Right -> Right
+
+// class Solution {
+// public:
+//     int uniquePaths(int m, int n) {
+//         // dp problem. 
+        
+//         vector<vector<int>> dp (m , vector<int>(n,0));
+        
+//         for (int i = 0; i < m; i++) {
+//             for (int j = 0; j < n; j++) {
+//                 if (i == 0 || j == 0) {
+//                     dp[i][j] = 1;
+//                 } else {
+//                     dp[i][j] = dp[i-1][j] + dp[i][j-1];
+//                 }
+//             }
+//         }
+//         return dp[m-1][n-1];
+//     }
+// };
+
+// Easy reduction to 1-d array. 
+
+class Solution {
+    public:
+    int uniquePaths (int m, int n) {
+        vector<vector<int>> dp (2, vector<int>(n,1));
+        
+        int i = 1;
+        while (i < m) {
+            int curr = i % 2;
+            for (int j = 1; j < n; j++) {
+                if (curr == 1) 
+                    dp[curr][j] = dp[curr][j-1] + dp[curr-1][j]; 
+                else {
+                    dp[curr][j] = dp[curr][j-1] + dp[curr+1][j];
+                }
+            }
+            i++;
+        }
+        return dp[(m-1)%2][n-1];
+    }
+};
