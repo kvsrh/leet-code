@@ -1,0 +1,86 @@
+161. One Edit Distance
+
+https://leetcode.com/problems/one-edit-distance/
+
+Medium
+
+Given two strings s and t, determine if they are both one edit distance apart.
+
+Note: 
+
+There are 3 possiblities to satisify one edit distance apart:
+
+    Insert a character into s to get t
+    Delete a character from s to get t
+    Replace a character of s to get t
+
+Example 1:
+
+Input: s = "ab", t = "acb"
+Output: true
+Explanation: We can insert 'c' into s to get t.
+
+Example 2:
+
+Input: s = "cab", t = "ad"
+Output: false
+Explanation: We cannot get t from s by only one step.
+
+Example 3:
+
+Input: s = "1203", t = "1213"
+Output: true
+Explanation: We can replace '0' with '1' to get t.
+
+Accepted
+108,386
+Submissions
+336,171
+
+class Solution {
+public:
+    bool isOneEditDistance(string s, string t) {
+        int sSize = s.size();
+        int tSize = t.size();
+        
+        if (s == t) return false;
+        
+        if (sSize > tSize) {
+            return isOneEditDistance(t,s);
+        }
+        
+        if (tSize - sSize > 1) 
+            return false;
+        
+        if (tSize == 1 && sSize == 0)
+            return true;
+        
+        int sIndex = 0;
+        int tIndex = 0;
+        
+        int edit = 0;
+        
+        while (tIndex < tSize && edit < 2) {
+            if (s[sIndex] == t[tIndex]) {
+                sIndex++; tIndex++;
+            } else {
+                edit++;
+                if (sSize == tSize) {
+                    sIndex++; tIndex++;
+                } else {
+                 tIndex++;
+                }
+            }
+        }
+        
+        return edit == 2 ? false : true;
+    }
+};
+
+// The crux is: 
+
+// If the input strings are of the same size, you only have the option of replacing a character 
+// in a string with the character from the other string. 
+
+// If the input strings are of unequal length then we can remove the non-equal character from the
+// longer string and therefore we increment only the index on the long string.
