@@ -1,0 +1,75 @@
+https://leetcode.com/problems/intersection-of-two-arrays/
+
+349. Intersection of Two Arrays
+Easy
+
+Given two arrays, write a function to compute their intersection.
+
+Example 1:
+
+Input: nums1 = [1,2,2,1], nums2 = [2,2]
+Output: [2]
+
+Example 2:
+
+Input: nums1 = [4,9,5], nums2 = [9,4,9,8,4]
+Output: [9,4]
+
+Note:
+
+    Each element in the result must be unique.
+    The result can be in any order.
+
+ 
+Accepted
+360,453
+Submissions
+582,766
+
+class Solution {
+public:
+    
+    bool bs (int elem, vector<int> & nums) {
+        int left = 0;
+        int right = nums.size()-1;
+        
+        while (left <= right) {
+            int mid = left + (right-left)/2;
+            // cout << "Recurse - " << elem << " " << nums[mid] << " " << left << " " << right << " mid : " << mid << endl;
+            if (elem == nums[mid]) {
+                return true;
+            } else if (elem > nums[mid]) {
+                left = mid+1;
+            } else {
+                right = mid-1;
+            }
+        }
+        // cout << "Done - " << elem << " " << left << " " << right << " " << endl;
+        return false;
+    }
+    
+    
+    vector<int> intersection(vector<int>& nums1, vector<int>& nums2) {
+        unordered_set <int> set1 (nums1.begin(), nums1.end());
+        unordered_set <int> set2 (nums2.begin(), nums2.end());
+
+        
+        nums1 = {}; nums2 = {};
+        
+        vector<int> nums1U(set1.begin(), set1.end());
+        vector<int> nums2U(set2.begin(), set2.end());
+        
+        sort(nums1U.begin(), nums1U.end());
+        sort(nums2U.begin(), nums2U.end());
+        
+        vector<int> result = {}; 
+        
+        for (auto & elem : nums1U) {
+            if (bs(elem, nums2U)) {
+               // cout << "elem - " << elem <<  " ";
+               result.emplace_back(elem);
+            }
+        }
+        return result;
+    }
+};
