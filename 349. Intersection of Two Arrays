@@ -26,50 +26,98 @@ Accepted
 Submissions
 582,766
 
-class Solution {
-public:
+// class Solution {
+// public:
     
-    bool bs (int elem, vector<int> & nums) {
-        int left = 0;
-        int right = nums.size()-1;
+//     bool bs (int elem, vector<int> & nums) {
+//         int left = 0;
+//         int right = nums.size()-1;
         
-        while (left <= right) {
-            int mid = left + (right-left)/2;
-            // cout << "Recurse - " << elem << " " << nums[mid] << " " << left << " " << right << " mid : " << mid << endl;
-            if (elem == nums[mid]) {
-                return true;
-            } else if (elem > nums[mid]) {
-                left = mid+1;
-            } else {
-                right = mid-1;
-            }
-        }
-        // cout << "Done - " << elem << " " << left << " " << right << " " << endl;
-        return false;
-    }
+//         while (left <= right) {
+//             int mid = left + (right-left)/2;
+//             // cout << "Recurse - " << elem << " " << nums[mid] << " " << left << " " << right << " mid : " << mid << endl;
+//             if (elem == nums[mid]) {
+//                 return true;
+//             } else if (elem > nums[mid]) {
+//                 left = mid+1;
+//             } else {
+//                 right = mid-1;
+//             }
+//         }
+//         // cout << "Done - " << elem << " " << left << " " << right << " " << endl;
+//         return false;
+//     }
     
     
-    vector<int> intersection(vector<int>& nums1, vector<int>& nums2) {
-        unordered_set <int> set1 (nums1.begin(), nums1.end());
-        unordered_set <int> set2 (nums2.begin(), nums2.end());
+//     vector<int> intersection(vector<int>& nums1, vector<int>& nums2) {
+//         unordered_set <int> set1 (nums1.begin(), nums1.end());
+//         unordered_set <int> set2 (nums2.begin(), nums2.end());
 
         
-        nums1 = {}; nums2 = {};
+//         nums1 = {}; nums2 = {};
         
-        vector<int> nums1U(set1.begin(), set1.end());
-        vector<int> nums2U(set2.begin(), set2.end());
+//         vector<int> nums1U(set1.begin(), set1.end());
+//         vector<int> nums2U(set2.begin(), set2.end());
         
-        sort(nums1U.begin(), nums1U.end());
-        sort(nums2U.begin(), nums2U.end());
+//         sort(nums1U.begin(), nums1U.end());
+//         sort(nums2U.begin(), nums2U.end());
         
-        vector<int> result = {}; 
+//         vector<int> result = {}; 
         
-        for (auto & elem : nums1U) {
-            if (bs(elem, nums2U)) {
-               // cout << "elem - " << elem <<  " ";
-               result.emplace_back(elem);
-            }
-        }
-        return result;
-    }
+//         for (auto & elem : nums1U) {
+//             if (bs(elem, nums2U)) {
+//                // cout << "elem - " << elem <<  " ";
+//                result.emplace_back(elem);
+//             }
+//         }
+//         return result;
+//     }
+// };
+
+class Solution {
+  public:
+     vector<int> intersection(vector<int>& nums1, vector<int>& nums2) {
+         
+         sort(nums1.begin(), nums1.end());
+         sort(nums2.begin(), nums2.end());
+         
+         vector<int> result; 
+         
+         int size1 = nums1.size();
+         int size2 = nums2.size();
+         
+         int index1 = 0;
+         int index2 = 0;
+         
+         while (index1 < size1 && index2 < size2) {
+             if (nums1[index1] == nums2[index2]) {
+                 result.emplace_back(nums1[index1]);
+                 int num = nums1[index1];
+                 do {
+                     index1++;
+                 } while (index1 < size1 && nums1[index1] == num);
+                 
+                 do {
+                     index2++;
+                 } while (index2 < size2 && nums2[index2] == num);
+                 
+             } else if (nums1[index1] > nums2[index2]) {
+                 // increment index2 until index2 becomes equal to
+                 // or just greater than index1.
+                 do {
+                     index2++;
+                 } while (index2 < size2 && nums2[index2] < nums1[index1]);
+
+             } else {
+                 
+                 // index1 < index2 .. increment index1 until it is equal to
+                 // index2 or just great than index2.
+                 do {
+                     index1++;
+                 } while (index1 < size1 && nums1[index1] < nums2[index2]);
+             }
+         }
+        
+         return result;
+     }
 };
