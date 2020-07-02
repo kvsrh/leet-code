@@ -15,10 +15,10 @@ or max ({ .. Range of elems .. })
 
 resize a vector -->  
 
-result.resize(size*resultSize);
+result.resize(size*resultSize); --> resizes the vector by (size);
 
 for (int k = 1; k < size; k++) {
-     copy_n(result.begin(), resultSize, result.begin() + k*(resultSize));
+     copy_n(result.begin(), resultSize, result.begin() + k*(resultSize)); --> copy_n (from, size, to);
 }
 
 copy_n () --> 
