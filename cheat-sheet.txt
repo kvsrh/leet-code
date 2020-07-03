@@ -155,3 +155,6 @@ int MOD = 10e9+7 // 1000,000,000 + 7.
 #define MOD 1000000007
 # ~~ #
 
+# UNORDERED_MAP # #HASH#
+
+unordered_map : delete - erase()
