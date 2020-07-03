@@ -1,0 +1,255 @@
+468. Validate IP Address
+Medium
+
+Write a function to check whether an input string is a valid IPv4 address or IPv6 address or neither.
+
+IPv4 addresses are canonically represented in dot-decimal notation, which consists of four decimal numbers, each ranging from 0 to 255, separated by dots ("."), e.g.,172.16.254.1;
+
+Besides, leading zeros in the IPv4 is invalid. For example, the address 172.16.254.01 is invalid.
+
+IPv6 addresses are represented as eight groups of four hexadecimal digits, each group representing 16 bits. The groups are separated by colons (":"). For example, the address 2001:0db8:85a3:0000:0000:8a2e:0370:7334 is a valid one. Also, we could omit some leading zeros among four hexadecimal digits and some low-case characters in the address to upper-case ones, so 2001:db8:85a3:0:0:8A2E:0370:7334 is also a valid IPv6 address(Omit leading zeros and using upper cases).
+
+However, we don't replace a consecutive group of zero value with a single empty group using two consecutive colons (::) to pursue simplicity. For example, 2001:0db8:85a3::8A2E:0370:7334 is an invalid IPv6 address.
+
+Besides, extra leading zeros in the IPv6 is also invalid. For example, the address 02001:0db8:85a3:0000:0000:8a2e:0370:7334 is invalid.
+
+ 
+
+Example 1:
+
+Input: IP = "172.16.254.1"
+Output: "IPv4"
+Explanation: This is a valid IPv4 address, return "IPv4".
+
+Example 2:
+
+Input: IP = "2001:0db8:85a3:0:0:8A2E:0370:7334"
+Output: "IPv6"
+Explanation: This is a valid IPv6 address, return "IPv6".
+
+Example 3:
+
+Input: IP = "256.256.256.256"
+Output: "Neither"
+Explanation: This is neither a IPv4 address nor a IPv6 address.
+
+ 
+
+Constraints:
+
+    IP consists only of English letters, digits and the characters "." and ":".
+
+#MY SOLUTION WITH two pointer method#
+
+class Solution {
+public:
+    bool validateOctet(string IP, int begin, int end) {
+        int oct = atoi(IP.substr(begin, end-begin).c_str()); // 
+        
+        if ((oct >= 0 && oct <= 9 && end-begin == 1) ||
+            (oct >= 10 && oct <= 99 && end-begin == 2) ||
+            (oct >= 100 && oct <= 255 && end-begin == 3)) {
+            return true;
+        }
+                       
+        return false;         
+    }
+    string validIPAddress(string IP) {
+        // Consider all the conditions. 
+        // the octet values should be between 0 and 255.
+        // if octet val >= 0 and val <= 9 .. digits should be 1.
+        // if octet val >= 10 and val <= 99 .. digits should be 2.
+        // if octet val >= 100 and val <= 255 .. digits should be 3.
+        // the number of octets should be 4. 
+        
+        int left = 0;
+        int right = 0;
+        
+        int size = IP.size();
+        int octetCount = 0;
+        
+        while (octetCount < 4) {
+            if (right >= size) {
+                break;
+            } 
+            
+            while (right < size) {
+                if (IP[right] != '.') {
+                    right++;
+                } else {
+                    break;
+                }
+            }
+            
+            // right stops at where we have '.'
+            if (!validateOctet(IP, left, right)) // make the appropriate check. 
+                return "Neither";
+            else {
+                octetCount++;
+            }
+            
+            // Move to next octet.
+            
+            left = right+1; right = right+1;
+        }
+        
+        // octets less than 4 .. not a full IP. 
+        
+        if (octetCount < 4) {
+            return "Neither";
+        } else {
+            return "IPv4";
+        }
+    }
+};
+
+#NICE SOLUTION USING stringstream#
+
+Lots of edge cases for this problem, try to think in terms of blocks or groups surrounded by dot(.) or colon(:) and consider the length of IP address as a means to differentiate along with the appearance of dot and colon for IPV4 and IPV6 respectively.
+
+Regex solutions are better as they can be applied in different scenarios along with this problem.
+
+keep track of edge cases as you read.
+Solution using stringstream in c++.
+
+class Solution {
+public:
+    
+    bool isIPV4(string IP)
+    {
+        if(IP.length() > 15 || IP.length() < 7)
+            return false;
+        
+        int dot = 0;
+        
+        for(int i=0;i<IP.length();i++)
+        {
+            if(IP[i] == '.')
+                dot++;
+        }
+        
+        if(dot != 3)
+            return false;
+        
+        stringstream ss(IP);
+        
+        string temp;
+        
+        while(getline(ss,temp,'.'))
+        {
+            
+            if(temp.length() == 0)
+                return false;
+            
+            if(temp.length() > 3)
+                return false;
+            else 
+            {
+                if(temp[0] == '0' && temp.length() > 1)
+                    return false;
+                else
+                {
+                    for(int i=0;i<temp.length();i++)
+                    {
+                        if((temp[i] >= 'a' && temp[i] <= 'z') || (temp[i] >= 'A' && temp[i] <= 'Z'))
+                            return false;
+                    }
+                    
+                    if(stoi(temp) < 0 || stoi(temp) > 255)
+                        return false;
+                }
+            }
+        
+        }
+        
+        return true;
+    }
+    
+    
+    bool isIPV6(string IP)
+    {
+        
+        if(IP.length() <= 15 || IP.length() > 39)
+        {
+            int colon = 0;
+            for(int i=0;i<IP.length();i++)
+            {
+                if(IP[i] == ':')
+                    colon++;
+            }
+
+            if(colon != 7 )
+                return false;    
+        }
+        
+        int colon = 0;
+        for(int i=0;i<IP.length();i++)
+        {
+            if(IP[i] == ':')
+                colon++;
+        }
+        
+        if(colon != 7 )
+            return false;
+        
+        if(IP.back() == ':')
+            return false;
+        
+        stringstream ss(IP);
+        
+        string temp;
+        
+        while(getline(ss,temp,':') )
+        {
+            if(temp.length() < 1 || temp.length() > 4)
+                return false;
+            else
+            {
+                for(int i=0;i<temp.length();i++)
+                {
+                    if(temp[i] >= '0' && temp[i] <= '9')
+                         ;
+                    else if(temp[i] >= 'a' && temp[i] <= 'f')
+                         ;
+                    else if(temp[i] >= 'A' && temp[i] <= 'F')
+                         ;
+                    else
+                        return false;
+                }
+            }
+        }
+
+        return true;
+        
+    }
+    string validIPAddress(string IP) {
+        
+        bool ipv4 = isIPV4(IP);
+        bool ipv6 = isIPV6(IP);
+        
+        if(ipv4 && !ipv6)
+            return "IPv4";
+        else if(!ipv4 && ipv6)
+            return "IPv6";
+        else
+            return "Neither";
+    }
+};
+
+Comments: 0
+BestMost VotesNewest to OldestOldest to Newest
+Copyright © 2020 LeetCode
+
+    Help Center
+    Jobs
+    Bug Bounty
+    Terms
+    Privacy Policy
+
+United StatesUnited States
+
+Type here...(Markdown is enabled)
+
+​
+
+Saved
