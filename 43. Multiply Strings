@@ -1,0 +1,118 @@
+43. Multiply Strings
+Medium
+
+Given two non-negative integers num1 and num2 represented as strings, return the product of num1 and num2, also represented as a string.
+
+Example 1:
+
+Input: num1 = "2", num2 = "3"
+Output: "6"
+
+Example 2:
+
+Input: num1 = "123", num2 = "456"
+Output: "56088"
+
+Note:
+
+    The length of both num1 and num2 is < 110.
+    Both num1 and num2 contain only digits 0-9.
+    Both num1 and num2 do not contain any leading zero, except the number 0 itself.
+    You must not use any built-in BigInteger library or convert the inputs to integer directly.
+
+Accepted
+291,407
+Submissions
+867,768
+
+class Solution {
+public:
+    string ans;
+    
+    void addToAns(string & s) { // add string s to ans. Work in reverse. 
+        int sizeS = s.size();
+        int sizeA = ans.size();
+        
+        reverse (ans.begin(), ans.end());
+        reverse(s.begin(), s.end());
+        
+        int iA = 0, iS = 0;
+        int carry = 0;
+        
+        string ansL = "";
+        
+        while (iA < sizeA || iS < sizeS) {
+            int dA = iA < sizeA ? ans[iA]-'0' : 0;
+            int dS = iS < sizeS ? s[iS]-'0' : 0;
+            
+            int sum = dA + dS + carry;
+            carry = sum/10;
+            char ac = '0'+sum%10;
+            ansL += ac;
+            iA++; iS++;
+        }
+        
+        // add left over carry to ans.
+        if (carry > 0) {
+            char cc = '0'+carry;
+            ansL = ansL + cc;
+        }
+        
+        reverse (ansL.begin(), ansL.end());
+        
+        ans = ansL;
+    }
+    
+    void multiplyDigitAndAdd (string & nums, int digit, int k) { // work in reverse. 
+        int carry = 0;
+        string result = "";
+        
+        for (auto & num : nums) {
+            int r = (num-'0')*digit + carry;
+            result += (r%10+'0');
+            carry = r/10;
+        }
+        
+        if (carry > 0) {
+            char cc = '0'+carry;
+            result = result + cc;
+        }
+        
+        
+        reverse (result.begin(), result.end());
+        for (int i = 0; i < k; i++) {
+            result += '0';    
+        }
+        // cout << result << endl;
+        addToAns(result);
+    }
+    
+    string multiply(string nums1, string nums2) {
+        // handle unequal length strings?? 
+        // will the numbers be negative? 
+        // will the numbers be positive integers? 
+        // string this with the add string solution. 
+        
+        if (nums1 == "0" || nums2 == "0")
+            return "0";
+        
+        int size1 = nums1.size();
+        int size2 = nums2.size();
+        
+        if (size1 < size2) {
+            return multiply(nums2, nums1);
+        }
+        
+        reverse (nums1.begin(), nums1.end());
+        reverse (nums2.begin(), nums2.end());
+
+        
+        for (int i = 0; i < size2; i++) {
+            multiplyDigitAndAdd (nums1, nums2[i]-'0', i);
+        }
+        
+        return ans;
+        
+        
+    }
+};
