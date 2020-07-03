@@ -41,6 +41,8 @@ Constraints:
 
 #MY SOLUTION WITH two pointer method#
 
+Using regex with c++.
+
 class Solution {
 public:
     bool validateOctet(string IP, int begin, int end) {
