@@ -1,0 +1,60 @@
+340. Longest Substring with At Most K Distinct Characters
+Hard
+
+Given a string, find the length of the longest substring T that contains at most k distinct characters.
+
+Example 1:
+
+Input: s = "eceba", k = 2
+Output: 3
+Explanation: T is "ece" which its length is 3.
+
+Example 2:
+
+Input: s = "aa", k = 1
+Output: 2
+Explanation: T is "aa" which its length is 2.
+
+class Solution {
+public:
+    int lengthOfLongestSubstringKDistinct(string s, int k) {
+        // outer loop stretch right. Inner loop shrink left.
+        
+        int size = s.size();
+        
+        if (size == 0)
+            return 0;
+    
+        int left = 0;
+        int right = 0;
+        
+        int maxL = 0;
+
+        unordered_map <char, int> map;
+        
+        for (right = 0; right < size;  right++) {
+            if (map.find(s[right]) != map.end()) {
+                map[s[right]]++;
+            } else {
+                map[s[right]] = 1;
+            }
+            
+            if (map.size() > k) {
+                // Shrink the left.
+                while (left < right && map.size() > k) {
+                      if (map[s[left]] == 1) {
+                         map.erase(s[left]);  
+                      } else {
+                         map[s[left]]--;
+                      }
+                     left++;
+                }
+            }
+            // cout << "left - " << left << " right - " << right << endl;
+             if (map.size() <= k) {
+                   maxL = max(right-left+1, maxL);
+            }
+        }
+        return maxL; 
+    }
+};
