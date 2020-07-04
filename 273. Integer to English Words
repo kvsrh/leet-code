@@ -1,0 +1,142 @@
+273. Integer to English Words
+Hard
+
+Convert a non-negative integer to its english words representation. Given input is guaranteed to be less than 231 - 1.
+
+Example 1:
+
+Input: 123
+Output: "One Hundred Twenty Three"
+
+Example 2:
+
+Input: 12345
+Output: "Twelve Thousand Three Hundred Forty Five"
+
+Example 3:
+
+Input: 1234567
+Output: "One Million Two Hundred Thirty Four Thousand Five Hundred Sixty Seven"
+
+Example 4:
+
+Input: 1234567891
+Output: "One Billion Two Hundred Thirty Four Million Five Hundred Sixty Seven Thousand Eight Hundred Ninety One"
+
+Accepted
+171,573
+Submissions
+640,753
+
+class Solution {
+    public:
+    
+    vector<string> ones = {"", "One", "Two", "Three", "Four",
+                           "Five", "Six", "Seven", "Eight", "Nine"};
+    vector<string> tens = {"", "", "Twenty", "Thirty", "Forty", "Fifty",
+                           "Sixty", "Seventy", "Eighty", "Ninety"};
+    vector<string> specialTens = {"Ten", "Eleven", "Twelve", "Thirteen", "Fourteen", "Fifteen",
+                                  "Sixteen", "Seventeen", "Eighteen", "Nineteen"};
+    vector<string> position = {"", "Thousand", "Million", "Billion"};
+    
+    void toOnes (int tens, int num, string & result) {
+        // cout << "O : " << tens << " " << num << endl;
+        if (tens == 1) {
+            return;
+        } else {
+            if (num == 0) {
+                return;
+            } else {
+                result = ones[num] + (result.size() == 0 ? "" : " ") + result;
+            }
+        }
+        return;
+    }
+    
+    void toTens (int ones, int num, string & result) {
+        // cout << "T : " << ones << " " << num << endl;
+        if (num == 0) {
+            return;
+        } else if (num == 1) {
+            result = specialTens[ones] + (result.size() == 0 ? "" : " ") + result;
+        } else {
+            result = tens[num] + (result.size() == 0 ? "" : " ") + result;
+        }
+        return;
+    }
+    
+    void toHundreds (int num, string & result) {
+        // cout << "H : " << num << endl;
+        if (num == 0) {
+            return;
+        } else {
+            result = ones[num] + " " + "Hundred" + (result.size() == 0 ? "" : " ") + result;
+        }
+        return;
+    }
+    
+    void toThousand (int num, string & result, int index) {
+        if (num == 0)
+            return;
+        
+        int ones = num%10; 
+        num = num/10;
+        int tens = num%10;
+        num = num/10;
+        int hundreds = num%10;
+        
+        result = position[index] + (result.size() == 0 ? "" : " ") + result; 
+        
+        toOnes(tens, ones, result);
+        toTens(ones, tens, result);
+        toHundreds(hundreds, result);
+
+        return;
+    }
+    
+    string numberToWords(int num) {
+        
+        if (num == 0) {
+            return "Zero";
+        }
+        
+        int index = 0; // keeps tracks of millions, billions, hundreds .. 
+        string result = "";
+        
+        
+        while (num > 0) {
+            int curr = num%1000;
+            toThousand (curr, result, index);
+            num = num/1000;
+            index++; 
+        }
+        int i = result.size()-1;
+
+        return result;
+        
+    }
+};
+
+// class Solution { 
+// public:
+//     string numberToWords(int num) {
+//         if(num == 0) return "Zero";
+//         vector<string>thousands({"", " Thousand", " Million", " Billion"});
+//         string res = "";
+//         int i = 0;
+//         while(num){
+//             if(num % 1000) res = helper(num % 1000) + thousands[i] + (res.size() ? " " : "") + res;
+//             num /= 1000;
+//             i++;
+//         }
+//         return res;
+//     }
+    
+//     string helper(int num){
+//         vector<string>lessThan20({"", "One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine","Ten", "Eleven", "Twelve", "Thirteen", "Fourteen", "Fifteen", "Sixteen", "Seventeen", "Eighteen", "Nineteen"});
+//         vector<string>tens({"", "", "Twenty", "Thirty", "Forty", "Fifty", "Sixty", "Seventy", "Eighty", "Ninety"});
+//         if(num >= 100) return lessThan20[num / 100] + " Hundred" + (num % 100 ? " ": "") + helper(num % 100);
+//         else if(num >= 20) return tens[num / 10] + (num % 10 ? " ": "") + helper(num % 10);
+//         else return lessThan20[num];
+//     }
+// };
