@@ -1,0 +1,84 @@
+/*
+// Definition for a Node.
+class Node {
+public:
+    int val;
+    vector<Node*> neighbors;
+    
+    Node() {
+        val = 0;
+        neighbors = vector<Node*>();
+    }
+    
+    Node(int _val) {
+        val = _val;
+        neighbors = vector<Node*>();
+    }
+    
+    Node(int _val, vector<Node*> _neighbors) {
+        val = _val;
+        neighbors = _neighbors;
+    }
+};
+*/
+
+// class Solution {
+// public:
+//     unordered_map <Node *, Node *> map;
+//     Node* cloneGraph(Node* node) {
+        
+//         // The basic problem is to check if the nodes is already created or not. 
+//         // Easy solution is to create all nodes up front and then work on the 
+//         // list. How to keep a list of the new nodes .. maybe keep a map for all 
+//         // allocated nodes and use it to find the nodes. 
+        
+//         if (node == NULL)
+//             return NULL;
+        
+//         if (map.find(node) != map.end()) {
+//             return map[node];
+//         }
+        
+//         Node * cloneNode = new Node (node->val, {});
+        
+//         map[node] = cloneNode;
+        
+//         for (auto & next : node->neighbors) {
+//             cloneNode->neighbors.emplace_back(cloneGraph(next));
+//         }
+         
+//         return cloneNode;
+//     }
+// };
+
+class Solution {
+    public: 
+    Node * cloneGraph (Node * node) {
+        if (node == NULL)
+            return NULL;
+    
+        unordered_map <Node*, Node*> map;
+        
+        queue<Node*> q;
+        
+        Node * cloneNode = new Node (node->val, {});
+        map[node] = cloneNode;
+        
+        q.push(node);
+        
+        while (!q.empty()) {
+            auto curr = q.front();
+            q.pop();
+            auto cloneCurr = map[curr];
+            
+            for (auto & next : curr->neighbors) {
+                if (map.find(next) == map.end()) {
+                    map[next] = new Node (next->val, {});
+                    q.push(next);           
+                }
+                cloneCurr->neighbors.emplace_back(map[next]);
+            }
+        }
+        return cloneNode;
+    }
+};
