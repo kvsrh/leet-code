@@ -1,0 +1,177 @@
+269. Alien Dictionary
+Hard
+
+There is a new alien language which uses the latin alphabet. However, the order among letters are unknown to you. You receive a list of non-empty words from the dictionary, where words are sorted lexicographically by the rules of this new language. Derive the order of letters in this language.
+
+Example 1:
+
+Input:
+[
+  "wrt",
+  "wrf",
+  "er",
+  "ett",
+  "rftt"
+]
+
+Output: "wertf"
+
+Example 2:
+
+Input:
+[
+  "z",
+  "x"
+]
+
+Output: "zx"
+
+Example 3:
+
+Input:
+[
+  "z",
+  "x",
+  "z"
+] 
+
+Output: "" 
+
+Explanation: The order is invalid, so return "".
+
+Note:
+
+    You may assume all letters are in lowercase.
+    If the order is invalid, return an empty string.
+    There may be multiple valid order of letters, return any one of them is fine.
+
+class Solution {
+public:
+    bool exactPrefix(string word1, string word2) {
+        // Check if word2 is an exact prefix of word1
+        // word1 is the larger word.
+        int size2 = word2.size();
+        int i = 0;
+        while (i < size2) {
+            if (word1[i] != word2[i]) {
+                return false;
+            } else {
+                i++;
+            }
+        }
+        return true;
+    }
+    string alienOrder(vector<string>& words) {
+        // Generate a graph with the following input. 
+        // t->f 
+        // r->t
+        // w->e
+        // e->r
+        
+        // z->x
+        // x->z
+        
+        // And then run the topological sort. 
+        
+        // [
+        //   "wrt",
+        //   "wrf",
+        //   "er",
+        //   "ett",
+        //   "rftt"
+        // ]
+        
+        // keep a list of adjacencies. 
+        // Keep a count of inbound adjacenies on each node.
+        
+        // Make sure if in a input lower word is a prefix of a higher word. 
+        // We need to process only two words at a time. 
+        unordered_map <char, unordered_set<char>> map; // can be optimized if input character-set is limited. 
+        unordered_map <char, int> inCount; 
+        
+        for (auto & word : words) {
+            for (auto & c : word) {
+                if (map.find(c) == map.end()) {
+                    map[c] = {};
+                    inCount[c] = 0;
+                }
+            }
+        }
+        
+        int size = words.size();
+        
+        for (int i = 0; i < size-1; i++) {
+            string word1 = words[i];
+            string word2 = words[i+1];
+             
+            if (word2.size() < word1.size() && exactPrefix(word1, word2)) {
+                return "";
+            }
+            
+            for (int i = 0; i < min (word1.size(), word2.size()); i++) {
+                if (word1[i] != word2[i]) {
+                    if (map[word1[i]].count(word2[i]) == 0) {
+                        map[word1[i]].insert(word2[i]); 
+                        inCount[word2[i]]++;
+                    }
+                    break;
+                }
+            }
+        }
+        
+        // for (auto & elem : map) {
+        //     cout << elem.first << ":" << " ";
+        //     for (auto & adj : elem.second) {
+        //         cout << adj << " ";
+        //     }
+        //     cout << endl;
+        // }
+        
+        // Run topological sort on this input .. 
+        
+        // first find the nodes with zero incidence. 
+        
+        queue<char> q;
+        
+        
+        for (auto & elem : inCount) {
+            // cout << elem.first << " " << elem.second << endl;
+            if (elem.second == 0) {
+                q.push(elem.first);
+            }
+        }
+        
+        // Run bfs on these nodes. As they are added remove adjacencies from the next nodes,
+        // and decrease inCount. 
+        
+        string result = "";
+        
+        while (!q.empty()) {
+
+            int size = q.size();
+            
+            for (int i = 0; i < size; i++) {
+                auto & curr = q.front();
+                q.pop();
+                result += curr;
+                // for (auto & next : map[curr]) {
+                //     inCount[next]--;
+                //     if (inCount[next] == 0) {
+                //         q.push(next);
+                //     }
+                //     //map[curr].erase(next);
+                // }
+                for (auto & next : map[curr]) {
+                    inCount[next]--;
+                    if (inCount[next] == 0) {
+                        q.push(next);
+                    }
+                    //map[curr].erase(next);
+                }
+            }
+        }
+        
+        
+        return result.size() < inCount.size() ? "" : result;
+    } 
+};
