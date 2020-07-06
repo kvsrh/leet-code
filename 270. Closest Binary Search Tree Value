@@ -1,0 +1,58 @@
+270. Closest Binary Search Tree Value
+Easy
+
+Given a non-empty binary search tree and a target value, find the value in the BST that is closest to the target.
+
+Note:
+
+    Given target value is a floating point.
+    You are guaranteed to have only one unique value in the BST that is closest to the target.
+
+Example:
+
+Input: root = [4,2,5,1,3], target = 3.714286
+
+    4
+   / \
+  2   5
+ / \
+1   3
+
+Output: 4
+
+Accepted
+134,680
+Submissions
+282,341
+
+class Solution {
+public:
+    int result;
+    double minDiff;
+    int closestValue(TreeNode* root, double target) {
+        // Compute the difference between a target and curr value. 
+        TreeNode * curr = root;
+        result = curr->val;
+        minDiff = abs(target-curr->val);
+        while (curr != NULL) {
+            // cout << "curr - " << curr->val << endl;
+            double diff = abs(target-curr->val);
+            // cout << "diff - " << diff << endl;
+            if (diff < minDiff) {
+                result = curr->val;
+                minDiff = diff;
+                // cout << "result - " << result << endl;
+            }
+            
+            if (diff == 0) {
+                return curr->val;
+            } else if (target > curr->val) {
+                curr = curr->right;
+            } else {
+                curr = curr->left;
+            }
+            //cout << "curr - " << curr->val << endl; 
+        }
+        return (int)result;
+    }
+};
