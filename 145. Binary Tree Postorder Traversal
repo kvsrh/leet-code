@@ -1,0 +1,56 @@
+145. Binary Tree Postorder Traversal
+Hard
+
+Given a binary tree, return the postorder traversal of its nodes' values.
+
+Example:
+
+Input: [1,null,2,3]
+   1
+    \
+     2
+    /
+   3
+
+Output: [3,2,1]
+
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+ * };
+ */
+class Solution {
+public:
+    vector<int> postorderTraversal(TreeNode* root) { 
+        stack<struct TreeNode*>ptr;
+        vector<int>post;
+        if(root==NULL)return post;
+        struct TreeNode* q =root;
+        while(1){
+            while(root->left!=NULL) {
+                ptr.push(root);root=root->left;
+            }
+            cout << "root - " <<  root->val << endl;
+            while(root->right==NULL || q==root->right){
+                post.push_back(root->val);
+                q=root;
+                if(ptr.empty())
+                    return post;
+                // cout << "root - " <<  root->val << endl;
+                root=ptr.top();
+                ptr.pop();
+            }
+            ptr.push(root);
+            cout << "root - " <<  root->val << endl;
+            root=root->right;
+            cout << "root - " <<  root->val << endl;
+        }
+        return post;
+    }
+};
