@@ -1,0 +1,61 @@
+264. Ugly Number II
+Medium
+
+Write a program to find the n-th ugly number.
+
+Ugly numbers are positive numbers whose prime factors only include 2, 3, 5. 
+
+Example:
+
+Input: n = 10
+Output: 12
+Explanation: 1, 2, 3, 4, 5, 6, 8, 9, 10, 12 is the sequence of the first 10 ugly numbers.
+
+Note:  
+
+    1 is typically treated as an ugly number.
+    n does not exceed 1690.
+
+class Solution {
+public:
+    vector<int> factors = {2,3,5};
+    int nthUglyNumber(int n) {
+        // Keep a pq style queue where we can keep already stored results. 
+        // Make sure no duplicates are added. 
+        // BFS in certain sense. 
+        // 
+        // push (1);
+        // while ()
+        //    get curr; --> lowest number. 
+        //    when you pop a node - increment count. 
+        //    if count == n return most recent returned number. 
+        // else add more numbers to the map. 
+        
+        priority_queue <long, vector<long>, greater<long>> pq;
+        unordered_set <long> map;
+        
+        pq.emplace(1);
+        map.insert(1);
+        
+        int popCount = 0;
+        
+        while (true) {
+            auto curr = pq.top();
+            pq.pop();
+            popCount++;
+            
+            if (popCount == n)
+                return curr;
+            
+            for (auto & factor : factors) {
+                long next = factor*curr;
+                if (map.count(next) == 0) {
+                    map.insert(next);
+                    pq.emplace(next);
+                }
+            }
+        }
+        
+        return -1;
+    }
+};
