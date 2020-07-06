@@ -1,0 +1,92 @@
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+*/
+
+// int helper (TreeNode * root, int * maximum) {
+        
+//         if (root == NULL) {
+//             return 0;
+//         }
+        
+//         int max_left = 0, max_right = 0, max_local = 0;
+//         int result = 0;
+        
+//         max_left = max(0, helper(root->left, maximum));
+//         max_right = max(0, helper(root->right, maximum));
+        
+//         max_local = root->val + max_left + max_right;
+            
+//         // max_local = max(max_local, root->val + max_left);
+//         // max_local = max(max_local, root->val + max_right);
+//         // max_local =  max(root->val, max_local);
+        
+//         *maximum = max(*maximum,max_local);
+
+//         result = max(max_left, max_right) + root->val;
+    
+//         return result;
+//     }
+
+// class Solution {
+// public:
+    
+//     int maxPathSum(TreeNode * root) {
+        
+//         int result = INT_MIN;
+//         helper(root, &result);
+//         return result;
+//     }
+// };
+
+// /*
+
+// class Solution {
+// public:
+//     int maxPathSum(TreeNode* root) {
+//         int maxSum = INT_MIN;
+//         DFS(root, maxSum);
+//         return maxSum;
+//     }
+    
+//     int DFS(TreeNode* root, int& maxSum){
+//         if(!root) return 0;
+//         int left = max(0, DFS(root->left, maxSum));
+//         int right = max(0, DFS(root->right, maxSum));
+//         maxSum = max(maxSum, left + right + root->val);
+//         return max(left, right) + root->val;
+//     }
+// };
+
+
+class Solution {
+    
+    int dfs (TreeNode * root, int & maxG) {
+        if (!root) 
+            return 0;
+        
+        int left = max (0, dfs (root->left, maxG));
+        int right = max (0, dfs (root->right, maxG));
+        
+        maxG = max (maxG, root->val + left + right);
+        
+        return max (left, right) + root->val;
+ 
+        
+    }
+    
+    public: 
+    int maxPathSum (TreeNode * root) {
+        if (root == NULL) { // if the tree is empty what should be sent??
+            return -1;
+        }
+        int result = INT_MIN;
+        (void) dfs (root, result);
+        return result;
+    }
+};
