@@ -1,0 +1,144 @@
+776. Split BST
+Medium
+
+Given a Binary Search Tree (BST) with root node root, and a target value V, split the tree into two subtrees where one subtree has nodes that are all smaller or equal to the target value, while the other subtree has all nodes that are greater than the target value.  It's not necessarily the case that the tree contains a node with value V.
+
+Additionally, most of the structure of the original tree should remain.  Formally, for any child C with parent P in the original tree, if they are both in the same subtree after the split, then node C should still have the parent P.
+
+You should output the root TreeNode of both subtrees after splitting, in any order.
+
+Example 1:
+
+Input: root = [4,2,6,1,3,5,7], V = 2
+Output: [[2,1],[4,3,6,null,null,5,7]]
+Explanation:
+Note that root, output[0], and output[1] are TreeNode objects, not arrays.
+
+The given tree [4,2,6,1,3,5,7] is represented by the following diagram:
+
+          4
+        /   \
+      2      6
+     / \    / \
+    1   3  5   7
+
+while the diagrams for the outputs are:
+
+          4
+        /   \
+      3      6      and    2
+            / \           /
+           5   7         1
+
+
+// /**
+//  * Definition for a binary tree node.
+//  * struct TreeNode {
+//  *     int val;
+//  *     TreeNode *left;
+//  *     TreeNode *right;
+//  *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+//  *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+//  *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+//  * };
+//  */
+// class Solution {
+// public:
+//     vector<TreeNode*> splitBST(TreeNode* root, int V) {
+//         // Finding the last left or a target. 
+        
+//         if (root == NULL)
+//             return {NULL, NULL};
+        
+        
+//         TreeNode * curr = root;
+//         TreeNode * lastLeft = NULL;
+        
+//         while (curr != NULL) {
+//             // cout << "curr - " << curr->val << " V - " << V << endl;
+//             if (curr->val == V) {
+//                 break;
+//             } else if (V < curr->val) {
+//                 lastLeft = curr;
+//                 curr = curr->left;
+//             } else {
+//                 curr = curr->right;
+//                 break;
+//             }
+//         }
+        
+//         curr = (curr == NULL) ? lastLeft : curr;
+        
+//         // Find parent of curr and do the following. 
+        
+//         TreeNode * parent = NULL;
+//         TreeNode * child = root;
+        
+//         while (child != curr) {
+//             if (child->val == curr->val) {
+//                 break;
+//             } else if (curr->val < child->val) {
+//                 parent = child;
+//                 child = child->left;
+//             } else {
+//                 parent = child;
+//                 child = child->right;
+//             }
+//         }
+        
+//         // cout << "curr - " << curr->val << " parent - " << parent->val << endl;
+        
+//         // if curr has a left child - move it to parent. 
+        
+//         if (child == root) {
+//             return {child, child->right};
+//         }
+        
+//         if (parent->left == child) {
+//             parent->left = child->right;
+//             child->right = NULL;
+//             return {curr, root};
+//         }
+        
+//         if (parent->right == child) {
+//             parent->right = child->left;
+//             child->left = NULL;
+//             return {root, curr};
+//         }
+        
+//         return {};
+//     }
+// };
+
+class Solution {
+    public:
+    vector<TreeNode *> splitBST (TreeNode * root, int V) {
+        if (root == NULL) {
+            return {NULL, NULL};
+        }
+        
+        if (root->val <= V) {
+            vector<TreeNode*> bns = splitBST(root->right, V);
+            root->right = bns[0];
+            bns[0] = root;
+            return bns;
+        } else {
+            vector<TreeNode *> bns = splitBST(root->left, V);
+            root->left = bns[1];
+            bns[1] = root;
+            return bns;
+        } 
+    }
+};
+
+// Wow max soltution -- 
+
+/* 
+
+The key is at each node you have to evalute .. how the tree structure will be split so that nodes at root, root->left and root->right have to split given a V. 
+
+as we move up we have too see if the left Tree has to be attached to the right  side of the root or to the left side of the root.
+
+consider the following diagram: 
+
+*/
