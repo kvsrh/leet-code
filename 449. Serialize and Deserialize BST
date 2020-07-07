@@ -1,0 +1,83 @@
+449. Serialize and Deserialize BST
+Medium
+
+Serialization is the process of converting a data structure or object into a sequence of bits so that it can be stored in a file or memory buffer, or transmitted across a network connection link to be reconstructed later in the same or another computer environment.
+
+Design an algorithm to serialize and deserialize a binary search tree. There is no restriction on how your serialization/deserialization algorithm should work. You just need to ensure that a binary search tree can be serialized to a string and this string can be deserialized to the original tree structure.
+
+The encoded string should be as compact as possible.
+
+Note: Do not use class member/global/static variables to store states. Your serialize and deserialize algorithms should be stateless.
+
+
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+class Codec {
+public:
+    void rEncode (TreeNode * root, string & result) {
+        if (root == NULL)
+            return;
+        result = result + to_string(root->val) + ",";
+        rEncode (root->left, result);
+        rEncode (root->right, result);
+        return;
+    }
+    
+    // Encodes a tree to a single string.
+    
+    string serialize(TreeNode* root) {
+        
+        // Given a pre-order traversal .. we can get a unique binary search tree. 
+        string result = "";
+        rEncode (root, result);
+        
+        return result;
+    }
+
+    TreeNode * rDecode (int & index, vector<int> & nums, int min, int max) {
+        if (index == nums.size())
+            return NULL;
+        
+        int val = nums[index];
+        
+        if (val < min || val > max)
+            return NULL;
+        index++;
+        TreeNode * root = new TreeNode (val);
+        root->left = rDecode(index, nums, min, val);
+        root->right = rDecode(index, nums, val, max);
+        
+        return root;
+    }
+    
+    // Decodes your encoded data to tree.
+    TreeNode* deserialize(string data) {
+        // Given a pre-order traversal we can get the required ... 
+        // binary search tree. 
+        
+        istringstream ss(data);
+        string token; 
+        
+        vector<int> nums;
+        
+        while (getline(ss, token, ',')) {
+            nums.emplace_back(atoi(token.c_str()));
+        }
+        
+        int index = 0;
+        
+        TreeNode * root = rDecode (index, nums, INT_MIN, INT_MAX);
+        return root;
+    }
+};
+
+// Your Codec object will be instantiated and called as such:
+// Codec codec;
+// codec.deserialize(codec.serialize(root));
