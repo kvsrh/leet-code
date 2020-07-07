@@ -1,0 +1,42 @@
+285. Inorder Successor in BST
+
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    TreeNode* inorderSuccessor(TreeNode* root, TreeNode* p) {
+        // Keep a context of the last left. If it has a right. Find
+        // the left most element in the right node, else return last right node. 
+        
+        TreeNode * curr = root;
+        TreeNode * lastLeft = NULL;
+        
+        while (true) {
+            if (curr->val == p->val) {
+                break;
+            } else if (curr->val < p->val) {
+                curr = curr->right;
+            } else {
+                lastLeft = curr;
+                curr = curr->left;
+            }
+        }
+        
+        if (curr->right == NULL) {
+            return lastLeft;
+        } else {
+            curr = curr->right;
+            while (curr->left != NULL) {
+                curr = curr->left;
+            }
+            return curr;
+        }
+    }
+};
