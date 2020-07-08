@@ -1,0 +1,114 @@
+https://leetcode.com/problems/3sum/
+
+// static auto x = []() {ios_base::sync_with_stdio(false); cin.tie(NULL); return NULL; }();
+
+// class Solution {
+// public:
+//     vector<vector<int>> threeSum(vector<int>& nums) {
+        
+//         vector<vector<int>> result;
+        
+//         sort(nums.begin(), nums.end());
+    
+//         for (int i = 0 ; i < nums.size(); i++) {
+            
+//             if  (nums[i] > 0) {
+//                 break; 
+//             }
+            
+//             // prevent if we already did a 2's sum with the same target.
+            
+//             if (i > 0 && (nums[i] == nums[i-1])) continue;
+            
+//             int left =  i+1;
+//             int right = nums.size()-1;
+//             int target = 0-nums[i];
+            
+//             while (left < right)  {
+//                 int sum = nums[left] + nums[right];
+//                 if (sum == target) {
+//                     result.push_back({nums[i], nums[left], nums[right]});
+//                     // If we have already seen the same num[left] skip the duplicates.
+//                     while ((left+1 < right) && (nums[left]==nums[left+1])) left++; // stops at the last 
+//                     // left value. 
+//                     while ((right-1 > left) && (nums[right]==nums[right-1])) right--; // stops at the                                                                          // first duplicate right value.
+//                     left++;
+//                     right--;
+//                 } else if (sum < target) {
+//                     left++;
+//                 } else {
+//                     right--;
+//                 }
+//             }
+//         }
+        
+//         return result;
+//     }
+// };
+
+
+// Should we included duplicate triplets.
+// Are we adding the indexes or the numbers? 
+// Also will all the input numbers fit in memory? 
+//
+
+// sort the numbers. 
+// keep three indexes .. (i) one for the outer number .. and left and right for inner numbers.
+
+// --> [-1, -1,-1, 2]
+//       
+// t = 3; r = {-3,0,3}, {-1,-1,2}, {-1, 0, 1}, 
+//
+// [-3, -2, -1, -1, -1, 0, 1, 1, 2, 2, 3]
+//       i
+//                         l
+//                            r 
+// 
+           
+class Solution {
+    public: 
+    vector<vector<int>> threeSum (vector<int> & nums) {
+        int size = nums.size();
+        if (size == 0)
+            return {};
+        
+        vector<vector<int>> result;
+         
+        sort(nums.begin(), nums.end());
+        
+        for (int i = 0; i < size; i++) {
+            int num = nums[i];
+            if (num > 0)
+                break;
+            
+            if (i > 0 && nums[i] == nums[i-1])
+                continue;
+            
+            int target = 0-num;
+            
+            int left = i+1;
+            int right = size-1;
+            
+            while (left < right) {
+                int sumL = nums[left] + nums[right];
+                if (sumL == target) {
+                    result.push_back({nums[i], nums[left], nums[right]});
+                    // Now where should i move to??
+                    // If num at i+1 is same as i .. keep moving forward. 
+                    while (left+1 < right && nums[left] == nums[left+1]) {
+                        left++;
+                    }
+                    while (right-1 > left && nums[right] == nums[right-1]) {
+                        right--;
+                    }
+                    left++; right--;
+                } else if (sumL < target) {
+                    left++;
+                } else {
+                    right--;
+                }
+            }
+        }
+        return result;
+    }
+};
