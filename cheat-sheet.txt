@@ -1,5 +1,9 @@
 Cheat sheet - 
 
+c++ header file for STL:
+
+#include<bits/stdc++.h> 
+
 permutation formula - 
 combination formula -  
 
