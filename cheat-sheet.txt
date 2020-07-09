@@ -168,3 +168,10 @@ int MOD = 10e9+7 // 1000,000,000 + 7.
 # UNORDERED_MAP # #HASH#
 
 unordered_map : delete - erase()
+
+# TOGGLE BIT # 
+
+toggle ^= 1;
+
+#####
+
