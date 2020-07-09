@@ -1,0 +1,123 @@
+143. Reorder List
+
+Medium
+
+Given a singly linked list L: L0→L1→…→Ln-1→Ln,
+reorder it to: L0→Ln→L1→Ln-1→L2→Ln-2→…
+
+You may not modify the values in the list's nodes, only nodes itself may be changed.
+
+Example 1:
+
+Given 1->2->3->4, reorder it to 1->4->2->3.
+
+Example 2:
+
+Given 1->2->3->4->5, reorder it to 1->5->2->4->3.
+
+Inputs: 
+
+Special inputs -- what if slow is less than runner. 
+consider special cases like that. 
+Step 2 needed only if slow is smaller than fast. 
+
+
+Whenever you get closest - ask if the number is garunteed to be present in the tree. 
+
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode() : val(0), next(nullptr) {}
+ *     ListNode(int x) : val(x), next(nullptr) {}
+ *     ListNode(int x, ListNode *next) : val(x), next(next) {}
+ * };
+ */
+
+class Solution {
+public:
+    void reorderList(ListNode* head) {
+        // 1->2->3->4
+        //       s
+        //          f
+        // 1->2
+        // 4->3
+        // 
+        // 1->2->3->4->5
+        //       s
+        //             f
+        // 1->2
+        // 5->4->3
+        
+        // step 1 : indentify splitting point (sp). 
+        // step 2 ; reverse end to sp.
+        // step 3 : merge the 2 LL'es.
+        
+        ListNode * slow = head;
+        ListNode * fast = head; 
+        ListNode * prev = NULL;
+        
+        while (fast != NULL && fast->next != NULL) {
+            prev = slow;
+            slow = slow->next;
+            fast = fast->next->next;
+        }
+        
+        if (slow == head) {
+            return;
+        }
+        
+        // step 2: 
+        if (prev != NULL)
+            prev->next = NULL;
+        
+        prev = NULL;
+        ListNode * curr = slow;
+        ListNode * next = NULL;
+        
+        while (curr != NULL) {
+            next = curr->next;
+            curr->next = prev;
+            prev = curr;
+            curr = next;
+        }
+
+        // Step 3 : 
+        
+        ListNode * one = head;
+        ListNode * two = prev;
+        curr = NULL;
+        // t - T, F, T 
+        // c - o, t
+        //           o 
+        // // 1   2  NULL  
+        // // | / |        
+        // // 5   4 - NULL
+        //       t
+        
+        bool toggle = true;
+        
+        while (one != NULL) {
+            if (toggle) {
+                
+                curr = one;
+                // if (one)
+                one = one->next;
+                curr->next = two;
+                
+                toggle ^= 1; 
+                
+            } else {
+                curr = two;
+                
+                // if (two)
+                two = two->next;
+                curr->next = one;
+                
+                toggle ^= 1;
+            }
+        }        
+        return;
+    }
+};
