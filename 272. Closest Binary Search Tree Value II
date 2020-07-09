@@ -1,0 +1,125 @@
+272. Closest Binary Search Tree Value II
+
+
+WoW I am in love with this solution. 
+
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+ * };
+ */
+
+class Solution {
+public:
+    stack<TreeNode *> forward; 
+    stack<TreeNode *> reverse; 
+    
+    void initIter (TreeNode * root, int val) {
+        if (!root)
+            return;
+        TreeNode * curr = root;
+        
+        while (curr != NULL) {
+            forward.push(curr);
+            curr = curr->left;
+        }
+        
+        TreeNode * curr = getNext();
+        
+        while (curr->val != val) {
+            curr = getNext();
+        }
+        return;
+    }
+    
+    bool hasNext() {
+        return forward.size() > 0 ? true : false;
+    }
+    
+    bool hasPrev() {
+        return reverse.size() > 0 ? true : false;
+    }
+    
+    TreeNode* getNext() {
+        TreeNode * next = forward.top();
+        
+        forward.pop();
+        reverse.push(next);
+        
+        TreeNode * curr = next->right;
+        
+        while (curr != NULL) {
+            forward.push(curr);
+            curr = curr->left;
+        }
+        
+        return next;
+    }
+    
+    TreeNode* getPrev() {
+        TreeNode * prev = reverse.top();
+        reverse.pop();
+        return prev;
+    }
+     
+    vector<int> closestKValues(TreeNode* root, double target, int k) {
+        
+        TreeNode * curr = root;
+        float minL = abs (target-curr->val);
+        int result = root->val;
+        
+        vector<int> results;
+        
+        while (curr != NULL) {
+            if (curr->val == target) {
+                result = curr->val;
+                break;
+            } else {
+                if (abs (target-curr->val) < minL) {
+                    result = curr->val;
+                    minL = abs (target-curr->val);
+                }
+                curr = target < curr->val ? curr->left : curr->right;
+            }
+        }
+        
+        results.emplace_back(result);
+        k--;
+        
+        // Now init an iterator with the given value and root. 
+        
+        initIter(root, result);
+        
+        TreeNode * prev = hasPrev ? getPrev(): NULL;
+        TreeNode * next = hasNext ? getNext(): NULL;
+        
+        while (k > 0) {
+            if (prev && next) {
+                if (abs (prev->val-target) > abs (next->val-target)) {
+                    results.emplace_back(prev->val);
+                    prev = hasPrev ? getPrev(): NULL;
+                } else {
+                    results.emplace_back(next->val);
+                    hasNext ? getNext(): NULL;
+                }
+            } else if (prev) {
+                results.emplace_back(prev->val);
+                prev = hasPrev ? getPrev(): NULL;
+            } else {
+                results.emplace_back(next->val);
+                next = hasNext ? getNext(): NULL;
+            }
+            k--;
+        }
+        
+        return results;
+        
+    }
+};
+       
