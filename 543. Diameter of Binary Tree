@@ -1,0 +1,181 @@
+https://leetcode.com/problems/diameter-of-binary-tree/
+
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+/* 
+using namespace std;
+
+class Solution {
+public:
+    
+    void diameterOfTree(TreeNode * root, int * max_line, int * max) {
+        
+        if (root == NULL) {
+            *max_line = 0; 
+            *max = 0; 
+            return;
+        }
+        
+        int max_left = 0;
+        int max_right = 0;
+        
+        (void) diameterOfTree(root->left, &max_left, max);
+        (void) diameterOfTree(root->right, &max_right, max);
+        
+        if (max_left + max_right + 1 > *max) {
+            *max = max_left + max_right + 1;
+        }
+        
+        cout << "root - " << root->val << ", max_line - " << *max_line << ", max - " << *max << endl;
+        
+        *max_line = max_left > max_right ? (max_left+1) : (max_right+1);
+        
+        cout << "root - " << root->val << ", max_line - " << *max_line << ", max - " << *max << endl;
+        
+        return;
+    }
+    
+    int diameterOfBinaryTree(TreeNode* root) {
+        int max_line = 0;
+        int diameter = 0;
+        (void) diameterOfTree(root, &max_line, &diameter);
+        
+        cout << "diameter - " << diameter << endl;
+    
+        return diameter;
+    }
+}; 
+
+*/
+
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+
+/*
+class Solution {
+public:
+    int helper(TreeNode* root, int& longestSoFar) {
+        if (root == NULL)
+            return 0;
+        
+        //Calculate longest paths on left/right
+        int left = helper(root->left, longestSoFar);
+        int right = helper(root->right, longestSoFar);
+        
+        if (root->left && root->right)
+        {
+            //Check if this sub-tree has the longest length
+            if ((left + right + 1) > longestSoFar)
+                longestSoFar = left + right + 1;
+            
+            //Return greater or length of left or right sub-tree
+            //Used to check whether the parent tree has greater length
+            if (left > right)
+                return left + 1;
+            else
+                return right + 1;
+        }
+        
+		//If only one root exists
+        if (root->left)
+            return left + 1 ;
+        else
+            return right + 1;
+    }
+    
+    int diameterOfBinaryTree(TreeNode* root) {
+        int longestSoFar = 0;
+        // We cannot go below 0 diameter.
+        return max(max(helper(root, longestSoFar), longestSoFar)-1, 0);
+    }
+};
+*/
+
+// class Solution {
+// public:
+    
+//     int helper(TreeNode * root, int & result) {
+//         if (root == NULL) {
+//             return 0;
+//         }
+        
+//         int lenLeft = helper(root->left, result);
+//         int lenRight = helper(root->right, result);
+        
+//         result = max(lenLeft + lenRight + 1, result); 
+        
+//         return lenLeft + 1 > lenRight + 1 ? lenLeft + 1: lenRight + 1;
+//     }
+    
+//     int diameterOfBinaryTree(TreeNode * root) {
+//         int result = 0;
+//         (void) helper(root, result);
+//         return result > 0 ? result-1 : 0;
+//     }
+// };
+
+// class Solution {
+//     public:
+//         int dfs (TreeNode * root, int * maximum) {
+//             if (root == NULL) {
+//                 return 0;
+//             }
+            
+//             int left = dfs (root->left, maximum);
+//             int right = dfs (root->right, maximum);
+            
+//             *maximum = max (left+right+1, *maximum);
+            
+//             return left+1 > right+1 ? left+1 : right+1;
+            
+//         }
+//         int diameterOfBinaryTree(TreeNode * root) {
+//             if (root == NULL) {
+//                 return 0;
+//             }    
+//             int maxL = 0;
+//             dfs (root, &maxL);
+            
+//             return maxL-1;
+//         }
+// };
+
+
+
+class Solution {
+    public: 
+    // Return the best possible branch length at root node.
+    int dfs (TreeNode * root, int & maxL) {
+        if (!root)
+            return 0;
+        
+        int left = dfs (root->left, maxL);
+        int right = dfs (root->right, maxL);
+        
+        maxL = max (maxL, left + right + 1);
+        //cout << "root - " << root->val << " l - " << left << " r - " << right << " maxL - " << 
+        //   maxL << endl;
+        return max (left, right) + 1;
+    }
+    
+    int diameterOfBinaryTree(TreeNode * root) {
+        int maxL = 0;
+        dfs (root, maxL);
+        return maxL > 0 ? maxL-1 : 0; // Interesting logic -- the length of a node is zero. 
+                                      // length between two nodes is 1. 
+    }
+};
