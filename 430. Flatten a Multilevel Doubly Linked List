@@ -1,0 +1,76 @@
+CRUX:
+
+USE A STACK TO KEEP TRACK OF ALL THE NEXT POINTERS YOU HAVE TO PROCESS AFTER A CHILD IS FOUND.
+ONCE THE CHILD LIST IS PROCESSED - return a prev so that the next current (top of the stack element) can be
+linked to the prev element. 
+
+crucial part is the while (curr != NULL || s.size() > 0) - works even in the case when root is NULL. 
+
+
+/*
+// Definition for a Node.
+class Node {
+public:
+    int val;
+    Node* prev;
+    Node* next;
+    Node* child;
+};
+*/
+
+// 2-1-4-5-8-7-6 3-10
+    
+// c: 5 n : 6 s : [3]    
+    
+class Solution {
+public:
+    Node* flatten(Node* head) {
+        // We could keep a stack and when we encounter a node with a child pointer, 
+        // we keep the right pointer on the stack. 
+        
+        Node * curr = head;
+        Node * prev = NULL;
+        stack<Node*> s; 
+        
+        while (curr != NULL || !s.empty()) {
+            if (curr == NULL) {
+                // If the curr is NULL we have to pick the 
+                // next element from the stack and 
+                // link them.
+                
+                curr = s.top();
+                s.pop();
+                
+                if (prev != NULL) {
+                    curr->prev = prev;
+                    prev->next = curr;
+                }
+                
+            }
+            
+            if (curr->child) {
+                if (curr->next) {
+                    s.push(curr->next);
+                }
+                if (curr->next != NULL)
+                    curr->next->prev = NULL;
+                curr->next = curr->child;
+                curr->next->prev = curr;
+                curr->child = NULL;
+                
+            }
+            
+            // if (curr->next == NULL) {
+                prev = curr;
+            // }
+            
+            curr = curr->next;
+            
+        }
+        
+        return head; 
+        
+
+        
+    }
+};
