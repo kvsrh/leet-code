@@ -30,50 +30,152 @@ Accepted
 Submissions
 698,645
 
-/**
- * Definition for a binary tree node.
- * struct TreeNode {
- *     int val;
- *     TreeNode *left;
- *     TreeNode *right;
- *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
- *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
- *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
- * };
- */
+Both iterative and recurssion approach. 
 
-TreeNode * recurse (TreeNode * root) {
-    if (root->left == NULL && root->right == NULL) {
-        return root;
-    }
+// /**
+//  * Definition for a binary tree node.
+//  * struct TreeNode {
+//  *     int val;
+//  *     TreeNode *left;
+//  *     TreeNode *right;
+//  *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+//  *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+//  *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+//  * };
+//  */
+
+// TreeNode * recurse (TreeNode * root) {
+//     if (root->left == NULL && root->right == NULL) {
+//         return root;
+//     }
     
-    TreeNode * right = root->right;
+//     TreeNode * right = root->right;
     
-    TreeNode * tail = NULL;
+//     TreeNode * tail = NULL;
     
-    if (root->left != NULL) {
-        root->right = root->left;
-        root->left = NULL;
-        tail = recurse (root->right);
-    } else {
-        tail = root;
-    }
+//     if (root->left != NULL) {
+//         root->right = root->left;
+//         root->left = NULL;
+//         tail = recurse (root->right);
+//     } else {
+//         tail = root;
+//     }
     
-    tail->right = right;
+//     tail->right = right;
     
-    if (right != NULL) 
-         tail = recurse (right);
+//     if (right != NULL) 
+//          tail = recurse (right);
     
-    return tail;
-}
+//     return tail;
+// }
+
+// class Solution {
+// public:
+//     void flatten(TreeNode* root) {
+//         // Does flattening mean ... linked-list as a pre-order-traversal .. 
+//         // But you cann't make a duplicate copy. 
+//         if (root == NULL) 
+//             return;
+//         (void) recurse (root);
+//     }
+// };
+
+// The key idea is: 
+// We always need to have the tail node/right-most node of the linked-list available. We therefore always check if,
+// the root->left and root->right is always non-null .. that way if there is no other tree to be processed under a current,
+// node we can send back the root node. 
+
+// We also keep a context of the right node so that once we are done with tree under the left node. The tail->right becomes
+// the right node from the original tree.
+// Eventually return tail. 
+
+//     1 
+//    / \
+//   2   5
+//  / \   \
+// 3   4   6
+
+// root = 1; 
+// right = 5
+    
+// root->right = root->left;
+
+// tail = recurse (root->left)
+
+// tail->right = right;
+
+// tail = recurse(root->right)
+//     return tail
+
+// class Solution {
+//     public:
+//     TreeNode * recurse (TreeNode * root) {
+//         if (root->left == NULL && root->right == NULL) { // root->left NULL this prevent null reference. 
+//             return root;
+//         }
+        
+//         TreeNode * right = root->right;
+
+//         TreeNode * tail = NULL;
+            
+//         if (root->left != NULL) {
+//             root->right = root->left;
+//             root->left = NULL;
+//             tail = recurse (root->right);
+//         } else {
+//             tail = root;
+        
+//         }
+
+//         tail->right = right;
+//         // tail = right;
+        
+//         if (right) // for root->right being NULL;
+//             tail = recurse (right);
+        
+//         return tail;
+//     } 
+    
+//     void flatten (TreeNode * root) {
+//         if (!root)
+//             (void) recurse (root);
+//         return;
+//     }
+    
+// };
+
+// Iterative solution
+
 
 class Solution {
-public:
-    void flatten(TreeNode* root) {
-        // Does flattening mean ... linked-list as a pre-order-traversal .. 
-        // But you cann't make a duplicate copy. 
-        if (root == NULL) 
-            return;
-        (void) recurse (root);
+    public: 
+    void flatten (TreeNode* root) {
+        TreeNode * curr = root;
+        TreeNode * prev = NULL; // The tail.
+        
+        stack<TreeNode *> s;
+        
+        while (curr != NULL || s.size() > 0) {
+            if (curr == NULL) {
+                curr = s.top();
+                s.pop();
+                
+                // link prev from the flatten-left tree to curr.
+                if (prev != NULL)
+                    prev->right = curr;
+            }
+            
+            if (curr->left) {
+                if (curr->right) {
+                    s.push(curr->right);
+                }
+                curr->right = curr->left;
+                curr->left = NULL;
+            }
+            
+            prev = curr;
+            curr = curr->right;
+        }
+        return;
     }
 };
