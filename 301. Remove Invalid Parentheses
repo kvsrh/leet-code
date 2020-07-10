@@ -21,85 +21,96 @@ Input: ")("
 Output: [""]
 
 Accepted
-204,009
+206,201
 Submissions
-475,214
-
+479,440
 
 class Solution {
 public:
     
     unordered_set<string> result;
-    int originalSize;
-    // int maxG = 0;
+    int ssize;
+    int leftUsed;
+    int rightUsed;
+    int len; 
+    string s;
     
-    void dfs (string s, string curr, int index, int leftUsed, int rightUsed) {
+    void dfs (string curr, int index, int left, int right, int used) {
         
-        cout << "s - " << s << " curr - " << curr << " index - " << index << "leftUsed - " << leftUsed << " rightUsed - " << rightUsed << endl;
+       // cout << "s - " << s << " curr - " << curr << " index - " << index << " left - " << left << " right - " << right << endl;
+        // cout << "r - " << curr << endl;
         
-        if (index == originalSize && leftUsed == 0 && rightUsed == 0) {
-                // if (curr.size() > maxG) {
-                //     result = {};
-                //     result.insert(curr);
-                //     maxG = curr.size();
-                // } else if (curr.size() == maxG) {
-                //     result.insert(curr);
-                // }
-            cout << "curr - " << curr << endl; 
+        if (index == ssize && left == leftUsed && right == rightUsed) {
             result.insert(curr);
-       
             return;
         }
         
-        if (index == originalSize) {
+        if (index == ssize) {
             return;
         }
+        
+        if (used > len) {
+            return;
+        }        
         
         char c = s[index];
-        
-        // cout << c << endl;
+
         
         if (c == '(') {
-            dfs (s, curr, index+1, leftUsed, rightUsed);
-            dfs (s, curr+c, index+1, leftUsed-1, rightUsed); 
+            dfs (curr, index+1, left, right, used);
+            dfs (curr+c, index+1, left+1, right, used+1);
         } else if (c == ')') {
-            if (leftUsed > rightUsed) {
-                dfs (s, curr, index+1, leftUsed, rightUsed);
-                dfs (s, curr+c, index+1, leftUsed, rightUsed-1);
+            if (left > right) {
+                dfs (curr, index+1, left, right, used);
+                dfs (curr+c, index+1, left, right+1, used+1);
             } else {
-                dfs (s, curr, index+1, leftUsed, rightUsed);
+                dfs (curr, index+1, left, right, used);
             }
         } else {
-            dfs (s, curr+c, index+1, leftUsed, rightUsed);
+            dfs (curr+c, index+1, left, right, used);
             
         }
         return; 
     }
     
-    vector<string> removeInvalidParentheses(string s) {
+    vector<string> removeInvalidParentheses(string S) {
         // Can I do it as the other valid parantheses problem. 
         // use a mix of backtracking and see if we can get a valid parantheses order. 
         
-        int orginalSize = s.size();
-
-        int leftUsed=0 , rightUsed=0, l = 0, r = 0;
+        // () )) ((()()) ( 
+        // left = 6
+        // right = 4
+        s = S;
+        ssize = s.size();
         
-		for(int i=0;i<s.size();i++)
+        int l = 0, r = 0;
+        
+        int extra = 0;
+        
+		for(int i=0; i< s.size();i++)
 		{
 			if(s[i]=='(') l++;
 			if(s[i]==')') r++;
 			if(r>l) 
 			{
-				rightUsed++;
 				r--;
 			}
+            if (s[i] != '(' && s[i] != ')')
+                extra++;
 		}
 
-		leftUsed=l-r;
-        // cout << "left - " << l << "right - " << r << endl;
+		l = r;
+        
+        leftUsed = l;
+        rightUsed = r;
+    
+        len = leftUsed + rightUsed + extra;
+        
+        // cout << "left - " << l << " right - " << r << " extra - " << extra << endl;
+        
         string curr = ""; 
         
-        dfs (s, curr, 0, l, r);
+        dfs (curr, 0, 0, 0, 0);
         
         return vector<string>(result.begin(), result.end());
         
