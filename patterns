@@ -2,3 +2,6 @@ DP patterns.
 
 0/1 Knapsack problems.
 
+Binary search pattern. 
+
+H-Index -- we needed the target value or a value greater than target .. meaning return left at the end of the binary search. 
