@@ -178,3 +178,291 @@ public:
         // return false;
     }
 };
+
+
+"aaaaaaaaaaaaab"
+"a*a*a*a*a*a*a*a*a*a*c" -- failing when i add cache. 
+
+// With memoization. 
+
+struct Node {
+    char val; // val for any match node is '.' --
+    bool isStar;
+    int index;
+    Node * next;
+    
+    Node (char val, bool isStar, int index) : val(val), isStar(isStar), index(index), next(NULL) {}
+};
+
+
+class Solution {
+public:
+    // unordered_map <int, unordered_set<int>> map;
+    // vector<vector<int>> map;
+    string s;
+    
+    bool dfs (int index, Node * head, vector<vector<int>> & map) {
+        
+        // if (index < s.size() && head != NULL && map[index][head->index])
+        //      return true;
+        
+        if (index == s.size()) {
+            // We need to check if there is anymore of the plainton nodes left. 
+            // '.' is a plain-ton node. Only if head is NULL .. or if until the end 
+            // we get star nodes can we say the regex has matched. 
+         
+            // abc 
+            //
+            
+            if (head == NULL)
+                return true;
+            
+            Node * curr = head;
+            
+            while (curr != NULL) {
+                if (!curr->isStar)
+                    return false;
+                curr = curr->next;
+            }
+            
+            return true;
+            
+        }
+        
+        if (head == NULL) {
+            return false;
+        }
+        
+        int val = head->val;
+        bool isStar = head->isStar;
+        
+        if (val == '.' || val == s[index]) {
+            if (dfs (index+1, head->next, map)) {
+                // Add to memo.
+                // map[index][head->index] = 1;
+                return true;
+            }
+            if (isStar) {
+                if (dfs (index+1, head, map)) { // use star node mutiple times. 
+                    // map[index][head->index] = 1;
+                    return true;
+                }
+            }
+        }
+        
+        if (isStar) {    
+            if (dfs (index, head->next, map)) { // don't use star node.
+                // map[index][head->index] = 1;
+                return true;    
+            }
+        }
+        
+        return false;
+    }
+    
+    bool isMatch(string test, string pattern) {
+        
+        // We can have three kinds of nodes.
+        // star nodes - nodes where we can run the dfs using the star-node value,
+        // or completely skipping it. 
+        // any-match nodes - match any character. 
+        // or plainton nodes - which have to exact match the current characters. 
+        
+        // Build a graph using it. 
+        
+        // Assume valid patterns as ones which don't have two back to back stars for now. 
+        // Or we could sanitize them seperately. 
+        
+        int pSize = pattern.size();
+        int tSize = test.size();
+        
+        if (!pSize && !tSize)
+            return true;
+        
+        if (!pSize)
+            return false; // What do we do when test is "" too? 
+        
+        Node * dummyHead = new Node ('#', false, -1);
+        Node * prev = dummyHead;
+        
+        int i = 0;
+        
+        while (i < pSize) {
+            int val = pattern[i];
+            bool star = false;
+            if (i+1 < pSize)
+                star = pattern[i+1] == '*' ? true : false;
+            Node * curr = new Node (val, star, i);
+            prev->next = curr;
+            prev = curr;
+            i = i + (star ? 2 : 1);
+        }
+        
+        // DummyHead->next will give us the start of the regex pattern. 
+        
+        Node * curr = dummyHead->next; 
+        
+        // while (curr != NULL) {
+        //     cout << curr->val << " " << curr->isStar << endl;
+        //     curr = curr->next;
+        // }
+        s = test;
+        vector<vector<int>> map (test.size(), vector<int> (pattern.size(), 0));
+        return dfs (0, dummyHead->next, map);
+        // return false;
+    }
+};
+
+// Removing the next nodes. 
+
+struct Node {
+    char val; // val for any match node is '.' --
+    bool isStar;
+    Node * next;
+    
+    Node (char val, bool isStar) : val(val), isStar(isStar), next(NULL) {}
+};
+
+
+class Solution {
+public:
+    
+    string s;
+    
+    bool dfs (int index, Node * head) {
+        
+        if (index == s.size()) {
+            // We need to check if there is anymore of the plainton nodes left. 
+            // '.' is a plain-ton node. Only if head is NULL .. or if until the end 
+            // we get star nodes can we say the regex has matched. 
+         
+            // abc 
+            //
+            
+            if (head == NULL)
+                return true;
+            
+            while (head != NULL) {
+                if (!head->isStar)
+                    return false;
+                head = head->next;
+            }
+            
+            return true;
+            
+        }
+        
+        if (head == NULL) {
+            return false;
+        }
+        
+        int val = head->val;
+        bool isStar = head->isStar;
+        
+//         if (val == '.') {
+//             if (dfs (index++, head->next)) {
+//                 return true;
+//             }
+//             // Try a dfs if it a star node without the any-match.
+//             if (isStar) {
+                
+//                 // Try the current index without using the star node. 
+//                 if (dfs (index, head->next)) {
+//                     return true;
+//                 }
+//                 // Try the current node mutiple times. 
+//                 if (dfs (index++, head)) {
+//                     return true;
+//                 } // try multiple match.
+//             }
+//         } else {
+//             if (val == s[index]) {
+//                 dfs (index++, head->next);
+//             } else if (isStar) {
+                
+//                 if (dfs (index, head->next)) { // don't use star node.
+//                     return true;    
+//                 }   
+                
+//                 if (dfs (index++, head)) { // use star node mutiple times. 
+//                     return true;
+//                 }
+//             }
+//         } 
+        
+        if (val == '.' || val == s[index]) {
+            if (dfs (index+1, head->next)) {
+                return true;
+            }
+            if (isStar) {
+                if (dfs (index+1, head)) { // use star node mutiple times. 
+                    return true;
+                }
+            }
+        }
+        
+        if (isStar) {    
+            if (dfs (index, head->next)) { // don't use star node.
+                return true;    
+            }
+        }
+        
+        return false;
+    }
+    
+    bool helper (string test, Node * head) {
+        s = test;
+        return dfs (0, head);
+    }
+    
+    bool isMatch(string test, string pattern) {
+        
+        // We can have three kinds of nodes.
+        // star nodes - nodes where we can run the dfs using the star-node value,
+        // or completely skipping it. 
+        // any-match nodes - match any character. 
+        // or plainton nodes - which have to exact match the current characters. 
+        
+        // Build a graph using it. 
+        
+        // Assume valid patterns as ones which don't have two back to back stars for now. 
+        // Or we could sanitize them seperately. 
+        
+        int pSize = pattern.size();
+        int tSize = test.size();
+        
+        if (!pSize && !tSize)
+            return true;
+        
+        if (!pSize)
+            return false; // What do we do when test is "" too? 
+        
+        Node * dummyHead = new Node ('#', false);
+        Node * prev = dummyHead;
+        
+        int i = 0;
+        
+        while (i < pSize) {
+            int val = pattern[i];
+            bool star = false;
+            if (i+1 < pSize)
+                star = pattern[i+1] == '*' ? true : false;
+            Node * curr = new Node (val, star);
+            prev->next = curr;
+            prev = curr;
+            i = i + (star ? 2 : 1);
+        }
+        
+        // DummyHead->next will give us the start of the regex pattern. 
+        
+        Node * curr = dummyHead->next; 
+        
+        // while (curr != NULL) {
+        //     cout << curr->val << " " << curr->isStar << endl;
+        //     curr = curr->next;
+        // }
+        
+        return helper (test, dummyHead->next);
+        // return false;
+    }
+};
