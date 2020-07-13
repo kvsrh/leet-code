@@ -1,0 +1,56 @@
+121. Best Time to Buy and Sell Stock
+
+// class Solution {
+// public:
+//     int maxProfit(vector<int>& prices) {
+//         if (!prices.size()) {
+//             return 0;
+//         }
+        
+//         int size = prices.size();
+        
+//         vector<int> dp (size, 0);
+        
+//         int maxG = 0;
+        
+//         dp[0] = 0;
+        
+//         for (int i = 1; i < size; i++) {
+//             int maxL = 0;
+//             for (int j = 0; j < i; j++) {
+//                 if (prices[j] < prices[i]) {
+//                     maxL = max (maxL, dp[j] + prices[i] - prices[j]);
+//                 }
+//             }
+//             dp[i] = maxL;
+//             maxG = max (maxG, maxL);
+//         }
+        
+//         // for (auto & elem : dp) {
+//         //     cout << elem << " " << endl;
+//         // }
+        
+//         return maxG;
+//     }
+    
+// };
+
+class Solution {
+    public: 
+    int maxProfit (vector<int> & price) {
+        int minL = INT_MAX;
+        int maxL = 0;
+        
+        for (int i = 0; i < price.size(); i++) {
+            if (price[i] < minL) {
+                minL = price[i];
+            } else {
+                if (price[i]-minL > maxL) {
+                    maxL = price[i]-minL;
+                }
+            }
+        }
+        return maxL;
+        
+    }
+};
