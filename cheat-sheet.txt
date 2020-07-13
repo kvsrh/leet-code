@@ -33,7 +33,27 @@ copy_n () -->
 
 SORT FUNCTION TEMPLATE: 
 
+int findNum (int search, vector<bool> & nums) { // return index.
+    int found = 0;
+    for (int i = 0; i < nums.size(); i++) {
+        if (nums[i] == false) {
+            found++;
+            if (found == search) {
+                return i;
+            }
+        }
+    }
+    return -1;
+}
 
+// alternative way to find a spot. 
+int findSpot (int k, vector<int> & nums) {
+     auto iter = nums.begin();
+     iter = iter+k-1;
+     int result = *iter;
+     nums.remove(iter);
+     return result;
+}
 
 
 ## ##
