@@ -165,6 +165,25 @@ while (q.empty()) {
     }
 }
 
+// Removing adding an element to set for bfs. 
+void recurse (vector<int> & nums, vector<int> & result) {
+        if (nums.size() == 0) {
+            results.emplace_back(result);
+            return;
+        }
+        
+        for (int i = 0; i < nums.size(); i++) {
+            int local = nums[i];
+            result.emplace_back(local);
+            auto iter = nums.begin()+i;
+            nums.erase(iter);
+            recurse (nums, result);
+            result.pop_back();
+            nums.insert(nums.begin()+i, local);
+        }
+        
+    }
+
 ## ##
 
 ## Processing unequal length strings or linked-list ## 
@@ -211,4 +230,5 @@ for (int center = 0; center < centers; center++) {
                 right++;
             }
 #####
+
 
