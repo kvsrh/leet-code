@@ -1,0 +1,150 @@
+445. Add Two Numbers II
+CRUX: 
+
+REVERSE THE TWO GIVEN INPUTS. 
+ADD THE TWO NUMBERS.
+DON'T FORGOT TO REVERSE IT AGAIN.
+    
+FOLLOWUP - DON'T USE REVERSAL OF THE NODES. 
+USE A STACK AND REVERSE NEWLY FORMED LINKED LIST IN THE END.
+
+
+// /**
+//  * Definition for singly-linked list.
+//  * struct ListNode {
+//  *     int val;
+//  *     ListNode *next;
+//  *     ListNode() : val(0), next(nullptr) {}
+//  *     ListNode(int x) : val(x), next(nullptr) {}
+//  *     ListNode(int x, ListNode *next) : val(x), next(next) {}
+//  * };
+//  */
+// class Solution {
+// public:
+    
+//     ListNode* reverse (ListNode * l1) {
+//         ListNode * prev = NULL;
+//         ListNode * curr = NULL;
+//         ListNode * next = NULL;
+        
+//         curr = l1;
+        
+//         while (curr != NULL) {
+//             next = curr->next;
+//             curr->next = prev;
+//             prev = curr;
+//             curr = next;
+//         }
+        
+//         return prev; 
+        
+//     }
+    
+//     ListNode* addTwoNumbers(ListNode* l1, ListNode* l2) {
+//         // Take both the list and reverse them and then add them. 
+        
+//         l1 = reverse (l1);
+//         l2 = reverse (l2);
+        
+//         ListNode * p = l1; 
+//         ListNode * q = l2;
+        
+//         ListNode * dummyHead = new ListNode ();
+//         ListNode * curr = dummyHead;
+//         int carry = 0;
+//         while (l1 != NULL || l2 != NULL) {
+//             int one = l1 != NULL ? l1->val : 0;
+//             int two = l2 != NULL ? l2->val : 0;
+//             //cout << "o - " << one << " t - " << two << endl;
+//             int val = (one + two + carry)%10;
+//             carry = (one + two + carry)/10;
+            
+//             // cout << "o - " << one << " t - " << two << " val - " << val << " c - " << carry << endl;
+            
+//             curr->next = new ListNode (val);
+//             curr = curr->next;
+//             l1 = l1 != NULL ? l1->next : NULL;
+//             l2 = l2 != NULL ? l2->next : NULL;
+//         }
+        
+//         if (carry != 0) {
+//             curr->next = new ListNode (carry);
+//         }
+        
+//         return reverse (dummyHead->next);
+//     }
+// };
+
+// [7,2,4,3]
+//   [5,6,4]
+
+// If we cann't modify the list .. i'll find size of the lists. Do recursion. 
+
+
+class Solution {
+    public: 
+    
+     ListNode* reverse (ListNode * l1) {
+        ListNode * prev = NULL;
+        ListNode * curr = NULL;
+        ListNode * next = NULL;
+        
+        curr = l1;
+        
+        while (curr != NULL) {
+            next = curr->next;
+            curr->next = prev;
+            prev = curr;
+            curr = next;
+        }
+        
+        return prev; 
+        
+    }
+    
+    ListNode * addTwoNumbers (ListNode * l1, ListNode * l2) {
+        
+        ListNode * dummyHead = new ListNode (-1);
+        ListNode * curr = dummyHead;
+        stack<int> stack1;
+        stack<int> stack2;
+        
+        while (l1 != NULL) {
+            stack1.push (l1->val);
+            l1 = l1->next;
+        }
+        
+        while (l2 != NULL) {
+            stack2.push (l2->val);
+            l2 = l2->next;
+        }
+        
+        int carry  = 0;
+        
+        while (!stack1.empty() || !stack2.empty()) {
+            int one = 0;
+            int two = 0;
+            int val = 0;
+            
+           if (!stack1.empty()) {
+               one = stack1.top();
+               stack1.pop();
+           }
+           if (!stack2.empty()) {
+               two = stack2.top();
+               stack2.pop();
+           }
+            
+            val = (one + two + carry)%10;
+            carry = (one + two + carry)/10;
+            
+            curr->next = new ListNode (val);
+            curr = curr->next;
+        }
+        
+        if (carry != 0)
+            curr->next = new ListNode (carry);
+        
+        return reverse (dummyHead->next);
+    }
+};
