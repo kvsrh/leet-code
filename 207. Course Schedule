@@ -1,0 +1,109 @@
+207. Course Schedule
+Medium
+
+There are a total of numCourses courses you have to take, labeled from 0 to numCourses-1.
+
+Some courses may have prerequisites, for example to take course 0 you have to first take course 1, which is expressed as a pair: [0,1]
+
+Given the total number of courses and a list of prerequisite pairs, is it possible for you to finish all courses?
+
+ 
+
+Example 1:
+
+Input: numCourses = 2, prerequisites = [[1,0]]
+Output: true
+Explanation: There are a total of 2 courses to take. 
+             To take course 1 you should have finished course 0. So it is possible.
+
+Example 2:
+
+Input: numCourses = 2, prerequisites = [[1,0],[0,1]]
+Output: false
+Explanation: There are a total of 2 courses to take. 
+             To take course 1 you should have finished course 0, and to take course 0 you should
+             also have finished course 1. So it is impossible.
+
+ 
+
+Constraints:
+
+    The input prerequisites is a graph represented by a list of edges, not adjacency matrices. Read more about how a graph is represented.
+    You may assume that there are no duplicate edges in the input prerequisites.
+    1 <= numCourses <= 10^5
+
+Accepted
+421,579
+Submissions
+984,294
+
+// class Solution {
+// public:
+//     bool canFinish(int numCourses, vector<vector<int>>& prerequisites) {
+//         vector<int> indegree(numCourses);
+//         vector<vector<int>> graph(numCourses);
+//         for (auto p: prerequisites) {
+//             graph[p[1]].push_back(p[0]);
+//             indegree[p[0]]++;
+//         }
+//         for(int i = 0; i < numCourses; i++) {
+//             int j = 0;
+//             for(; j < numCourses; j++) if(indegree[j] == 0) break;
+//             // cout << i << j << endl;
+//             if(j == numCourses) return false;
+//             indegree[j] = -1;
+//             for(auto x: graph[j]) indegree[x]--;
+//         }
+//         return true;
+//     }
+// };
+
+class Solution {
+    public: 
+    bool canFinish(int numCourses, vector<vector<int>> & prerequisites) {
+        vector<int> inDegree(numCourses, 0);
+        vector<vector<int>> graph(numCourses);
+        
+        for (auto & edge : prerequisites) {
+            inDegree[edge[0]]++;
+            graph[edge[1]].emplace_back(edge[0]);
+        }
+        
+        queue<int> q;
+        vector<int> visited (numCourses, 0);
+        
+        
+        for (int i = 0; i < inDegree.size(); i++) {
+            if (inDegree[i] == 0) {
+                q.push(i);
+                visited[i] = 1;
+            }
+        }
+        
+        while (!q.empty()) {
+            
+            int curr = q.front();
+            q.pop();
+            
+            // cout << "curr - " << curr << endl;
+            
+            for (int next : graph[curr]) {
+                if (visited[next])
+                    return false;
+                
+                inDegree[next]--;
+                if (inDegree[next] == 0) {
+                    q.push(next);
+                    visited[next] = 1;
+                }
+            }
+        }
+        
+        for (auto & visitedNode : visited) {
+            if (!visitedNode)
+                return false;
+        }
+        
+        return true;
+    }
+};
