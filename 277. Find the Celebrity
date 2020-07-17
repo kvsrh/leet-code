@@ -1,0 +1,137 @@
+277. Find the Celebrity
+
+Suppose you are at a party with n people (labeled from 0 to n - 1) and among them, there may exist one celebrity. The definition of a celebrity is that all the other n - 1 people know him/her but he/she does not know any of them.
+
+Now you want to find out who the celebrity is or verify that there is not one. The only thing you are allowed to do is to ask questions like: "Hi, A. Do you know B?" to get information of whether A knows B. You need to find out the celebrity (or verify there is not one) by asking as few questions as possible (in the asymptotic sense).
+
+You are given a helper function bool knows(a, b) which tells you whether A knows B. Implement a function int findCelebrity(n). There will be exactly one celebrity if he/she is in the party. Return the celebrity's label if there is a celebrity in the party. If there is no celebrity, return -1.
+
+ 
+
+Example 1:
+
+Input: graph = [
+  [1,1,0],
+  [0,1,0],
+  [1,1,1]
+]
+Output: 1
+Explanation: There are three persons labeled with 0, 1 and 2. graph[i][j] = 1 means person i knows person j, otherwise graph[i][j] = 0 means person i does not know person j. The celebrity is the person labeled as 1 because both 0 and 2 know him but 1 does not know anybody.
+
+Example 2:
+
+Input: graph = [
+  [1,0,1],
+  [1,1,0],
+  [0,1,1]
+]
+Output: -1
+Explanation: There is no celebrity.
+
+ 
+
+Note:
+
+    The directed graph is represented as an adjacency matrix, which is an n x n matrix where a[i][j] = 1 means person i knows person j while a[i][j] = 0 means the contrary.
+    Remember that you won't have direct access to the adjacency matrix.
+
+Accepted
+125,835
+Submissions
+302,489
+
+// /* The knows API is defined for you.
+//       bool knows(int a, int b); */
+
+// class Solution {
+// public:
+//     vector<int> visited;
+//     vector <vector<int>> map; // row - per node. col 0 - outbound. col 1 - inbound. 
+//     int size;
+    
+//     void dfs (int input) {
+//         int outCount = 0;
+//         visited[input] = 1;
+        
+//         for (int i = 0; i < size; i++) {
+//             if (i != input && knows (input, i)) {
+//                 if (!visited[i]) {
+//                     dfs (i);
+//                 }
+//                 map[i][1]++;
+//                 outCount++;
+//             }
+//         }
+//         map[input][0] = outCount;
+//         return;
+//     }
+    
+//     int findCelebrity(int n) {
+//         // knows (a,b) api -- 
+//         // 0 --> 1 ..
+//         // 2 --> 0 ..
+//         // 2 --> 1 ..
+//         // A celebrity has n-1 inCount and 0 outCount. 
+        
+//         //  O (n^2) relationship calls from every n to every other n-1 persons. 
+//         //  
+//         // Can we optimize based on the person who has the highest indegree count at this
+//         // point as the potential candidate for the celebrity. 
+        
+//         // What does it mean if I find a cycle? None of the nodes in the cycle can be a celebrity? 
+//         // Start with 0 ... n if they know anyone they cann't be a celebrate. Mark them visited, 
+//         // and then we can say they are not celebrities too. 
+//         // 
+//         // Keep an unordered map of the nodes which don't have zero outCount and then check eventually, 
+//         // if they have inCount == 0. 
+        
+//         visited = vector<int> (n, 0);
+//         map = vector<vector<int>>(n, vector<int>(2,0)); 
+//         size = n;
+        
+//         for (int i = 0; i < n; i++) {
+//             if (!visited[i])
+//                 dfs (i);
+//         };
+        
+//         for (int i = 0; i < n; i++) { 
+//             if (map[i][0] == 0 && map[i][1] == n-1) {
+//                 return i;
+//             }
+//             //cout << "i - " << i << " out - " << map[i][0] << " in - " << map[i][1] << endl;
+//         }
+        
+//         return -1;
+        
+//     }
+// };
+
+
+class Solution {
+    public:
+    int count;
+    
+     bool isCeleb (int i) {
+         for (int j = 0; j < count; j++) {
+              if (i == j) continue;
+              if (knows (i,j) || !knows (j,i))
+                  return false;
+         }
+         return true;
+     } 
+     
+     int findCelebrity(int n) { 
+        count = n;
+        int celeb = 0;
+        
+        for (int i = 0; i < n; i++) {
+            if (knows (celeb, i)) {
+                celeb = i;
+            }
+            if (isCeleb (celeb)) {
+                return celeb;
+            }
+        }
+        return -1;
+     }
+};
