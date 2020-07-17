@@ -1,0 +1,99 @@
+636. Exclusive Time of Functions
+
+Medium
+
+On a single threaded CPU, we execute some functions.  Each function has a unique id between 0 and N-1.
+
+We store logs in timestamp order that describe when a function is entered or exited.
+
+Each log is a string with this format: "{function_id}:{"start" | "end"}:{timestamp}".  For example, "0:start:3" means the function with id 0 started at the beginning of timestamp 3.  "1:end:2" means the function with id 1 ended at the end of timestamp 2.
+
+A function's exclusive time is the number of units of time spent in this function.  Note that this does not include any recursive calls to child functions.
+
+The CPU is single threaded which means that only one function is being executed at a given time unit.
+
+Return the exclusive time of each function, sorted by their function id.
+
+ 
+
+Example 1:
+
+Input:
+n = 2
+logs = ["0:start:0","1:start:2","1:end:5","0:end:6"]
+Output: [3, 4]
+Explanation:
+Function 0 starts at the beginning of time 0, then it executes 2 units of time and reaches the end of time 1.
+Now function 1 starts at the beginning of time 2, executes 4 units of time and ends at time 5.
+Function 0 is running again at the beginning of time 6, and also ends at the end of time 6, thus executing for 1 unit of time. 
+So function 0 spends 2 + 1 = 3 units of total time executing, and function 1 spends 4 units of total time executing.
+
+Note:
+
+    1 <= n <= 100
+    Two functions won't start or end at the same time.
+    Functions will always log when they exit.
+
+
+class Solution {
+public:
+    vector<int> exclusiveTime(int n, vector<string>& logs) {
+        // Can I use a stack ?? To compute the time.
+        // How do we encode information in the stack. 
+        
+        // s : [] 
+        // When we see a start - we want to push the start to the stack. And we have to 
+        // stop the old task that has been started. Add time to old task. 
+        // When we see a end - pop the stack .. if the stack is not empty, 
+        // the top of the stack will continue running ...
+        // 
+        
+        vector<int> result (n, 0);
+        
+        stack <pair<int,int>> s; // keep the id and the time when it started.
+        
+        for (auto & elem : logs) {
+            istringstream ss(elem);
+            string token;
+            int i = 0; 
+            int idx;
+            string code;
+            int time;
+            
+            while (getline(ss,token,':')) {
+                switch (i) {
+                    case 0:
+                        idx = atoi(token.c_str());
+                        break;
+                    case 1:
+                        code = token;
+                        break;
+                    case 2:
+                        time = atoi(token.c_str());
+                        break;
+                }
+                i++;
+            }
+            
+            // Come with the key logic fast by considering examples. 
+            
+            if (code == "start") {
+                if (!s.empty()) {
+                    result[s.top().first] += (time - s.top().second); /This is the starting time. 
+                }
+                s.push ({idx,time});
+            } else {
+                // stack shouldn't be empty. 
+                result[s.top().first] += (time - s.top().second + 1); // This is the ending time.
+                s.pop();
+                // move the new start time for the old task.
+                if (!s.empty()) {
+                    s.top().second = time+1;
+                }
+            } 
+        }
+        
+        return result;  
+        
+    }
+};
