@@ -1,0 +1,55 @@
+325. Maximum Size Subarray Sum Equals k
+Medium
+
+Given an array nums and a target value k, find the maximum length of a subarray that sums to k. If there isn't one, return 0 instead.
+
+Note:
+The sum of the entire nums array is guaranteed to fit within the 32-bit signed integer range.
+
+Example 1:
+
+Input: nums = [1, -1, 5, -2, 3], k = 3
+Output: 4 
+Explanation: The subarray [1, -1, 5, -2] sums to 3 and is the longest.
+
+Example 2:
+
+Input: nums = [-2, -1, 2, 1], k = 1
+Output: 2 
+Explanation: The subarray [-1, 2] sums to 1 and is the longest.
+
+Follow Up:
+Can you do it in O(n) time?
+Accepted
+103,080
+Submissions
+220,825
+
+class Solution {
+public:
+    int maxSubArrayLen(vector<int>& nums, int k) {
+        // Keep a prefix-sum/rolling-sum as we keep going forward in the
+        // array. 
+        
+        unordered_map <int, int> map; // map between sum and the index where it is found.
+        
+        map[0] = -1; // 
+        //  
+        // Keep the lowest index where a given sum is obtained. 
+        // Also keep a maxL which keeps track of a sum. 
+        int rollingSum = 0;
+        int maxL = 0;
+        for (int i = 0; i < nums.size(); i++) {
+            rollingSum += nums[i];
+            
+            if (map.find(rollingSum-k) != map.end()) {
+                maxL = max (maxL, i - map[rollingSum-k]);
+            }
+            
+            if (map.find(rollingSum) == map.end()) {
+                map[rollingSum] = i;
+            }
+        }
+        return maxL; 
+    }
+};
