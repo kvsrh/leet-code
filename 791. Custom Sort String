@@ -2,7 +2,22 @@
 Medium
 
 ####
-It is weird that it fails when make the following check. 
+It is weird that it fails when make the following check.
+unordered_map <char, int> mapG;
+
+bool compare (char& a, char& b) {
+    
+    //cout << a  << " - " << mapG[a] << b << " - " << mapG[b] << endl;
+    // cout << a  << " " << b << endl;
+
+    // if (mapG.find(a) != mapG.end() && 
+    //     mapG.find(b) != mapG.end()) { --> why does this fail ??? 
+    //     return mapG[a] < mapG[b];
+    // } else {
+    //     return false;
+    // }
+     return mapG[a] < mapG[b];
+}
 ####
 
 S and T are strings composed of lowercase letters. In S, no letter occurs more than once.
