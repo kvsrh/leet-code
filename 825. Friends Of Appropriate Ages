@@ -2,6 +2,11 @@
 
 https://leetcode.com/problems/friends-of-appropriate-ages/
 
+====
+edge-case examples:
+[16,16]]
+====
+
 class Solution {
 public:
     unordered_map <int,int> map;
