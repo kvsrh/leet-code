@@ -1,0 +1,105 @@
+825. Friends Of Appropriate Ages
+
+https://leetcode.com/problems/friends-of-appropriate-ages/
+
+class Solution {
+public:
+    unordered_map <int,int> map;
+    
+    int findRequests (vector<int> & ages, int index) {
+        int size = map[ages[index]];
+        
+        int left = 0;
+        int right = size-1;
+        double target = (double) (0.5*ages[index]) + 7; // find ages > target.
+        
+        while (left <= right) {
+            int mid = left + (right-left)/2;
+            if (ages[mid] <= target) {
+                left = mid+1;
+            } else {
+                right = mid-1;
+            }
+        }
+        
+        return size-left; // len between index-1 and left. 
+    }
+    
+    int numFriendRequests(vector<int>& ages) {
+        ///  B  A
+        /// [30,34]
+        /// 0.5*age[A] + 7 --> 
+        /// 
+        // Sort in nlogn time. 
+        // Then consider all numbers less than current age 
+        // which will be greater than 0.5*age[A]+7 ... 
+        // Last condition is redundant. 
+        // Find the last occurence of the index and keep it in a map. 
+        
+        sort (ages.begin(), ages.end());
+        
+        for (int i = 0; i < ages.size(); i++) {
+            map[ages[i]] = i;
+        }
+        
+        int count = 0;
+        // The youngest will not send a request to anyone. 
+        for (int i = 0; i < ages.size(); i++) {
+            count += findRequests (ages, i);
+        }
+        return count;
+    }
+};
+
+// Another way to solve it would be to - process the number in back and return previously 
+// computed values. 
+
+///  B  A
+        /// [30,34]
+        /// 0.5*age[A] + 7 --> 
+        /// 
+        // Sort in nlogn time. 
+        // Then consider all numbers less than current age 
+        // which will be greater than 0.5*age[A]+7 ... 
+        // Last condition is redundant. 
+        // Find the last occurence of the index and keep it in a map. 
+
+// class Solution {
+// public:
+//     unordered_map <int,int> map;
+    
+//     int findRequests (vector<int> & ages, int index) {
+        
+//         if (map.find(ages[index]) != map.end()) {
+//             return map[ages[index]];
+//         }
+        
+//         int left = 0;
+//         int right = index-1;
+//         double target = (double) (0.5*ages[index]) + 7; // find ages >= target.
+        
+//         while (left <= right) {
+//             int mid = left + (right-left)/2;
+//             if (ages[mid] <= target) {
+//                 left = mid+1;
+//             } else {
+//                 right = mid-1;
+//             }
+//         }
+        
+//         map[ages[index]] = index-left;
+//         return index-left; // len between index-1 and left. 
+//     }
+    
+//     int numFriendRequests(vector<int>& ages) {
+        
+//         sort (ages.begin(), ages.end());
+        
+//         int count = 0;
+        
+//         for (int i = ages.size()-1; i >= 0 ; i--) {
+//             count += findRequests (ages, i);
+//         }
+//         return count;
+//     }
+// };
