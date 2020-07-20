@@ -4,7 +4,7 @@ https://leetcode.com/problems/friends-of-appropriate-ages/
 
 ====
 edge-case examples:
-[16,16]]
+[[16,16]] --> if you just do a simple binary search .. you'll miss the number of people who are of the same age whom we can befriend. 
 ====
 
 class Solution {
