@@ -1,0 +1,155 @@
+
+####
+cases: 
+
+Missed the logic where in BFS wouldn't work. Example: 
+
+[["A","B","C","E"]
+ ["S","F","E","S"]
+ ["A","D","E","E"]]
+"ABCESEEEFS"
+
+See why BFS won't work. 
+
+####
+
+// // Missed a massive consideration ... in the bfs solution we might come to a visited node
+// // in the later part of the search and skip going down that path. 
+
+
+// class Solution {
+// public:
+    
+//     bool bfs (vector<vector<char>> board, int r, int c, string & word) {
+        
+//         queue<pair<int,int>> q;
+//         q.push({r,c});
+        
+//         board[r][c] = '\0';
+        
+//         int rows = board.size();
+//         int cols = board[0].size();
+        
+//         vector<int> dirs = {0,1,0,-1,0};
+    
+//         int level = 1;
+        
+//         while (!q.empty()) {
+//             int size = q.size();
+            
+//             for (int i = 0; i < size; i++) {
+//                 auto & curr = q.front();
+//                 q.pop();
+//                 int cr = curr.first;
+//                 int cc = curr.second; 
+
+//                 if (level == word.size()) {
+//                     return true;
+//                 }
+
+//                 for (int i = 0; i < 4; i++) {
+//                     int nr = cr + dirs[i];
+//                     int nc = cc + dirs[i+1];
+
+//                     if (nr >= 0 && nr < rows &&
+//                         nc >= 0 && nc < cols &&
+//                        board[nr][nc] == word[level]) {
+//                         board[nr][nc] = '\0';
+//                         q.push ({nr,nc});
+//                     }
+//                 }
+//             }
+            
+//             level++;
+//         }
+//         return false;
+//     }
+    
+//     bool exist(vector<vector<char>>& board, string word) {
+//        // have a context of where you can find the first letter of 
+//        // the string. 
+        
+//         int rows = board.size();
+        
+//         if (rows == 0 && word.size() == 0)
+//             return true;
+        
+//         if (rows == 0 || word.size() == 0)
+//             return false;
+        
+//         int cols = board[0].size();
+    
+//         for (int r = 0; r < rows; r++) {
+//             for (int c = 0; c < cols;  c++) {
+//                 if (board[r][c] == word[0]) {
+//                     if (bfs (board, r, c, word))
+//                         return true;    
+//                 }
+//             }
+//         }
+        
+//         return false;
+//     }
+// };
+
+class Solution {
+    public:
+    string wordG;
+    vector<int> dirs = {0,1,0,-1,0};
+    
+    bool dfs (vector<vector<char>> & board, int r, int c, int index) {
+        
+        if (board[r][c] != wordG[index])
+            return false;
+        
+        if (index == wordG.size()-1) 
+            // important line .. you cann't check like the other backtracking solutions. 
+            return true;
+        
+        char curr = board[r][c];
+        board[r][c] = '\0';
+        
+        int rows = board.size();
+        int cols = board[0].size();
+        
+        for (int i = 0; i < 4; i++) {
+            int nr = r + dirs[i];
+            int nc = c + dirs[i+1];
+            if (nr >= 0 && nr < rows &&
+                nc >= 0 && nc < cols && 
+                board[nr][nc] != '\0') {
+                if (dfs (board, nr, nc, index+1)) {
+                    return true;
+                }
+            }
+        }
+        
+        board[r][c] = curr;
+        return false;
+    }
+    
+    bool exist (vector<vector<char>> & board, string word) {
+        int rows = board.size();
+        
+        if (rows == 0 && word.size() == 0) {
+            return true;
+        }
+        
+        if (rows == 0 || word.size() == 0)
+            return false;
+        
+        int cols = board[0].size();
+        
+        wordG = word;
+        
+        for (int r = 0; r < rows; r++) {
+            for (int c = 0; c < cols; c++) {
+                if (dfs (board, r, c, 0)) {
+                    return true;
+                }
+            }
+        }
+        
+        return false;
+    }
+};
