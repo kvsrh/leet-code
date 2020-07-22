@@ -1,0 +1,49 @@
+203. Remove Linked List Elements
+
+https://leetcode.com/problems/remove-linked-list-elements/
+
+Remove all elements from a linked list of integers that have value val.
+
+Example:
+
+Input:  1->2->6->3->4->5->6, val = 6
+Output: 1->2->3->4->5
+
+Accepted
+358,506
+Submissions
+929,897
+
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode() : val(0), next(nullptr) {}
+ *     ListNode(int x) : val(x), next(nullptr) {}
+ *     ListNode(int x, ListNode *next) : val(x), next(next) {}
+ * };
+ */
+class Solution {
+public:
+    ListNode* removeElements(ListNode* head, int val) {
+        ListNode * curr = head;
+        ListNode * dummyHead = new ListNode (-1);
+        dummyHead->next = head;
+        ListNode *prev = dummyHead;
+        
+        while (curr != NULL) {
+            if (curr->val == val) {
+                // delete node ...
+                prev->next = curr->next;
+                delete (curr); // Delete the curr node and then work on updating it.
+                curr = prev->next;
+            } else {
+                prev = curr; 
+                curr = curr->next;
+            }
+        }
+        
+        return dummyHead->next;
+    }
+};
