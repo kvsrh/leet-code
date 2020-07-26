@@ -1,0 +1,78 @@
+40. Combination Sum II
+Medium
+
+Given a collection of candidate numbers (candidates) and a target number (target), find all unique combinations in candidates where the candidate numbers sums to target.
+
+Each number in candidates may only be used once in the combination.
+
+Note:
+
+    All numbers (including target) will be positive integers.
+    The solution set must not contain duplicate combinations.
+
+Example 1:
+
+Input: candidates = [10,1,2,7,6,1,5], target = 8,
+A solution set is:
+[
+  [1, 7],
+  [1, 2, 5],
+  [2, 6],
+  [1, 1, 6]
+]
+
+Example 2:
+
+Input: candidates = [2,5,2,1,2], target = 5,
+A solution set is:
+[
+  [1,2,2],
+  [5]
+]
+class Solution {
+public:
+    vector<int> candidatesG;
+    int targetG;
+    vector<vector<int>> result;
+    void dfs (vector<int> & path, int index, int sum) {
+        if (sum == targetG) {
+            result.push_back(path);
+            return;
+        }
+        
+        if (sum > targetG)
+            return;
+        
+        unordered_set<int> setL;
+        
+        // At a given level in the dfs a solution with the same value in the
+        // set will not be searched for again.
+        
+        for (int i = index; i < candidatesG.size(); i++) {
+            int num = candidatesG[i];
+            if (setL.find(num) == setL.end()) {
+                path.emplace_back(num);
+                dfs (path, i+1, sum + num);
+                path.pop_back();
+                setL.insert(num);
+            }
+        }
+        
+        return;
+    }
+    
+    vector<vector<int>> combinationSum2(vector<int>& candidates, int target) {
+        // If a number can be used only once. Move the index 1 forward.
+        sort (candidates.begin(), candidates.end());
+        candidatesG = candidates;
+        targetG = target;
+        vector<int> path;
+        // sort (candidates.begin(), candidates.end());
+        dfs (path, 0, 0);
+        
+        return result;
+        
+    }
+    
+    
+};
