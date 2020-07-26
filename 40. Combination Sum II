@@ -1,5 +1,4 @@
 40. Combination Sum II
-Medium
 
 Given a collection of candidate numbers (candidates) and a target number (target), find all unique combinations in candidates where the candidate numbers sums to target.
 
@@ -69,10 +68,51 @@ public:
         vector<int> path;
         // sort (candidates.begin(), candidates.end());
         dfs (path, 0, 0);
+        return result; 
+    }
+};
+
+// ## Non-Set based solution ## //
+
+class Solution {
+public:
+    vector<int> candidatesG;
+    int targetG;
+    vector<vector<int>> result;
+    void dfs (vector<int> & path, int index, int sum) {
+        if (sum == targetG) {
+            result.push_back(path);
+            return;
+        }
         
-        return result;
+        if (sum > targetG)
+            return;
         
+        // At a given level in the dfs a solution with the same value in the
+        // set will not be searched for again.
+        
+        for (int i = index; i < candidatesG.size(); i++) {
+            if (i > index && candidatesG[i] == candidatesG[i-1]) {
+                continue;
+            }
+            int num = candidatesG[i];
+            path.emplace_back(num);
+            dfs (path, i+1, sum + num);
+            path.pop_back();
+        }
+        
+        return;
     }
     
-    
+    vector<vector<int>> combinationSum2(vector<int>& candidates, int target) {
+        // If a number can be used only once. Move the index 1 forward.
+        sort (candidates.begin(), candidates.end());
+        candidatesG = candidates;
+        targetG = target;
+        vector<int> path;
+        // sort (candidates.begin(), candidates.end());
+        dfs (path, 0, 0);
+        
+        return result;
+    }
 };
