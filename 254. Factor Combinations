@@ -1,0 +1,103 @@
+254. Factor Combinations
+Medium
+
+Numbers can be regarded as product of its factors. For example,
+
+8 = 2 x 2 x 2;
+  = 2 x 4.
+
+Write a function that takes an integer n and return all possible combinations of its factors.
+
+Note:
+
+    You may assume that n is always positive.
+    Factors should be greater than 1 and less than n.
+
+Example 1:
+
+Input: 1
+Output: []
+
+Example 2:
+
+Input: 37
+Output:[]
+
+Example 3:
+
+Input: 12
+Output:
+[
+  [2, 6],
+  [2, 2, 3],
+  [3, 4]
+]
+
+Example 4:
+
+Input: 32
+Output:
+[
+  [2, 16],
+  [2, 2, 8],
+  [2, 2, 2, 4],
+  [2, 2, 2, 2, 2],
+  [2, 4, 4],
+  [4, 8]
+]
+
+Accepted
+72,748
+Submissions
+155,948
+
+class Solution {
+public:
+    vector<vector<int>> result;
+    int targetG;
+    
+    void dfs (vector<int> & nums, vector<int> & path, int index, long prod) {
+        if (prod == targetG && path.size() > 0) {
+            result.push_back(path);
+            return;
+        }
+        
+        if (prod > targetG)
+            return;
+        
+        for (int i = index; i < nums.size(); i++) {
+            path.emplace_back(nums[i]);
+            dfs (nums, path, i, prod*nums[i]);
+            path.pop_back();
+        }
+        return;
+    }
+    
+    vector<vector<int>> getFactors(int n) {
+        
+        // keep a vector of all primes uptil sqrt(n).
+        // Eratosthenes seives method to consider all primes until the sqrt(n). 
+        
+        // Or find all the primes of a given number.
+        
+        // if (n <= 2)
+        //     return {};
+        
+        int num = (int) (n/2);
+        targetG = n;
+        
+        vector<int> nums;
+    
+        for (int i = 2; i <= num; i++) {
+            if (n % i == 0) {
+                nums.emplace_back(i);    
+            }
+        }
+        
+        vector<int> path;
+        
+        dfs (nums, path, 0, 1);
+        
+        return result;
+    }
+};
