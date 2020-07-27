@@ -1,0 +1,93 @@
+51. N-Queens
+Hard
+
+The n-queens puzzle is the problem of placing n queens on an n×n chessboard such that no two queens attack each other.
+
+Given an integer n, return all distinct solutions to the n-queens puzzle.
+
+Each solution contains a distinct board configuration of the n-queens' placement, where 'Q' and '.' both indicate a queen and an empty space respectively.
+
+Example:
+
+Input: 4
+Output: [
+ [".Q..",  // Solution 1
+  "...Q",
+  "Q...",
+  "..Q."],
+
+ ["..Q.",  // Solution 2
+  "Q...",
+  "...Q",
+  ".Q.."]
+]
+Explanation: There exist two distinct solutions to the 4-queens puzzle as shown above.
+
+class Solution {
+public:
+    
+    vector<vector<string>> results;
+    // could be made faster using vectors. 
+    unordered_set <int> cols;
+    unordered_set <int> PosDiagonal; // r-c;
+    unordered_set <int> NegDiagonal; // r+c;
+    
+    bool goodPos (int r, int c) {
+        // Keep 4 maps ... 
+        
+        if (cols.count(c) > 0 ||
+            PosDiagonal.count(r-c) > 0 ||
+            NegDiagonal.count(r+c) > 0) {
+            return false;
+        }
+        return true;
+    }
+    
+    void insertPos (int r, int c) {
+        cols.insert(c);
+        PosDiagonal.insert(r-c);
+        NegDiagonal.insert(r+c);
+        return;
+    }
+    
+    void deletePos (int r, int c) {
+        cols.erase(c);
+        PosDiagonal.erase(r-c);
+        NegDiagonal.erase(r+c);
+        return;
+    }
+    
+    void dfs (vector<string> & board, int r, int size) {
+        if (r == size) {
+            results.push_back(board);
+        }
+        
+        for (int c = 0; c < size; c++) {
+            if (goodPos (r, c)) {
+                board[r][c] = 'Q';
+                insertPos (r, c);
+                dfs (board, r+1, size);
+                deletePos (r, c);
+                board[r][c] = '.';
+            }
+        }
+         
+    }
+    
+    vector<vector<string>> solveNQueens(int n) {
+        // There are two ways of solving the problem ... 
+        // For each position check if a valid Queen can be placed. 
+        
+        string s = "";
+        
+        for (int i = 0; i < n; i++) {
+            s.append(".");
+        }
+        
+        vector<string> board (n, s);
+        
+        dfs (board, 0, n);
+        
+        return results;
+    }
+};
