@@ -1,0 +1,99 @@
+# Pramp -- 
+
+Award Budget Cuts
+
+The awards committee of your alma mater (i.e. your college/university) asked for your assistance with a budget allocation problem they’re facing. Originally, the committee planned to give N research grants this year. However, due to spending cutbacks, the budget was reduced to newBudget dollars and now they need to reallocate the grants. The committee made a decision that they’d like to impact as few grant recipients as possible by applying a maximum cap on all grants. Every grant initially planned to be higher than cap will now be exactly cap dollars. Grants less or equal to cap, obviously, won’t be impacted.
+
+Given an array grantsArray of the original grants and the reduced budget newBudget, write a function findGrantsCap that finds in the most efficient manner a cap such that the least number of recipients is impacted and that the new budget constraint is met (i.e. sum of the N reallocated grants equals to newBudget).
+
+Analyze the time and space complexities of your solution.
+
+Example:
+
+input:  grantsArray = [2, 100, 50, 120, 1000], newBudget = 190
+
+output: 47 # and given this cap the new grants array would be
+           # [2, 47, 47, 47, 47]. Notice that the sum of the
+           # new grants is indeed 190
+
+####
+
+Logic: 
+
+step 1: 
+
+Sort the array.
+Intially give all the member equal amount of budget. 
+Run a binary search to find the members who had budget below the new budget.
+Compute the excess they have received and reallocate it other in the grantArray. Do it in a loop until you have no more
+budget to re-assign.
+
+####
+
+#include <iostream>
+#include <vector>
+
+using namespace std;
+
+vector<int> grantsArrayG;
+
+// Find the number of people who have grant greater than
+//   
+
+double spare (double sum, int & start) {
+  
+    int left = start;
+    int right = grantsArrayG.size()-1;
+    
+    while (left <= right) {
+      int mid = left + (right-left)/2;
+      if (grantsArrayG[mid] <= sum) {
+        left = mid+1;  
+      } else {
+        right = mid-1;
+      }
+    }
+    
+    double spareL = 0;
+    
+    for (int i = start; i < left; i++) {
+      spareL += grantsArrayG[i];
+    }
+    
+    double excess = (left - start)*sum - spareL;
+  
+    start = left;
+    return excess;
+}
+double findGrantsCap( vector<int> grantsArray, int newBudget ) 
+{
+  // Grants -- 
+  // Grants array: 
+  // [2, 100, 50, 120, 1000] --> new budget 190 .. 190/5 --> 38$ ... 
+  // Any number of people below 38 dollars money can be split again. 
+  // 36 dollars spare .. so split that amongst the rest. Once you find nobody 
+  // less than the current split amount you are done. 
+  
+  sort (grantsArray.begin(), grantsArray.end());
+  
+  grantsArrayG = grantsArray;
+  
+  int size = grantsArray.size();
+  
+  double sum = (double)newBudget/size;
+  
+  int start = 0;
+  
+  while (true) {
+      double spareL = spare (sum, start);
+      if (spareL == 0)
+          break;
+      int count = size - start;
+      sum += (double)(spareL/count);
+  }
+  return sum;
+}
+
+int main() {
+  return 0;
+}
