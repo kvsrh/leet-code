@@ -235,4 +235,15 @@ for (int center = 0; center < centers; center++) {
             }
 #####
 
+Priority queue with custom comparator function -- 
 
+priority_queue <pair<int, double>, vector<pair<int, double>>, 
+            function<bool(pair<int,double>, pair<int,double>)>> pq (
+            [](pair<int, double> & a, pair<int, double> & b) -> bool {
+                return a.second < b.second;
+            });
+            
+Declare the template with returntype (inputtype, inputtype) {
+[] (inputtype & a, intputtype & b) {
+}
+}
