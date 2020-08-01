@@ -31,47 +31,62 @@ Constraints:
 
 class Solution {
 public:
+    // Interesting if they are anagrams .. we can check if they are different at more than two
+    // positions we can bail out. 
     
     bool similar (string & a, string & b) {
-        //cout << a << " " << b << endl;
+        int count = 0;
         
-        if (a.size() != b.size()) {
-            return false;
-        }
-        if (a.compare(b) == 0)
-            return true;
-        
-        int pos = 0;
-        pair <int,int> miss = {-1,-1};
-        
-        int size = a.size();
-        
-        while (pos < size) {
-            if (a[pos] == b[pos]) {
-                pos++;
-                continue;
-            }
-            if (miss.first == -1) {
-                // Meaning we are hitting a mismatch for the firstime.
-                miss.first = a[pos];
-                miss.second = b[pos];
-                pos++;
-                continue; 
-            } else {
-                // Hitting a second miss. compare with first miss vals. 
-                if (miss.first == b[pos] && 
-                    miss.second == a[pos] && 
-                    (a.compare (pos+1, size-1-pos, b, pos+1, size+1-pos) == 0)) {
-                    return true;
-                } else {
-                    // if the above two condition are not satisfied .. strings are 
-                    // not 1-swap distance away.
+        for (int i = 0; i < a.size(); i++) {
+            if (a[i] != b[i]) {
+                count++;
+                if (count > 2)
                     return false;
-                }
             }
         }
-        return false;
+        return true;
     }
+    
+//     bool similar (string & a, string & b) {
+//         //cout << a << " " << b << endl;
+        
+//         if (a.size() != b.size()) {
+//             return false;
+//         }
+//         if (a.compare(b) == 0)
+//             return true;
+        
+//         int pos = 0;
+//         pair <int,int> miss = {-1,-1};
+        
+//         int size = a.size();
+        
+//         while (pos < size) {
+//             if (a[pos] == b[pos]) {
+//                 pos++;
+//                 continue;
+//             }
+//             if (miss.first == -1) {
+//                 // Meaning we are hitting a mismatch for the firstime.
+//                 miss.first = a[pos];
+//                 miss.second = b[pos];
+//                 pos++;
+//                 continue; 
+//             } else {
+//                 // Hitting a second miss. compare with first miss vals. 
+//                 if (miss.first == b[pos] && 
+//                     miss.second == a[pos] && 
+//                     (a.compare (pos+1, size-1-pos, b, pos+1, size+1-pos) == 0)) {
+//                     return true;
+//                 } else {
+//                     // if the above two condition are not satisfied .. strings are 
+//                     // not 1-swap distance away.
+//                     return false;
+//                 }
+//             }
+//         }
+//         return false;
+//     }
     
     int numSimilarGroups(vector<string>& A) {
         
