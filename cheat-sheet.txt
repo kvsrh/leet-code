@@ -201,6 +201,11 @@ string.substr(int startindex, int len) --> get a substring of type string.
 
 stringstream .. given a string string with demarcators the stream splits it and gives us the individual line. 
 
+compare 2 strings -- 
+a.compare(b) == 0 --> implies the two strings are the same. 
+Compare two strings from certain position in string a to certain position in b. 
+
+a.compare(start_pos_a, length_in_a, b, start_pos_b, length_in_b);
 
 # BIT APIS #
 
