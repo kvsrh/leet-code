@@ -1,0 +1,145 @@
+839. Similar String Groups
+Hard
+
+Two strings X and Y are similar if we can swap two letters (in different positions) of X, so that it equals Y. Also two strings X and Y are similar if they are equal.
+
+For example, "tars" and "rats" are similar (swapping at positions 0 and 2), and "rats" and "arts" are similar, but "star" is not similar to "tars", "rats", or "arts".
+
+Together, these form two connected groups by similarity: {"tars", "rats", "arts"} and {"star"}.  Notice that "tars" and "arts" are in the same group even though they are not similar.  Formally, each group is such that a word is in the group if and only if it is similar to at least one other word in the group.
+
+We are given a list A of strings.  Every string in A is an anagram of every other string in A.  How many groups are there?
+
+ 
+
+Example 1:
+
+Input: A = ["tars","rats","arts","star"]
+Output: 2
+
+ 
+
+Constraints:
+
+    1 <= A.length <= 2000
+    1 <= A[i].length <= 1000
+    A.length * A[i].length <= 20000
+    All words in A consist of lowercase letters only.
+    All words in A have the same length and are anagrams of each other.
+    The judging time limit has been increased for this question.
+
+
+
+class Solution {
+public:
+    
+    bool similar (string & a, string & b) {
+        //cout << a << " " << b << endl;
+        
+        if (a.size() != b.size()) {
+            return false;
+        }
+        if (a.compare(b) == 0)
+            return true;
+        
+        int pos = 0;
+        pair <int,int> miss = {-1,-1};
+        
+        int size = a.size();
+        
+        while (pos < size) {
+            if (a[pos] == b[pos]) {
+                pos++;
+                continue;
+            }
+            if (miss.first == -1) {
+                // Meaning we are hitting a mismatch for the firstime.
+                miss.first = a[pos];
+                miss.second = b[pos];
+                pos++;
+                continue; 
+            } else {
+                // Hitting a second miss. compare with first miss vals. 
+                if (miss.first == b[pos] && 
+                    miss.second == a[pos] && 
+                    (a.compare (pos+1, size-1-pos, b, pos+1, size+1-pos) == 0)) {
+                    return true;
+                } else {
+                    // if the above two condition are not satisfied .. strings are 
+                    // not 1-swap distance away.
+                    return false;
+                }
+            }
+        }
+        return false;
+    }
+    
+    int numSimilarGroups(vector<string>& A) {
+        
+        // tars, rats, arts, star ... 
+        // Given two words .. best case how can we get ... 
+        // similarity formula. 
+        // Do a linear search .. if we see the two places where they are miss-matched, 
+        // and if a swap will resolve the conflict .. we can say they are in a similar group. 
+        
+        // Now when we get a new one .. we'll have to check if it is similar to any other group
+        // member. Complexity will become n^2 .. 
+        
+        // Looks like a solution for union find? Generate a graph using the similarity logic. 
+        // and then do union find on it. 
+        int size = A.size();
+        if (size == 0) 
+            return 0;
+        
+        vector<vector<int>> graph (size, vector<int>(0,0));
+        
+        for (int i = 0; i < A.size(); i++) {
+            for (int j = i+1; j < A.size(); j++) {
+                //cout << i << " " << j << endl;
+                if (similar (A[i],A[j])) {
+                    graph[i].emplace_back(j);
+                    graph[j].emplace_back(i);
+                }
+            }
+        }
+        
+         
+        
+        // for (int i = 0; i < graph.size(); i++) {
+        //     cout << i <<  " : "; 
+        //     for (auto & node : graph[i]) {
+        //         cout << " " << node;
+        //     }
+        //     cout << endl;
+        // } 
+        
+        // Find connected components.
+        
+        vector<bool> visited (size, false);
+        int count = 0;
+    
+        for (int i = 0; i < size; i++) {
+            if (visited[i] == false) {
+                count++;
+                
+                queue<int> q; 
+                q.push(i);
+                visited[i] = true;
+                
+                while (!q.empty()) {
+                    int curr = q.front();
+                    q.pop();
+                    
+                    for (auto & next : graph[curr]) {
+                        if (!visited[next]) {
+                            visited[next] = true;
+                            q.push(next);
+                        }
+                    }
+                }
+            }
+        }
+        
+        return count; 
+        
+    }
+};
