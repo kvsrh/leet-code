@@ -1,0 +1,136 @@
+1216. Valid Palindrome III
+Hard
+
+Given a string s and an integer k, find out if the given string is a K-Palindrome or not.
+
+A string is K-Palindrome if it can be transformed into a palindrome by removing at most k characters from it.
+
+ 
+
+Example 1:
+
+Input: s = "abcdeca", k = 2
+Output: true
+Explanation: Remove 'b' and 'e' characters.
+
+ 
+
+Constraints:
+
+    1 <= s.length <= 1000
+    s has only lowercase English letters.
+    1 <= k <= s.length
+
+
+// class Solution {
+// public:
+//     bool isPalindrome (string & s) {
+//         int left = 0;
+//         int right = s.size()-1;
+        
+//         while (left < right) {
+//             if (s[left] != s[right])
+//                 return false;
+//             left++;
+//             right--;
+//         }
+        
+//         return true;
+//     }
+    
+//     bool dfs (string output, int k, int index) {
+//         // cout << "output - " << output << ":" << k << endl;
+//         if (k == 0) {
+//             return isPalindrome (output); 
+//         }
+        
+//         if (index == output.size()) {
+//             return false;
+//         }
+        
+//         // Keep the char at index. 
+        
+//         if (dfs (output, k, index+1))
+//             return true;
+        
+//         output = output.substr(0, index) + output.substr(index+1);
+        
+//         if (dfs(output, k-1, index))
+//             return true;
+        
+//         return false;
+//     }
+    
+//     bool isValidPalindrome(string input, int k) {
+//         // Can we do dfs and skip those many characters and check if the string is a palindrome. 
+        
+//         if (input.size() < k)
+//             return  true;
+
+//         return dfs (input, k, 0);
+        
+//     }
+// };
+
+// class Solution {
+//     public:
+//     vector<vector<int>> mapG;
+//     bool recurse (string &  s, int k, int l, int r) {
+//         int left = l;
+//         int right = r; 
+        
+//         if (mapG[l][r] != -1)
+//             return mapG[l][r] <= k;
+        
+//         while (left < right) {
+//             if (s[left] != s[right]) {
+//                 if (k == 0) {
+//                     return false;
+//                 }
+                
+//                 if (recurse (s, k-1, left+1, right)) {
+//                     mapG[l][r] = k;
+//                     return true;
+//                 }
+                
+//                 if (recurse (s, k-1, left, right-1)) {
+//                     mapG[l][r] = k;
+//                     return true;
+//                 } 
+                
+//                 return false;
+//             }
+//             left++; right--;
+//         }
+        
+//         mapG[l][r] = k;
+//         return true;
+//     }
+    
+//     bool isValidPalindrome (string s, int k) {
+//         if (s.size() <= k)
+//             return true;
+        
+//         mapG = vector<vector<int>> 
+//             (s.size(), vector<int> (s.size(), -1));
+        
+//         return recurse (s, k, 0, s.size()-1);
+//     }
+// };
+
+class Solution {
+public:
+    int check(int start, int end, string &s,vector<vector<int> > &dp){
+        if(start>end) return 0;
+        if(dp[start][end] != -1) return dp[start][end];
+        if(s[start] == s[end]) return dp[start][end] = check(start+1,end-1,s,dp);
+        else return dp[start][end] = 1+min(check(start+1,end,s,dp) , check(start,end-1,s,dp));
+    }
+    
+    bool isValidPalindrome(string s, int k) {
+        int start= 0;
+        int end = s.length()-1;
+        vector<vector<int> > dp(end+1,vector<int>(end+1,-1));
+        return check(start,end,s,dp) <= k;
+    }
+};
