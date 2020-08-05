@@ -1,0 +1,74 @@
+https://leetcode.com/problems/reorganize-string/
+
+767. Reorganize String
+Medium
+
+Given a string S, check if the letters can be rearranged so that two characters that are adjacent to each other are not the same.
+
+If possible, output any possible result.  If not possible, return the empty string.
+
+Example 1:
+
+Input: S = "aab"
+Output: "aba"
+
+Example 2:
+
+Input: S = "aaab"
+Output: ""
+
+Note:
+S will consist of lowercase letters and have length in range [1, 500].
+
+class Solution {
+public:
+    string reorganizeString(string S) {
+        
+        // It would have been simpler to say if a string cann't be 
+        // arranged in the given pattern. 
+        
+        int size = S.size();
+        
+        unordered_map <char, int> map;
+        
+        for (auto & c : S) {
+            map[c]++;
+            if (map[c] > (size+1)/2) {
+                return "";
+            }
+        }
+        
+        priority_queue <pair<int, char>> pq;
+        
+        for (auto & elem : map) {
+            pq.push ({elem.second, elem.first});
+        }
+        
+        string result; 
+        
+        while (!pq.empty()) {
+            vector<pair<int,char>> cache;
+            
+            for (int i = 0; i < 2; i++) {
+                
+                if (pq.empty())
+                    return "";
+                
+                auto curr = pq.top(); pq.pop();
+                result.push_back(curr.second);
+                
+                if (result.size() == S.size()) {
+                    return result;
+                }
+                
+                if (--curr.first > 0) {
+                    cache.push_back ({curr.first, curr.second});
+                }
+            }
+            for (auto & elem : cache) {
+                pq.push ({elem.first, elem.second});
+            }
+        }
+        return result;
+    }
+};
