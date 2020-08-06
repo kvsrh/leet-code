@@ -1,0 +1,41 @@
+https://leetcode.com/problems/find-all-duplicates-in-an-array/
+
+442. Find All Duplicates in an Array
+Medium
+
+Given an array of integers, 1 ≤ a[i] ≤ n (n = size of array), some elements appear twice and others appear once.
+
+Find all the elements that appear twice in this array.
+
+Could you do it without extra space and in O(n) runtime?
+
+Example:
+
+Input:
+[4,3,2,7,8,2,3,1]
+
+Output:
+[2,3]
+
+class Solution {
+public:
+    vector<int> findDuplicates(vector<int>& nums) {
+        // [4,3,2,7,8,2,3,1]
+        // Double negation technique. 
+        
+        vector<int> results;
+        
+        for (auto & num : nums) {
+            nums[abs(num) - 1] *= -1;
+        }
+        
+        for (auto & num : nums) {
+            if (nums[abs(num)-1] > 0) {
+                results.push_back(abs(num));
+                nums[abs(num)-1] *= -1;
+            }
+        }
+        
+        return results;
+    }
+};
