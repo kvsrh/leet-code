@@ -199,6 +199,7 @@ void recurse (vector<int> & nums, vector<int> & result) {
 to_string() --> convert an integer value to string. 
 string.substr(int startindex, int len) --> get a substring of type string.
 
+if len is not passed .. substr will give substring until the end. 
 stringstream .. given a string string with demarcators the stream splits it and gives us the individual line. 
 
 compare 2 strings -- 
@@ -207,8 +208,7 @@ Compare two strings from certain position in string a to certain position in b.
 
 a.compare(start_pos_a, length_in_a, b, start_pos_b, length_in_b);
 
-convert string to int ... 
-
+convert string to int --
 stoi(str);
 
 # BIT APIS #
