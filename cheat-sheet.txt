@@ -207,6 +207,10 @@ Compare two strings from certain position in string a to certain position in b.
 
 a.compare(start_pos_a, length_in_a, b, start_pos_b, length_in_b);
 
+convert string to int ... 
+
+stoi(str);
+
 # BIT APIS #
 
 cout << bitset<8>(x) << endl; --> prints the number in bit representation. 
