@@ -1,0 +1,94 @@
+93. Restore IP Addresses
+Medium
+
+Given a string containing only digits, restore it by returning all possible valid IP address combinations.
+
+A valid IP address consists of exactly four integers (each integer is between 0 and 255) separated by single points.
+
+Example:
+
+Input: "25525511135"
+Output: ["255.255.11.135", "255.255.111.35"]
+
+class Solution {
+public:
+    string sG;    
+    vector<string> results;
+    
+    // do we consider 1.02.3.5 a valid address?? 
+    
+    bool validateAddress (string s) {
+        stringstream ss(s); 
+        string token;
+        int valid = 0;
+        while (getline (ss, token, '.')) {
+            int size = token.size();
+            int val = stoi(token);
+            if ((size == 1 && val >= 0 && val <= 9) || 
+                (size == 2 && val >= 10 && val <= 99) ||
+                (size == 3 && val >= 100 && val <= 255)) {
+                valid++;
+            } else {
+                return false;
+            }
+        }
+        if (valid == 4) {
+            return true;
+        }
+        return false;
+    }
+    
+    void dfs (string & result, int curr, int last, int count) {
+        // cout << result << endl; 
+        if (count == 3) {
+            string ip = result+sG.substr(curr); // important step. 
+            // cout << ip << endl;
+            if (validateAddress(ip)) {
+                results.push_back (ip);
+            }
+            return;
+        }
+        
+        if (curr == sG.size()) {
+            return;
+        }
+        
+        // last is the index where after which we keep a dot ...
+        // To compute the valid length for inserting a dot .. check length = curr - last
+        // Once a dot is place lets move curr++. 
+        // 
+        
+        // cout << "result - " << result << endl;
+            
+        if (curr-last <= 3) {
+            result.push_back(sG[curr]);
+            dfs (result, curr+1, last, count);
+            result.push_back('.');
+            dfs (result, curr+1, curr, count+1);
+            result.pop_back();
+            result.pop_back(); // Simple step how did you miss it kana? 
+        }
+        
+        return; 
+    }
+     
+    vector<string> restoreIpAddresses(string s) {
+        // Ton loads of optimization we would have to do. 
+        // backtracking. 
+        
+        int size = s.size();
+        
+        if (size < 4 || size > 12) 
+            return {};
+        
+        string result = "";
+        
+        sG = s;
+        
+        // cout << validateAddress (s) << endl;
+        
+        dfs (result, 0, -1, 0);
+        
+        return results;
+    }
+};
