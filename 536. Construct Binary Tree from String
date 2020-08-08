@@ -1,0 +1,115 @@
+536. Construct Binary Tree from String
+Medium
+
+You need to construct a binary tree from a string consisting of parenthesis and integers.
+
+The whole input represents a binary tree. It contains an integer followed by zero, one or two pairs of parenthesis. The integer represents the root's value and a pair of parenthesis contains a child binary tree with the same structure.
+
+You always start to construct the left child node of the parent first if it exists.
+
+Example:
+
+Input: "4(2(3)(1))(6(5))"
+Output: return the tree root node representing the following tree:
+
+       4
+     /   \
+    2     6
+   / \   / 
+  3   1 5   
+
+Note:
+
+    There will only be '(', ')', '-' and '0' ~ '9' in the input string.
+    An empty tree is represented by "" instead of "()".
+
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+// class Solution {
+// public:
+//     TreeNode* str2tree(string str) {
+//         int n=str.size();
+//         if(n==0) return nullptr;
+        
+//         stack<TreeNode*> nodes;
+//         TreeNode* curr;
+//         int sign=1;
+        
+//         for(int i=0; i<n; i++){
+//             if(str[i]==')'){
+//                 curr=nodes.top();
+//                 nodes.pop();
+                
+//                 if(!nodes.empty() && nodes.top()->left==nullptr)
+//                     nodes.top()->left=curr;
+                
+//                 else if(!nodes.empty() && nodes.top()->right==nullptr)
+//                     nodes.top()->right=curr;
+//             }
+//             else if(str[i]>='0' && str[i]<='9'){
+//                 int val=0;
+//                 do{
+//                     val= val*10 + (str[i]-'0');
+//                     i++;
+//                 }while(str[i]!='(' && str[i]!=')'&& i<n);
+//                 i--;
+//                 val*=sign;
+//                 sign=1;
+//                 TreeNode* node=new TreeNode(val);
+                
+//                 nodes.push(node);
+//             }
+//             else if(str[i]=='-')
+//                 sign=-1;
+//         }
+//         //cout<<nodes.top()->val;
+//         return nodes.top();
+//     }
+// };
+
+class Solution {
+    public:
+    TreeNode * str2tree (string str) {
+        int n = str.size();
+        if (n == 0)
+            return NULL;
+        
+        int sign = 1;
+        
+        stack<TreeNode *> s;
+        TreeNode * curr;
+        
+        for (int i = 0; i < n; i++) {
+            if (str[i] >= '0' && str[i] <= '9') {
+                int val = 0;
+                do {
+                    val = val*10 + (str[i]-'0');
+                    i++;
+                } while (str[i] != '(' && str[i] != ')' && i < n);
+                i--;
+                val *= sign;
+                sign = 1;
+                TreeNode * node = new TreeNode (val);
+                s.push (node);
+            } else if (str[i] == ')') {
+                curr = s.top();
+                s.pop();
+                if (!s.empty() && s.top()->left == NULL) {
+                    s.top()->left = curr;
+                } else if (!s.empty() && s.top()->right == NULL) {
+                    s.top()->right = curr;
+                }
+            } else if (str[i] == '-') {
+                sign = -1;
+            }
+        }   
+        return s.top();
+    }  
+};
