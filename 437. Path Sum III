@@ -1,0 +1,100 @@
+https://leetcode.com/problems/path-sum-iii/
+
+437. Path Sum III
+Medium
+
+You are given a binary tree in which each node contains an integer value.
+
+Find the number of paths that sum to a given value.
+
+The path does not need to start or end at the root or a leaf, but it must go downwards (traveling only from parent nodes to child nodes).
+
+The tree has no more than 1,000 nodes and the values are in the range -1,000,000 to 1,000,000.
+
+Example:
+
+root = [10,5,-3,3,2,null,11,3,-2,null,1], sum = 8
+
+      10
+     /  \
+    5   -3
+   / \    \
+  3   2   11
+ / \   \
+3  -2   1
+
+Return 3. The paths that sum to 8 are:
+
+1.  5 -> 3
+2.  5 -> 2 -> 1
+3. -3 -> 11
+
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+ * };
+ */
+class Solution {
+public:
+    int result;
+    int targetG;
+    void dfs (TreeNode * root, int sum, unordered_map<int,int> & map) {
+        
+        if (map.count(sum + root->val - targetG) > 0) {
+            result += map[sum + root->val - targetG];
+        }
+        
+        if (root->left == NULL && root->right == NULL) {
+            return;
+        }
+        
+        map[sum+root->val]++;
+        
+        if (root->left != NULL) {
+            dfs (root->left, sum + root->val, map);
+        }
+        if (root->right != NULL) {
+            dfs (root->right, sum + root->val, map);
+        }
+        
+        if (map[sum+root->val] == 1) {
+            map.erase (sum+root->val);
+        } else {
+            map[sum+root->val]--;
+        }
+        
+        return;
+    }
+    
+    int pathSum(TreeNode* root, int sum) {
+        // If we can keep a prefix sum of all the paths and them check if in the given path
+        // target-(curr_sum) is present in the map .. then we have a solution. 
+        
+        // Keep a context of the prefix sum till an index and keep that in a map.
+        
+        // unordered_map <int, vector<int>> map; // for a given sum the vector of indexes where
+                                              // where you'll  find the prefix-sum.
+       
+        // ok small error .. we just need the number of sub-branches that lead to a 
+        // specific sum .. we don't need to keep a context of all the indexes. 
+        // just the count is good. 
+        
+        if (root == NULL) {
+            return 0;
+        }
+        
+        unordered_map <int, int> map; //prefixsum : count
+        
+        map[0] = 1;
+        result = 0;
+        targetG = sum;
+        dfs (root, 0, map);
+        return result;
+    }
+};
