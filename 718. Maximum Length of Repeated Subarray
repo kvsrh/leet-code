@@ -21,7 +21,7 @@ Note:
     1 <= len(A), len(B) <= 1000
     0 <= A[i], B[i] < 100
 
- class Solution {
+class Solution {
 public:
     int findLength(vector<int>& A, vector<int>& B) {
         //  A: [1,2,3,2,1]
@@ -37,11 +37,12 @@ public:
         
         vector<vector<int>> dp (sizeA+1, vector<int> (sizeB+1, 0));
 
-        int result = 0;
+        int result = 0; // Mistake 1 : result = INT_MIN;
         
         for (int a = 1; a <= sizeA; a++) {
             for (int b = 1; b <= sizeB; b++) {
-                if (A[a-1] == B[b-1]) {
+                if (A[a-1] == B[b-1]) { 
+                    // Mistake 2 (A[a] == B[b]) .. has to be one less than dp index.  
                     dp[a][b] = dp[a-1][b-1] + 1;
                     result = max (result, dp[a][b]);
                 }
