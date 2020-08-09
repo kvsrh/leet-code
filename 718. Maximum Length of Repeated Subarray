@@ -1,0 +1,60 @@
+https://leetcode.com/problems/maximum-length-of-repeated-subarray/
+
+718. Maximum Length of Repeated Subarray
+Medium
+
+Given two integer arrays A and B, return the maximum length of an subarray that appears in both arrays.
+
+Example 1:
+
+Input:
+A: [1,2,3,2,1]
+B: [3,2,1,4,7]
+Output: 3
+Explanation: 
+The repeated subarray with maximum length is [3, 2, 1].
+
+ 
+
+Note:
+
+    1 <= len(A), len(B) <= 1000
+    0 <= A[i], B[i] < 100
+
+ class Solution {
+public:
+    int findLength(vector<int>& A, vector<int>& B) {
+        //  A: [1,2,3,2,1]
+        //  B: [3,2,1,4,7]  
+        
+        // A: [1,2,3,2,1]
+        // B: [3,2,1,4,7]
+        
+        // dp solution. 
+        
+        int sizeA = A.size();
+        int sizeB = B.size();
+        
+        vector<vector<int>> dp (sizeA+1, vector<int> (sizeB+1, 0));
+
+        int result = 0;
+        
+        for (int a = 1; a <= sizeA; a++) {
+            for (int b = 1; b <= sizeB; b++) {
+                if (A[a-1] == B[b-1]) {
+                    dp[a][b] = dp[a-1][b-1] + 1;
+                    result = max (result, dp[a][b]);
+                }
+            }
+        }
+        
+        // for (auto & row : dp) {
+        //     for (auto elem : row) {
+        //         cout << elem << " "; 
+        //     }
+        //     cout << endl;
+        // }
+        
+        return result; 
+    }
+};
