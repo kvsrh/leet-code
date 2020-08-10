@@ -31,6 +31,11 @@ for (int k = 1; k < size; k++) {
 
 copy_n () --> 
 
+auto it = max_elem (vec.begin(), vec.end()); --> finding pointer to the elem which is the highest in a vector. 
+
+vec.erase(it);
+
+
 SORT FUNCTION TEMPLATE: 
 
 int findNum (int search, vector<bool> & nums) { // return index.
