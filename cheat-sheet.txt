@@ -31,7 +31,7 @@ for (int k = 1; k < size; k++) {
 
 copy_n () --> 
 
-auto it = max_elem (vec.begin(), vec.end()); --> finding pointer to the elem which is the highest in a vector. 
+auto it = max_element (vec.begin(), vec.end()); --> finding pointer to the elem which is the highest in a vector. 
 
 vec.erase(it);
 
