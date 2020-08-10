@@ -1,0 +1,76 @@
+https://leetcode.com/problems/tree-diameter/
+
+1245. Tree Diameter
+Medium
+
+Given an undirected tree, return its diameter: the number of edges in a longest path in that tree.
+
+The tree is given as an array of edges where edges[i] = [u, v] is a bidirectional edge between nodes u and v.  Each node has labels in the set {0, 1, ..., edges.length}.
+
+ 
+
+Example 1:
+
+Input: edges = [[0,1],[0,2]]
+Output: 2
+Explanation: 
+A longest path of the tree is the path 1 - 0 - 2.
+
+Example 2:
+
+Input: edges = [[0,1],[1,2],[2,3],[1,4],[4,5]]
+Output: 4
+Explanation: 
+A longest path of the tree is the path 3 - 2 - 1 - 4 - 5.
+
+class Solution {
+public:
+    vector<vector<int>> graph;
+    
+    int dfs (int start, int & result) {
+        
+        int size = graph[start].size();
+        
+        if (size == 0) {
+            result = max (result, 1);
+            return 1;
+        }
+        
+        vector<int> maxLeg (size, 0);
+        
+        for (int i = 0; i < size; i++) {
+            maxLeg[i] = dfs (graph[start][i], result);    
+        }
+        
+        if (size >= 2) {
+            auto  maxLIndex = max_element (maxLeg.begin(), maxLeg.end());
+            int maxL = *maxLIndex;
+            maxLeg.erase (maxLIndex);
+            int maxLsecond = * max_element (maxLeg.begin(), maxLeg.end());
+            
+            result = max (result, maxL + maxLsecond + 1);
+            return maxL+1;
+        } else {
+            int maxL = *max_element (maxLeg.begin(), maxLeg.end());
+            result = max (result, maxL + 1);
+            return maxL+1; 
+        }
+    }
+    
+    int treeDiameter(vector<vector<int>>& edges) {
+        
+        int size = edges.size();
+        
+        graph = vector<vector<int>> (size+1, vector<int>());
+        
+        for (auto & edge : edges) {
+            graph[edge[0]].emplace_back(edge[1]);
+        }
+        
+        int result = INT_MIN;
+        
+        dfs (0, result);
+        
+        return result > 0 ? result-1 : 0;   
+    }
+};
