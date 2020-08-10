@@ -1,0 +1,149 @@
+https://leetcode.com/problems/equal-tree-partition/
+
+663. Equal Tree Partition
+Medium
+
+Given a binary tree with n nodes, your task is to check if it's possible to partition the tree to two trees which have the equal sum of values after removing exactly one edge on the original tree.
+
+Example 1:
+
+Input:     
+    5
+   / \
+  10 10
+    /  \
+   2   3
+
+Output: True
+Explanation: 
+    5
+   / 
+  10
+      
+Sum: 15
+
+   10
+  /  \
+ 2    3
+
+Sum: 15
+
+Example 2:
+
+Input:     
+    1
+   / \
+  2  10
+    /  \
+   2   20
+
+Output: False
+Explanation: You can't split the tree into two trees with equal sum after removing exactly one edge on the tree.
+
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+ * };
+ */
+class Solution {
+public:
+    bool dfs (TreeNode * root, int target, int & sum) {
+        if (!root) {
+            return false;
+        }
+        
+        int leftSum = 0;
+        
+        if (dfs (root->left, target, leftSum)) {
+            return true;
+        } 
+        
+        int rightSum = 0;
+    
+        if (dfs (root->right, target, rightSum)) {
+            return true;
+        }
+        
+        sum = root->val + leftSum + rightSum; 
+        
+        return (sum == target);
+    }
+    
+    void TreeSum (TreeNode * root, int & sum) {
+        if (!root)
+            return;
+        
+        sum += root->val;
+        
+        TreeSum (root->left, sum);
+        TreeSum (root->right, sum);
+        return;
+    }
+    
+    bool checkEqualTree(TreeNode* root) {
+      
+        // Can be solved using dfs .. at each node we compute the sum of left-tree + root->val
+        // keep it in a hash .. 
+        // Similarly compute sum of the right-tree + root->val .. check in hash else put in hash. 
+        // This should be done for only node which have children. 
+        
+        // Damn if we knew the whole sum of the tree .. if we find a subroot with half the sum of 
+        // the tree we are done. Damn!!
+        
+        int target = 0;
+        
+        TreeSum (root, target);
+        
+        // cout << "target - " << target << endl;
+        
+        if (target%2 != 0)
+            return false;
+        
+        int sum = 0;
+        
+        // Nice max test-cases.
+        // Since you want to have the tree be split starting at root->left and root->right ...
+        // don't sent root directly. 
+        // Also another important thing is .. passing terminal values for sum ... 
+        //  if we send -1 .. we don't handle the case when the tree values are negative and less
+        // than -1. 
+        // [0,-4,-3,null,-1,8,null,null,3,null,-9,-2,null,4] - like for this example. 
+        // This is similar to the check if valid BST question - wherein we send pointers .. 
+        // instead of values to cover the case when the nodes can have terminal values,         
+        // INT_MIN/INT_MAX.
+        
+        return ((root->left != NULL && dfs (root->left, target/2, sum)) ||
+                (root->right != NULL && dfs (root->right, target/2, sum)));
+    }
+};
+
+
+// class Solution {
+// public:
+//     bool checkEqualTree(TreeNode* root) {
+//         vector<int>v;
+//         int sum = DFS(root, v);
+//         v.pop_back();
+        
+//         for (auto & elem : v) {
+//             cout << elem << " ";
+//         }
+        
+//         return !(sum % 2) && find(v.begin(), v.end(), sum / 2) != v.end();
+//     }
+    
+//     int DFS(TreeNode* root, vector<int>& v){
+//         if(!root) return 0;
+//         int l = DFS(root->left, v);
+//         int r = DFS(root->right, v);
+//         int sum = root->val + l + r;
+//         v.push_back(sum);
+//         return sum;
+//     }
+// };
