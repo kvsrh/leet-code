@@ -1,0 +1,79 @@
+695. Max Area of Island
+Medium
+
+Given a non-empty 2D array grid of 0's and 1's, an island is a group of 1's (representing land) connected 4-directionally (horizontal or vertical.) You may assume all four edges of the grid are surrounded by water.
+
+Find the maximum area of an island in the given 2D array. (If there is no island, the maximum area is 0.)
+
+Example 1:
+
+[[0,0,1,0,0,0,0,1,0,0,0,0,0],
+ [0,0,0,0,0,0,0,1,1,1,0,0,0],
+ [0,1,1,0,1,0,0,0,0,0,0,0,0],
+ [0,1,0,0,1,1,0,0,1,0,1,0,0],
+ [0,1,0,0,1,1,0,0,1,1,1,0,0],
+ [0,0,0,0,0,0,0,0,0,0,1,0,0],
+ [0,0,0,0,0,0,0,1,1,1,0,0,0],
+ [0,0,0,0,0,0,0,1,1,0,0,0,0]]
+
+Given the above grid, return 6. Note the answer is not 11, because the island must be connected 4-directionally.
+
+Example 2:
+
+[[0,0,0,0,0,0,0,0]]
+
+Given the above grid, return 0.
+
+Note: The length of each dimension in the given grid does not exceed 50.
+
+class Solution {
+public:
+    
+    int result;
+    
+    void dfs (vector<vector<int>> & grid, int r, int c, int & count) {
+        int rows = grid.size();
+        int cols = grid[0].size();
+        vector<int> dirs = {0,1,0,-1,0};
+        
+        grid[r][c] = 0;
+        count++;
+        
+        for (int i = 0; i < 4; i++) {
+            int nr = r + dirs[i];
+            int nc = c + dirs[i+1];
+            if (nr >= 0 && nr < rows &&
+                nc >= 0 && nc < cols &&
+                grid[nr][nc] == 1) {
+                dfs (grid, nr, nc, count);
+            }
+        }
+        
+    }
+    
+    int maxAreaOfIsland(vector<vector<int>>& grid) {
+        // Run a dfs walk on the node and convert them to '0' .. keep a context
+        // of the max count you can get. 
+        
+        int rows = grid.size();
+        
+        if (!rows)
+            return 0;
+        
+        int cols = grid[0].size();
+        
+        result = 0;
+        
+        for (int r = 0; r < rows; r++) {
+            for (int c = 0; c < cols; c++) {
+                if (grid[r][c] == 1) {
+                    int count = 0;
+                    dfs (grid, r, c, count);
+                    result = max (result, count);
+                }
+            }
+        }
+        
+        return result; 
+    }
+};
