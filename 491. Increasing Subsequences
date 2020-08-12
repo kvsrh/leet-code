@@ -1,0 +1,68 @@
+491. Increasing Subsequences
+Medium
+
+Given an integer array, your task is to find all the different possible increasing subsequences of the given array, and the length of an increasing subsequence should be at least 2.
+
+ 
+
+Example:
+
+Input: [4, 6, 7, 7]
+Output: [[4, 6], [4, 7], [4, 6, 7], [4, 6, 7, 7], [6, 7], [6, 7, 7], [7,7], [4,7,7]]
+
+ 
+
+Constraints:
+
+    The length of the given array will not exceed 15.
+    The range of integer in the given array is [-100,100].
+    The given array may contain duplicates, and two equal integers should also be considered as a special case of increasing sequence.
+
+class Solution {
+public:
+    vector<int> numsG;
+    set<vector<int>> mapG;
+    
+    void dfs (vector<int> & result, int index, int prev) {
+        if (numsG.size() == index && result.size() > 1 && 
+            mapG.count(result) == 0) {
+            mapG.insert(result);
+            // results.push_back(result);
+            return;
+        }
+        
+        if (numsG.size() == index)
+            return;
+        
+        if (numsG[index] >= prev) {
+            result.emplace_back(numsG[index]);
+            dfs (result, index+1, numsG[index]);
+            result.pop_back();
+        }
+        
+        dfs (result, index+1, prev);
+        
+        return; 
+        
+    }
+    
+    
+    vector<vector<int>> findSubsequences(vector<int>& nums) {
+        // standard bfs and backtracking ... 
+        
+        int size = nums.size();
+        
+        if (size == 0)
+            return {};
+        
+        vector<int> result = {};
+        
+        numsG = nums;
+        
+        dfs (result, 0, INT_MIN);
+        
+        vector<vector<int>> results(mapG.begin(), mapG.end());
+        
+        return results;
+    }
+};
