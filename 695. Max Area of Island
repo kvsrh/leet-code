@@ -30,12 +30,10 @@ class Solution {
 public:
     
     int result;
-    
+    int rows;
+    int cols;
+    vector<int> dirs = {0,1,0,-1,0};
     void dfs (vector<vector<int>> & grid, int r, int c, int & count) {
-        int rows = grid.size();
-        int cols = grid[0].size();
-        vector<int> dirs = {0,1,0,-1,0};
-        
         grid[r][c] = 0;
         count++;
         
@@ -55,12 +53,12 @@ public:
         // Run a dfs walk on the node and convert them to '0' .. keep a context
         // of the max count you can get. 
         
-        int rows = grid.size();
+        rows = grid.size();
         
         if (!rows)
             return 0;
         
-        int cols = grid[0].size();
+        cols = grid[0].size();
         
         result = 0;
         
