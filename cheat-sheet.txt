@@ -268,4 +268,10 @@ Declare the template with returntype (inputtype, inputtype) {
 top() -- first elem ...
 emplace() / push() -- push an element into the pq ...
 
+struct compare {
+    bool operator()(const P& p, const P& q) {
+        return (p.first < q.first) || (p.first == q.first && p.second > q.second);
+    }
+};
 
+priority_queue <P, vector<P>, compare> pq; -- faster way to make comparision.
