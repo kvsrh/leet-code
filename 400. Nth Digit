@@ -1,0 +1,107 @@
+https://leetcode.com/problems/nth-digit/
+
+Find the nth digit of the infinite integer sequence 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, ...
+
+Note:
+n is positive and will fit within the range of a 32-bit signed integer (n < 231).
+
+Example 1:
+
+Input:
+3
+
+Output:
+3
+
+Example 2:
+
+Input:
+11
+
+Output:
+0
+
+Explanation:
+The 11th digit of the sequence 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, ... is a 0, which is part of the number 10.
+
+Crux .. find the bucket in which n falls .. then compute the number which gives the nth digit and then within the number find the digit which gives us,
+the nth  digit. 
+
+class Solution {
+public:
+    int findNthDigit(int n) {
+        // 1 - 9 : (x-0)*1
+        // 10 - 99 (xx-9)*2 [10, 99]   
+        // 100 - 999 (xxx-99)*3 .. repetition formula. 
+        
+        // (x-10^3-1)*3
+        
+        int i = 1;
+        long prev_max = 0;
+        long  total = 0;
+        long  prev_total = 0;
+        
+        while (true) {
+            long max_val = (pow (10,i)-1);
+            total += (max_val-prev_max)*(i);
+            // cout << "total : " << total << endl; 
+            if (n <= total) {
+                break;
+            }
+            prev_max = max_val;
+            prev_total = total;
+            i++;
+        }
+        
+        int num_digits = i;
+        
+        prev_total = prev_total + (num_digits == 1 ? 0 : 1);
+        
+        prev_max = prev_max + (num_digits == 1 ? 0 : 1);
+        
+        int num_excess = n - prev_total;
+        
+        int num = prev_max + num_excess/num_digits;
+        
+        int digit_pos = num_digits - (num_excess%num_digits);
+        
+        //cout << "digit_pos - " << digit_pos << " num digits - " << num_digits << " num - " << num << endl;
+         
+        int result = 0;
+        
+        while (digit_pos > 0) {
+            result = num%10;
+            num = num/10;
+            digit_pos--;
+        }
+        
+        return result;
+    }
+};
+
+
+// class Solution {
+// public:
+//     int findNthDigit(int n) {
+//         long long int dig=1,p=9;
+//         while((n-p*dig)>0){
+//             n-=p*dig;
+//             dig++;
+//             p*=10;
+//         }
+//         long long int index=n%dig;
+//         if(index==0){
+//             index=dig;
+//         }
+//        long long int dg=pow(10,dig-1)+ (index==dig ? (n/dig)-1 : (n/dig));
+//        cout<<dg;
+//         vector<int> vec;
+//         while(dg){
+//             vec.push_back(dg%10);
+//             dg/=10;
+//         }
+//         reverse(vec.begin(),vec.end());
+//         // cout<<index;
+//         return vec[index-1];
+//     }
+// };
