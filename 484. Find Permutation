@@ -22,6 +22,11 @@ The input string will only contain the character 'D' and 'I'.
 The length of input string is a positive integer and will not exceed 10,000
 
 
+Crux: When you encounter an I .. push it to the stack and then pop all the elems in the stack. 
+    : When you encounter an D .. push it to the stack. 
+    
+    Once you are done with the chars in the string .. add the last possible number and pop all the nums from the stack. 
+
 class Solution {
 public:
     vector<int> findPermutation(string input) {
