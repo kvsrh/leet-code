@@ -1,0 +1,93 @@
+https://leetcode.com/problems/maximum-difference-between-node-and-ancestor/
+
+1026. Maximum Difference Between Node and Ancestor
+Medium
+
+Given the root of a binary tree, find the maximum value V for which there exists different nodes A and B where V = |A.val - B.val| and A is an ancestor of B.
+
+(A node A is an ancestor of B if either: any child of A is equal to B, or any child of A is an ancestor of B.)
+
+ 
+
+Example 1:
+
+Input: [8,3,10,1,6,null,14,null,null,4,7,13]
+Output: 7
+Explanation: 
+We have various ancestor-node differences, some of which are given below :
+|8 - 3| = 5
+|3 - 7| = 4
+|8 - 1| = 7
+|10 - 13| = 3
+Among all possible differences, the maximum value of 7 is obtained by |8 - 1| = 7.
+
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+ * };
+ */
+class Solution {
+public:
+    int result;
+    pair <int,int> dfs (TreeNode * root) {
+        
+        if (root == NULL) {
+            return {INT_MAX, INT_MIN};
+        }
+        
+        pair <int,int> left;
+        pair <int,int> right;
+        
+        left = dfs (root->left);
+        right = dfs (root->right);
+        
+        int minL = min (left.first, right.first);
+        int maxL = max (left.second, right.second);
+        
+        if (minL != INT_MAX) {
+            result = max (result, abs(minL-root->val));
+        }
+        
+        if (maxL != INT_MIN) {
+            result = max (result, abs(maxL-root->val));
+        }
+            
+        return {min (minL, root->val), max (maxL, root->val)};
+    }
+    
+    int maxAncestorDiff(TreeNode* root) {
+        // generate the min max at each node and then send upwards ... 
+        // the min max you can get. 
+        
+        result = INT_MIN;
+        
+        (void) dfs (root);
+        
+        return result;
+    }
+};
+
+// class Solution {
+// private:
+//     int preorder(TreeNode *root, int minE, int maxE) {
+//         if (!root) return maxE - minE;
+        
+//         minE = std::min(minE, root->val);
+//         maxE = std::max(maxE, root->val);
+//         //  cout << root->val << " - " << minE << ", " << maxE << endl;
+//         return std::max(preorder(root->left, minE, maxE), preorder(root->right, minE, maxE));
+//     }
+// public:
+//     int maxAncestorDiff(TreeNode* root) {
+//         if (!root) return 0;
+        
+//         // Send min max downwards return at null;
+//         return preorder(root, root->val, root->val);
+//     }
+// };
