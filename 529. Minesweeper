@@ -1,0 +1,93 @@
+529. Minesweeper
+
+Let's play the minesweeper game (Wikipedia, online game)!
+
+You are given a 2D char matrix representing the game board. 'M' represents an unrevealed mine, 'E' represents an unrevealed empty square, 'B' represents a revealed blank square that has no adjacent (above, below, left, right, and all 4 diagonals) mines, digit ('1' to '8') represents how many mines are adjacent to this revealed square, and finally 'X' represents a revealed mine.
+
+Now given the next click position (row and column indices) among all the unrevealed squares ('M' or 'E'), return the board after revealing this position according to the following rules:
+
+    If a mine ('M') is revealed, then the game is over - change it to 'X'.
+    If an empty square ('E') with no adjacent mines is revealed, then change it to revealed blank ('B') and all of its adjacent unrevealed squares should be revealed recursively.
+    If an empty square ('E') with at least one adjacent mine is revealed, then change it to a digit ('1' to '8') representing the number of adjacent mines.
+    Return the board when no more squares will be revealed.
+
+
+class Solution {
+public:
+    int rows;
+    int cols; 
+    vector<vector<int>> dirs = {{0,1}, {1,0}, {0,-1}, {-1,0},
+                                {1,1}, {1,-1}, {-1,1}, {-1,-1}};
+    
+    int checkMines (vector<vector<char>>& board, int r, int c) {
+        int mines = 0;
+        for (auto & dir : dirs) {
+            int nr = r + dir[0], nc = c + dir[1];
+            if (nr >= 0 && nr < rows &&
+                nc >= 0 && nc < cols &&
+                board[nr][nc] == 'M') {
+                mines++; 
+            }
+        }
+        return mines;
+    
+    }
+    
+    void dfs (vector<vector<char>> & board, int r, int c) {
+        int mines = checkMines (board, r, c);
+        a
+        if (mines != 0) {
+            board[r][c] = '0' + mines;
+        } else {
+            board[r][c] = 'B';
+            for (auto & dir : dirs) {
+                int nr = r + dir[0], nc = c + dir[1];
+                    if (nr >= 0 && nr < rows &&
+                        nc >= 0 && nc < cols && 
+                        board[nr][nc] == 'E') {
+                            dfs (board, nr, nc);
+                    }
+            }
+        }
+        return;
+    }
+    
+    vector<vector<char>> updateBoard(vector<vector<char>>& board, vector<int>& click) {
+        // If you click on mine .. turn the cell to X and return the board. 
+        // If the current square is a revealed B square .. return the board. 
+        // If we click 'E'/digit square .. then recursively open all adjacent squares, 
+        // If there is no mine in it's neighbors. 
+        
+        rows = board.size();
+        
+        if (!rows)
+            return board;
+        
+        cols = board[0].size();
+        
+        int r = click[0], c = click[1];
+        
+        switch (board[r][c]) {
+            case 'M':
+                board[r][c] = 'X';
+                return board;
+                break;
+            case 'B':
+                return board;
+                break;
+            case 'E':
+                dfs (board, r, c);
+                return board;
+                break;
+            default:
+                char c = board[r][c];
+                if (c-'0' >= 0 && c-'0' <= 8) {
+                    return board;
+                } else {
+                    // do nothing;
+                }
+        }
+        // shouldn't come here .. unless input is badlly formatted.
+        return board;
+    }
+};
