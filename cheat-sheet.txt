@@ -228,8 +228,11 @@ for (auto & word : dict) {
                 
             } while (pos != npos);
 
-convert string to int --
+## convert string to int ##
 stoi(str);
+
+## convert int to string ##
+itoa(str);
 
 # BIT APIS #
 
