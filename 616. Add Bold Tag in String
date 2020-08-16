@@ -1,0 +1,177 @@
+616. Add Bold Tag in String
+Medium
+Given a string s and a list of strings dict, you need to add a closed pair of bold tag <b> and </b> to wrap the substrings in s that exist in dict. If two such substrings overlap, you need to wrap them together by only one pair of closed bold tag. Also, if two substrings wrapped by bold tags are consecutive, you need to combine them.
+
+Example 1:
+
+Input: 
+s = "abcxyz123"
+dict = ["abc","123"]
+Output:
+"<b>abc</b>xyz<b>123</b>"
+
+ 
+
+Example 2:
+
+Input: 
+s = "aaabbcc"
+dict = ["aaa","aab","bc"]
+Output:
+"<b>aaabbc</b>c"
+
+// class Solution {
+// public:
+//     string addBoldTag(string s, vector<string>& dict) {
+//         // Reduce the problem to two parts. 
+//         // Step1. find where all we need to add tags. 
+//         // Step2. merget intervals. 
+        
+//         // find in substring. 
+        
+//         //   01 234 5
+//         // me nlo park
+//         //     
+        
+//         //        
+               
+//         int size = s.size();
+        
+//         vector<pair<int,int>> results;
+        
+//         for (auto & word : dict) {
+            
+//             int pos = -1;
+            
+//             do {
+//                 pos = s.find (word, pos+1);
+                
+//                 if (pos != string::npos) {
+//                     results.push_back ({pos, pos+word.size()-1});
+//                 }
+                
+//             } while (pos != string::npos);
+//         }
+        
+//         // Merge the intervals.
+        
+//         if (!results.size())
+//             return s;
+        
+//         sort (results.begin(), results.end(), [](pair <int, int> & a, pair <int, int> & b) {
+//             return a.second < b.second;
+//         });
+        
+//         vector<pair<int,int>> merge; 
+        
+//         int curr = 0;
+        
+//         merge.push_back(results[0]);
+        
+//         for (int i = 1; i < results.size(); i++) {
+//             if (results[i].first <= merge[curr].second+1) {
+//                 merge[curr].second = max (results[i].second, merge[curr].second);
+//             } else {
+//                 merge.push_back(results[i]);
+//                 curr++;
+//             }
+//         }        
+        
+//         for (auto & interval : merge) {
+//             cout << interval.first << " " << interval.second << endl;
+//         }
+        
+//         //now add the <b> and </b> tags.
+        
+//         string result = "";
+        
+//         int interval_index = 0; bool start = true;
+        
+//         int merge_size = merge.size();
+        
+//         for (int i = 0; i < size; i++) {
+            
+//             if (start &&
+//                 interval_index < merge_size  && 
+//                 i == merge[interval_index].first &&
+//                 i == merge[interval_index].second) {
+//                 result += "<b>";
+//                 result.push_back(s[i]);
+//                 result += "</b>";
+//                 interval_index++;
+//             } else if (start && 
+//                 interval_index < merge_size && 
+//                 i == merge[interval_index].first) {
+//                 result += "<b>";
+//                 result.push_back(s[i]);
+//                 start = false;
+//             } else if (!start && 
+//                        interval_index < merge_size && 
+//                        i == merge[interval_index].second) {
+//                 result.push_back(s[i]);
+//                 result += "</b>";
+//                 start = true;
+//                 interval_index++;
+//             } else {
+//                 result += s[i];
+//             }
+//         }
+        
+//         return result; 
+//     }
+// };
+
+Neat max idea to use the mask to know the merged intervals ... my method involved using extra memory to get the merged intervals and then extra memory to merge them. 
+
+class Solution {
+public: 
+string addBoldTag(string s, vector<string>& dict) {
+    
+    if (dict.empty() || s.empty()) return s;
+    
+    vector<int> mask(s.size(),0);
+    string ans;
+    
+    for(string word : dict){
+        int sz = word.size();
+        auto f = s.find(word);
+        while(f != std::string::npos){
+            // for(auto i = f; i < f+sz; i++){
+            //     mask[i] = 1;
+            // }
+            
+            for_each(mask.begin()+f, mask.begin()+f+sz, [](int & elem){
+                elem = 1;
+            });
+            
+            f = s.find(word, f+1);
+        }
+    }
+    
+    for(int j = 0; j < mask.size(); j++){
+        
+        if(mask[j] == 1 && (j == 0)){
+            ans += "<b>";
+            ans += s[j];
+        }
+        else if(mask[j] == 1 && (j != 0) && mask[j-1] == 0){
+            ans += "<b>";
+            ans += s[j];
+        }
+        else if(mask[j] == 1 && (j == mask.size()-1)){
+            ans += s[j];
+            ans += "</b>";
+        }
+        else if(mask[j] == 0 && (j != 0) && mask[j-1] == 1){
+            ans += "</b>";
+            ans += s[j];
+        }
+        else{
+            ans += s[j];
+        }
+        
+    }
+    
+    return ans;
+}
+};
