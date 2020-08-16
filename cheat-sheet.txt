@@ -213,6 +213,21 @@ Compare two strings from certain position in string a to certain position in b.
 
 a.compare(start_pos_a, length_in_a, b, start_pos_b, length_in_b);
 
+## finding all occurences of a words in a string ##
+
+for (auto & word : dict) {
+            
+            int pos = 0;
+            
+            do {
+                pos = s.find (word, pos);
+                
+                if (pos != npos) {
+                    results.emplace_back ({pos, pos+word.size()-1});
+                }
+                
+            } while (pos != npos);
+
 convert string to int --
 stoi(str);
 
