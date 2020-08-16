@@ -35,6 +35,12 @@ auto it = max_element (vec.begin(), vec.end()); --> finding pointer to the elem 
 
 vec.erase(it);
 
+for_each (iter first, inter last, function) --> takes elements in the ranges of [start,end) and sends the value in each of the interator as a reference based 
+on the input argument to the function. 
+ for_each(mask.begin()+f, mask.begin()+f+sz, [](int & elem){
+                elem |= 1 --> here elem is modified. since input arg is & elem. 
+            });
+            
 
 SORT FUNCTION TEMPLATE: 
 
