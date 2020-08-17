@@ -299,3 +299,14 @@ struct compare {
 };
 
 priority_queue <P, vector<P>, compare> pq; -- faster way to make comparision.
+
+class Info {
+public:
+    Info(int cnt, int lower, int upper):
+        cnt_(cnt), lower_(lower), upper_(upper){}
+    int cnt() { return cnt_; }
+    int lower() { return lower_; }
+    int upper() { return upper_; }
+private:
+    int cnt_, lower_, upper_;
+};
