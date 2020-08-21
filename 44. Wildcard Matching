@@ -1,0 +1,113 @@
+44. Wildcard Matching
+Hard
+
+Given an input string (s) and a pattern (p), implement wildcard pattern matching with support for '?' and '*'.
+
+'?' Matches any single character.
+'*' Matches any sequence of characters (including the empty sequence).
+
+The matching should cover the entire input string (not partial).
+
+Note:
+
+    s could be empty and contains only lowercase letters a-z.
+    p could be empty and contains only lowercase letters a-z, and characters like ? or *.
+
+Example 1:
+
+Input:
+s = "aa"
+p = "a"
+Output: false
+Explanation: "a" does not match the entire string "aa".
+
+Example 2:
+
+Input:
+s = "aa"
+p = "*"
+Output: true
+Explanation: '*' matches any sequence.
+
+Example 3:
+
+Input:
+s = "cb"
+p = "?a"
+Output: false
+Explanation: '?' matches 'c', but the second letter is 'a', which does not match 'b'.
+
+Example 4:
+
+Input:
+s = "adceb"
+p = "*a*b"
+Output: true
+Explanation: The first '*' matches the empty sequence, while the second '*' matches the substring "dce".
+
+Example 5:
+
+Input:
+s = "acdcb"
+p = "a*c?b"
+Output: false
+
+class Solution {
+public:
+    string sG, pG;
+    int sSize, pSize;
+    vector<vector<int>> dp;
+    bool dfs (int sIndex, int pIndex) {
+        
+        if (sIndex == sSize) {
+            if (pIndex <= pSize) {
+                for (int i = pIndex; i < pSize; i++) {
+                    if (pG[i] != '*') {
+                        return false;
+                    }
+                }
+                return true;
+            }
+        }
+        
+        if (pIndex == pSize)
+            return false;
+        
+        if (dp[sIndex][pIndex] != -1) {
+            return dp[sIndex][pIndex] == 1 ?  true : false;
+        }
+            
+        if (pG[pIndex] == sG[sIndex]) {
+            if(dfs (sIndex+1, pIndex+1)) {
+                dp[sIndex][pIndex] = 1;
+                return true;
+            }   
+        } else if (pG[pIndex] == '?') {
+            if (dfs (sIndex+1, pIndex+1)) {
+                dp[sIndex][pIndex] = 1;
+                return true;
+            }   
+        } else if (pG[pIndex] == '*') {
+            if (dfs (sIndex, pIndex+1) || dfs(sIndex+1, pIndex+1) || dfs(sIndex+1, pIndex)) {
+                dp[sIndex][pIndex] = 1;
+                return true;
+            }
+        }
+        dp[sIndex][pIndex] = 0;
+        return false;
+    }
+    
+    bool isMatch(string s, string p) {
+        // Try writing the 2-d version.
+        // We need to keep a context of sIndex and pIndex .. 
+        // backtracking for finding the matching string.
+        // Once we reach the end of the sIndex .. check the only 
+        // chars left in the pIndex is *. 
+        
+        sG = s; pG = p; sSize = s.size(); pSize = p.size();
+        
+        dp = vector<vector<int>> (sSize, vector<int> (pSize, -1));
+        
+        return dfs (0,0);    
+    }
+};
