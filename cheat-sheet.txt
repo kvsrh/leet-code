@@ -116,7 +116,7 @@ Graph directions for a knight on a phone pad.
             
 ## SWAP ELEMENTS ##
 
-swap (nums[fromIndex), nums[toIndex]);
+swap (nums[fromIndex), nums[toIndex]); +++ For vectors. 
 
 ## ~~~ ##
 
