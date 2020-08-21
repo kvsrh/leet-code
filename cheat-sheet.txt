@@ -41,6 +41,15 @@ on the input argument to the function.
                 elem |= 1 --> here elem is modified. since input arg is & elem. 
             });
             
+lower_bound and upper_bound 
+
+lower_bound -- Given a target find the largest number smaller than equal to the target.
+upper_bound -- Given a target find the smallest number greater than equal to the target. 
+
+syntax: 
+
+upper_bound (vec.begin(), vec.end(), target) --> given a target returns a iterator to the index which is larger than or equal to the currrent target.
+similarly lower_bound. 
 
 SORT FUNCTION TEMPLATE: 
 
