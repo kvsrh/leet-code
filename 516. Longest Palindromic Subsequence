@@ -1,0 +1,58 @@
+516. Longest Palindromic Subsequence
+Medium
+
+Given a string s, find the longest palindromic subsequence's length in s. You may assume that the maximum length of s is 1000.
+
+Example 1:
+Input:
+
+"bbbab"
+
+Output:
+
+4
+
+One possible longest palindromic subsequence is "bbbb".
+
+ 
+
+Example 2:
+Input:
+
+"cbbd"
+
+Output:
+
+2
+
+
+class Solution {
+public:
+    vector<vector<int>> dp;
+    int dfs (int start, int end, string & s) {
+        if (start > end)
+            return 0;
+        
+        if (dp[start][end] >= 0) {
+            return dp[start][end];
+        }
+        
+        if (s[start] == s[end]) {
+            return dp[start][end] = dfs (start+1, end-1, s) + ((start == end) ? 1 : 2);
+        }
+        
+        return dp[start][end] = max (dfs (start+1, end, s), dfs (start, end-1, s));
+    }
+    
+    int longestPalindromeSubseq(string s) {
+        // Can do a top-down approach where in we can memo the 
+        // the max palindrome sub-sequence between a start and end. 
+        
+        int size = s.size();
+        
+        dp = vector<vector<int>> (size, vector<int> (size, -1));
+        
+        return dfs (0, size-1, s);
+        
+    }
+};
