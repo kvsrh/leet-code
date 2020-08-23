@@ -43,8 +43,19 @@ on the input argument to the function.
             
 lower_bound and upper_bound 
 
-lower_bound -- Given a target find the largest number smaller than equal to the target.
-upper_bound -- Given a target find the smallest number greater than equal to the target. 
+lower_bound -- smallest number greater than equal to target.
+
+example: 
+
+arr = {3,7} 
+
+int pos = lower_bound (arr.begin(), arr.end(), 4(to7)) - arr.begin() --> pos = 1 i.e 7. 
+int pos = lower_bound (arr.begin(), arr.end(), 0(to)3) --> pos = 0 i.e. 3.
+
+upper_bound -- largest number smaller than target. 
+
+int pos = upper_bound (elems.begin(), elems.end(), 0(to)2) - elems.begin(); --> pos = 0;
+int pos = upper_bound (elems.begin(), elems.end(), 3(to)7) - elems.begin(); --> pos = 1;
 
 syntax: 
 
