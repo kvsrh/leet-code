@@ -1,0 +1,160 @@
+65. Valid Number
+Hard
+
+Validate if a given string can be interpreted as a decimal number.
+
+Some examples:
+"0" => true
+" 0.1 " => true
+"abc" => false
+"1 a" => false
+"2e10" => true
+" -90e3   " => true
+" 1e" => false
+"e3" => false
+" 6e-1" => true
+" 99e2.5 " => false
+"53.5e93" => true
+" --6 " => false
+"-+3" => false
+"95a54e53" => false
+
+Note: It is intended for the problem statement to be ambiguous. You should gather all requirements up front before implementing one. However, here is a list of characters that can be in a valid decimal number:
+
+    Numbers 0-9
+    Exponent - "e"
+    Positive/negative sign - "+"/"-"
+    Decimal point - "."
+
+Of course, the context of these characters also matters in the input.
+
+
+
+// class Solution {
+// public:
+//     bool isNumber(string s) {
+//         // conditions ... 
+//         // the number string should only contain [0-9] or [.,-,+,e]once
+//         // e should be precedded by some num string. 
+//         // e should succedded by some num string. 
+        
+//         // The num string after e shouldn't have a decimal point. 
+        
+//         bool founde = false;
+//         bool founddot = false;
+//         bool foundminus = false;
+//         bool foundplus = false;
+    
+//         string mantisa = "";
+//         string exponent = "";
+        
+//         for (auto c : s) {
+//             switch (c) {
+//                 case '+':
+//                     if (foundplus || foundminus)
+//                         return false;
+//                     foundplus = true;
+//                     // if (founde) {
+//                     //     exponent += c;
+//                     // } else {
+//                     //     mantisa += c;
+//                     // }
+                        
+//                     break;
+                    
+//                 case '-':
+//                     if (foundplus || foundminus)
+//                         return false;
+//                     foundminus = true;
+                    
+//                     // if (founde) {
+//                     //     exponent += c;
+//                     // } else {
+//                     //     mantisa += c;
+//                     // }
+                    
+//                     break;
+                    
+//                 case '.':
+//                     if (founddot || founde)
+//                         return false;
+//                     founddot = true;
+                    
+//                     // mantisa += c;
+                    
+//                     break;
+                    
+//                 case 'e':
+//                     if (founde || mantisa.size() < 1)
+//                         return false;
+//                     founde = true;
+//                     break; 
+                
+//                 default: 
+//                     if (c-'0' >= 0 && c-'0' <= 9) {
+//                         if (founde) {
+//                             exponent += c;
+//                         } else {
+//                             mantisa += c;
+//                         }
+//                     } else {
+//                         return false;
+//                     }
+//             }
+//         }
+        
+//         if (founde && exponent.size() < 1)
+//             return false;
+        
+//         if (founddot && exponent.size() == 0 && mantisa.size() == 0)
+//             return false;
+        
+//         return true;
+//     }
+// };
+class Solution {
+    public:
+ bool isNumber(string s)
+ {
+     int n = s.size();
+     if(n == 0) return false;
+     
+     int i = 0;
+     //Skip leading spaces.
+     while(s[i] == ' ') i++;
+     
+     //Significand
+     if(s[i] == '+' || s[i] == '-') i++;
+     
+     int cnt = 0;
+     //Integer part
+     while(isdigit(s[i]))
+     {
+         i++;
+         cnt++;
+     }
+     //Decimal point
+     if(s[i] == '.') i++;
+     //Fractional part
+     while(isdigit(s[i]))
+     {
+         i++;
+         cnt++;
+     }
+     if(cnt == 0) return false;  //No number in front or behind '.'
+     
+     //Exåponential
+     if(s[i] == 'e')
+     {
+         i++;
+         if(s[i] == '+' || s[i] == '-') i++;
+         if(!isdigit(s[i])) return false;    //No number follows
+         while(isdigit(s[i])) i++;
+     }
+     
+     //Skip following spaces;
+     while(s[i] == ' ') i++;
+     
+     return i == s.size() ? true : false;
+ }
+};
