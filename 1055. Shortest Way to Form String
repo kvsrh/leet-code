@@ -31,55 +31,86 @@ Constraints:
     Both the source and target strings consist of only lowercase English letters from "a"-"z".
     The lengths of source and target string are between 1 and 1000.
 
+// class Solution {
+// public:
+//     unordered_map <string, int> dp; 
+//     int result; 
+//     int tSize;
+//     int sSize;
+//     string source; 
+//     string target;
+    
+//     bool dfs (int ss, int se, int ts, int te) {
+//         if (se == sSize) {
+//             if (ss < sSize) {
+//                 result += 1;
+                
+//                 return true;
+//             } else {
+//                 return false;
+//             }
+//         }
+        
+//         if (dp[source.substring(te, te-ts+1)] != dp.end()) {
+            
+//         }
+        
+//         if (source[se] == target[te]) {
+//             if (dfs(ss, se+1, ts, ts+1)) {
+                
+//             }
+//         }
+        
+        
+//     }
+    
+    
+    
+//     int shortestWay(string src, string tgt) {
+//         // top-down approach ... 
+        
+//         int se = src.size();
+//         int te = tgt.size();
+//         tSize = te;
+//         sSize = se;
+        
+//         source = src;
+//         target = tgt;
+        
+//         dp (0, 0, 0, 0);
+        
+        
+//     }
+// };
+
 
 class Solution {
 public:
-    unordered_map <string, int> dp; 
-    int result; 
-    int tSize;
-    int sSize;
-    string source; 
-    string target;
-    
-    bool dfs (int ss, int se, int ts, int te) {
-        if (se == sSize) {
-            if (ss < sSize) {
-                result += 1;
-                
-                return true;
-            } else {
-                return false;
+    int shortestWay(string source, string target) {
+        int n = target.size(), m = source.size(), res = 0;
+        
+        for(int i = 0; i < n;){
+            int j = 0;
+            int flg = 0;
+            for(int j = 0; j < m;){
+                // at least one match for the source vs target, increment both indices
+                if(target[i] == source[j]){
+                    i++;
+                    j++;
+                    flg = 1; 
+                }
+                // try the best matching target with source, if not match, increment the position in source
+                else{
+                    j++;                    
+                }
             }
-        }
-        
-        if (dp[source.substring(te, te-ts+1)] != dp.end()) {
-            
-        }
-        
-        if (source[se] == target[te]) {
-            if (dfs(ss, se+1, ts, ts+1)) {
-                
+            // does not match any character in source vs target, early stop
+            if(!flg){
+                return -1;
             }
+            // complete a matching
+            res++;
         }
-        
-        
-    }
-    
-    
-    
-    int shortestWay(string src, string tgt) {
-        // top-down approach ... 
-        
-        int se = src.size();
-        int te = tgt.size();
-        tSize = te;
-        sSize = se;
-        
-        source = src;
-        target = tgt;
-        
-        dp (0, 0, 0, 0);
-        
-        
+        return res;
     }
 };
