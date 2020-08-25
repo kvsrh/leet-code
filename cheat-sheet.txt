@@ -335,12 +335,21 @@ Template classes:
 
 ## Trie ##
 
-class Trie {
-     public: 
-     Trie (char val) : val_(val) {
-          for ()
-     }
-     
-     private:
-     char val_; unordered_map <char, Trie*> map; bool isEnd_; 
-}
+    class TrieNode {
+        public:
+        unordered_map<char, TrieNode*> map;
+        bool isEnd;
+        int index; 
+       
+        TrieNode () {
+            isEnd = false;
+            index = -1;
+        }
+    };
+    
+    class Trie {
+        public:
+        TrieNode * root;
+        Trie () {
+            root = new TrieNode ();
+        }
