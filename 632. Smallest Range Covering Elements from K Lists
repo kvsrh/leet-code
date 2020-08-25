@@ -1,0 +1,93 @@
+Nice logic: 
+
+Using a pq to get the current low number across all lists, and then keeping a context of the largest number amongst the rest, to find the upper bound. 
+I came with a solution to find the max seperately. 
+
+https://leetcode.com/problems/smallest-range-covering-elements-from-k-lists/
+
+632. Smallest Range Covering Elements from K Lists
+Hard
+
+You have k lists of sorted integers in ascending order. Find the smallest range that includes at least one number from each of the k lists.
+
+We define the range [a,b] is smaller than range [c,d] if b-a < d-c or a < c if b-a == d-c.
+
+ 
+
+Example 1:
+
+Input: [[4,10,15,24,26], [0,9,12,20], [5,18,22,30]]
+Output: [20,24]
+Explanation: 
+List 1: [4, 10, 15, 24,26], 24 is in range [20,24].
+List 2: [0, 9, 12, 20], 20 is in range [20,24].
+List 3: [5, 18, 22, 30], 22 is in range [20,24].
+
+ 
+
+Note:
+
+    The given list may contain duplicates, so ascending order means >= here.
+    1 <= k <= 3500
+    -105 <= value of elements <= 105.
+
+
+
+
+class Solution {
+public:
+    typedef pair<int, pair<int,int>> pp;
+    
+    struct compare {
+        bool operator() (const pp & a,  const pp & b) {
+        return a.first > b.first;
+        }
+    };
+    
+    vector<int> smallestRange(vector<vector<int>>& nums) {
+        // can I use a min-heap and max heap. 
+        //   
+        // [[4,10,15,24,26], 
+        //                    ^   
+        //  [0,9,12,20], 
+        //                ^   
+        //  [5,18,22,30]]
+        //             ^
+        
+        int size = nums.size();
+
+        priority_queue <pp, vector<pp>, compare> pq; 
+                                
+        int maxL = INT_MIN;
+        
+        for (int r = 0; r < size; r++) {
+            pq.push(make_pair (nums[r][0], make_pair(r,0)));
+            maxL = max (maxL, nums[r][0]);
+        }  
+    
+        vector<int> result (2,0);
+        
+        result[0] = pq.top().first;
+        result[1] = maxL;
+        
+        while (pq.size() == nums.size()) {
+            auto elem = pq.top();
+            pq.pop();
+            
+            int num = elem.first;
+            int row = elem.second.first;
+            int col = elem.second.second;
+            
+            if (maxL-num < result[1]-result[0]) {
+                result[0] = num; result[1] = maxL;
+            }
+            
+            if (col+1 < nums[row].size()) {
+                pq.push (make_pair(nums[row][col+1], make_pair(row, col+1)));
+                maxL = max (maxL, nums[row][col+1]);
+            }
+        }
+        
+        return result;
+    }
+};
