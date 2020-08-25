@@ -1,0 +1,158 @@
+670. Maximum Swap
+Medium
+
+Given a non-negative integer, you could swap two digits at most once to get the maximum valued number. Return the maximum valued number you could get.
+
+Example 1:
+
+Input: 2736
+Output: 7236
+Explanation: Swap the number 2 and the number 7.
+
+Example 2:
+
+Input: 9973
+Output: 9973
+Explanation: No swap.
+
+Note:
+
+    The given number is in the range [0, 108]
+
+
+// class Solution {
+// public:
+//     int maximumSwap(int num) {
+//         // 2736 -- If you have 9 in any position .. 
+//         // we cann't get any better .. we find if we can get any lower order digit to swap. 
+//         // Largest number greater than current digit. 
+//         // 9973 -- 
+            
+//         // Find a non-9 digit. 
+//         // The find a number greater than current digit. 
+        
+//         string numS = "";
+        
+//         int input = num;
+        
+//         while (num > 0) {
+//             numS = char(num%10+'0') + numS;
+//             num = num/10;
+//         }
+//         // cout << "num - " << numS << endl;
+        
+//         int i;
+        
+//         for (i = 0; i < numS.size(); i++) {
+//             if (numS[i] != '9') {
+//                 break;
+//             }
+//         }
+        
+//         int target = numS[i]-'0';
+//         int j = i+1;
+//         int maxL = INT_MIN;
+        
+//         while (j < numS.size()) {
+//             if (numS[j]-'0' > target) {
+//                 target = numS[j]-'0';
+//                 maxL = j;
+//             }
+//             j++;
+//         }
+//         // cout << "j - " << j << endl;
+//         // cout << "swap - " << numS[i] << " " << numS[maxL] << endl;
+        
+//         if (maxL != INT_MIN) {
+//             char temp = numS[maxL];
+//             numS[maxL] = numS[i];
+//             numS[i] = temp;
+//         } else {
+//             return input;
+//         }
+        
+//         int result = 0; 
+        
+//         // cout << "result - " << numS << endl; 
+        
+//         for (int i = 0; i < numS.size(); i++) {
+//             // cout << "r - " << result << " char - " << numS[i] << endl;
+//             result = result*10 + numS[i]-'0';
+//             // cout << "r - " << result << " char - " << numS[i] << endl;
+//         }
+        
+//         return result;
+//     }
+// };
+
+// class Solution {
+//     public: 
+//     int maximumSwap (int num) {
+//         // Can we find the lowest number from the left which isn't a 9. 
+//         // Find the highest number from right.
+//         // swap those two ... 
+        
+//         string s = to_string(num);
+//         int size = s.size();
+        
+//         int left = 0;
+        
+//         while (left < size) {
+            
+//             while (left < size && s[left] == '9') {
+//                 left++;
+//             }
+            
+//             if (left == size) {
+//                 return num;
+//             }
+            
+//             int max = left;
+            
+//             for (int j = left; j < size; j++) {
+//                 if (s[max] <= s[left]) {
+//                     max = j;
+//                 }
+//             }
+            
+//             cout << "left - " << left << " max - " << max << endl;
+            
+//             if (s[left] != s[max]) {
+//                 swap (s[left], s[max]);
+//                 return stoi(s);
+//             }
+            
+//             left++;
+//         }
+        
+//         return num;
+//     }
+// };
+
+
+class Solution {
+public:
+    static int getmax(string s, int i){
+        int max=i;
+    
+        for (int j = s.size()-1; j > i; j--) {
+            if (s[j] > s[max])
+                max = j;
+        }
+        
+        return max;
+    }
+    int maximumSwap(int num) {
+        string s = to_string(num);
+        for(int i=0;i<s.length();i++)
+        {
+            int temp = getmax(s,i);
+            if (s[i] != s[temp]) {
+                swap(s[i],s[temp]);
+                break;
+            }
+        }
+        int number = stoi(s);
+        return number;
+    }
+};
