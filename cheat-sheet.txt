@@ -330,3 +330,17 @@ public:
 private:
     int cnt_, lower_, upper_;
 };
+
+Template classes: 
+
+## Trie ##
+
+class Trie {
+     public: 
+     Trie (char val) : val_(val) {
+          for ()
+     }
+     
+     private:
+     char val_; unordered_map <char, Trie*> map; bool isEnd_; 
+}
