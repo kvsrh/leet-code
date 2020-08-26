@@ -121,3 +121,30 @@ class Solution {
          return result;
      }
 };
+
+
+class Solution {
+    public: 
+    vector<int> intersection (vector<int> & nums1, vector<int> & nums2) {
+        int size1 = nums1.size();
+        int size2 = nums2.size();
+        
+        sort (nums1.begin(), nums1.end());
+        sort (nums2.begin(), nums2.end());
+        
+        unordered_set<int> results;
+        
+        for (int i = 0, j = 0; i < size1 && j < size2;) {
+            if (nums1[i] == nums2[j]) {
+                results.insert(nums1[i]);
+            }
+            int minL = min (nums1[i], nums2[j]);
+            if (nums1[i] == minL)
+                i++;
+            if (nums2[j] == minL)
+                j++;
+        }
+        return vector<int> (results.begin(), results.end());
+    
+    }
+};
