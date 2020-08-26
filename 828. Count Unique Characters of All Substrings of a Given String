@@ -1,0 +1,119 @@
+https://leetcode.com/problems/count-unique-characters-of-all-substrings-of-a-given-string/
+
+828. Count Unique Characters of All Substrings of a Given String
+Hard
+
+Let's define a function countUniqueChars(s) that returns the number of unique characters on s, for example if s = "LEETCODE" then "L", "T","C","O","D" are the unique characters since they appear only once in s, therefore countUniqueChars(s) = 5.
+
+On this problem given a string s we need to return the sum of countUniqueChars(t) where t is a substring of s. Notice that some substrings can be repeated so on this case you have to count the repeated ones too.
+
+Since the answer can be very large, return the answer modulo 10 ^ 9 + 7.
+
+ 
+
+Example 1:
+
+Input: s = "ABC"
+Output: 10
+Explanation: All possible substrings are: "A","B","C","AB","BC" and "ABC".
+Evey substring is composed with only unique letters.
+Sum of lengths of all substring is 1 + 1 + 1 + 2 + 2 + 3 = 10
+
+Example 2:
+
+Input: s = "ABA"
+Output: 8
+Explanation: The same as example 1, except countUniqueChars("ABA") = 1.
+
+Example 3:
+
+Input: s = "LEETCODE"
+Output: 92
+
+// #define MOD 1000000007
+
+// class Solution {
+// public:
+//     int uniqueLetterString(string s) {
+//         // We'll have to walk over s with all possible window sizes.
+//         // wdw_size = 1 to size-1.
+        
+//         // use a bit-set api. 
+        
+//         int size = s.size();
+        
+//         int count = 0;
+        
+//         for (int wdwSize = 1; wdwSize < size; wdwSize++) {
+//             bitset<26> bits;
+//             bitset<26> prev_bits;
+//             for (int i = 0; i < size-wdwSize-1; i++) { // when we are i we are moving from i-1 to i.
+//                 if (i == 0) {
+//                     bits = prev_bits;
+//                     bits.set(s[wdwSize-1]-'A');
+//                     prev_bits = bits;
+//                     count += (bits.count()%MOD);
+//                 } else {
+//                     bits.reset(s[i-1]-'A');
+//                     bits.set(s[i+wdwSize-1]-'A');
+//                     count += (bits.count()%MOD);
+//                 }
+//             }
+//         }
+        
+//         return count;
+        
+//     }
+// };
+
+// class Solution {
+// public:
+//     int uniqueLetterString(string s) {
+//         int out = 0;
+//         int n = s.size();
+//         for(char c = 'A'; c <= 'Z'; c++)
+//         {
+//             int start = 0;
+//             for(int i = 0; i < n; i++)
+//             {
+//                 if(s[i] == c)
+//                 {
+//                     int end = i;
+//                     while(end+1 < n && s[end+1] != c) end++; 
+//                     int left = i-start+1;
+//                     int right = end-i+1;
+//                     out += left*right;
+//                     start = i+1;
+//                 }
+//             }
+//         }
+//         return out;
+// 	}
+// };
+
+// God mode solution .. 
+
+
+class Solution {
+    public: 
+    int uniqueLetterString(string s) {
+        vector<int> left(s.length(),-1), right(s.length(),s.length());
+        vector<int> v(26,-1);
+        for(int i = 0;i<s.length();++i){
+            left[i]=v[s[i]-'A'];
+            v[s[i]-'A']=i;
+        }
+        v.assign (26,s.length());
+        for(int i = s.length()-1;i>=0;--i){
+            right[i]=v[s[i]-'A'];
+            v[s[i]-'A']=i;
+        }
+        long ret=0;
+        for(int i =0;i<s.length();++i){
+            ret+=((right[i]-i)*(i-left[i]))%1000000007;
+            ret%=1000000007;
+        }
+        return ret;
+    }
+};
+
