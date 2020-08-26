@@ -1,0 +1,97 @@
+https://leetcode.com/problems/4sum/
+
+18. 4Sum
+Medium
+
+Given an array nums of n integers and an integer target, are there elements a, b, c, and d in nums such that a + b + c + d = target? Find all unique quadruplets in the array which gives the sum of target.
+
+Note:
+
+The solution set must not contain duplicate quadruplets.
+
+Example:
+
+Given array nums = [1, 0, -1, 0, -2, 2], and target = 0.
+
+A solution set is:
+[
+  [-1,  0, 0, 1],
+  [-2, -1, 1, 2],
+  [-2,  0, 0, 2]
+]
+
+class Solution {
+public:
+    vector<vector<int>> threeSum (vector<int> & nums, int targetIn, int start) {
+        vector<vector<int>> result; 
+        // Input is sorted. 
+        // a+b+c = target;
+        
+        for (int i = start; i < nums.size(); i++) {
+            if (i > start && nums[i]==nums[i-1]) {
+                continue;
+            }
+            
+            int target = targetIn - nums[i];
+        
+            int start = i+1;
+            int end = nums.size()-1;
+            
+            while (start < end) {
+                if (nums[start] + nums[end] == target) {
+                    result.push_back({nums[i],nums[start],nums[end]});
+                    
+                    // if we have duplicates ahead of start, skip them. 
+                    
+                    while (start+1 < nums.size() && nums[start] == nums[start+1]) {
+                        start++;
+                    }
+                    start++;
+                    // similarily decrement end. 
+                    
+                    while (end-1 > i && nums[end] == nums[end-1]) {
+                        end--;
+                    }
+                    end--;
+                } else if (nums[start] + nums[end] > target) {
+                    end--;
+                } else {
+                    start++;
+                }
+            }
+        }
+        return result;
+    }
+    
+    vector<vector<int>> fourSum(vector<int>& nums, int target) {
+        // write a three sum function seperately and then run the code for the 4 sum. 
+        
+         vector<vector<int>> results; 
+        
+        if (nums.size() < 4)
+            return {};
+        
+        sort (nums.begin(), nums.end());
+        
+        // for (auto & elem : nums) {
+        //     cout << elem << " ";
+        // }
+        cout << endl;
+        
+        for (int i = 0; i < nums.size()-3; i++) {
+            if (i > 0 && nums[i-1] == nums[i]) {
+                continue;
+            }
+            int targetIn = target - nums[i];
+            vector<vector<int>> result = threeSum (nums, targetIn, i+1);
+            for (auto  r : result) {
+                results.push_back({nums[i]});
+                for (auto  elem : r) {
+                    results.back().emplace_back(elem);
+                }
+            }
+        }
+        
+        return results;
+    }
+};
