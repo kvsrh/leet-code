@@ -50,3 +50,32 @@ Accepted
 167,600
 Submissions
 345,350
+
+class Solution {
+    public:
+    int leastInterval(vector<char> & tasks, int n) {
+        vector<int> map(26,0);
+        
+        for (auto & task : tasks) {
+            map[task-'A']++;
+        }
+        
+        sort(map.begin(), map.end(), greater<>());
+        
+        // for (auto & elem : map) {
+        //     cout << elem << endl;
+        // }
+
+        int idle_time = (map[0]-1)*n;
+        
+        for (int i = 1; i < 26; i++) {               
+            if (map[i] == 0)
+                break;
+            idle_time -= min (map[0]-1, map[i]);
+        }
+        
+        idle_time = max (0, idle_time);
+        
+        return idle_time + tasks.size();
+    }
+};
