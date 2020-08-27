@@ -46,3 +46,35 @@ public:
         return;
     }
 };
+
+class Solution {
+public:
+    void merge(vector<int>& nums1, int m, 
+               vector<int>& nums2, int n) {
+    
+        
+        if (nums1.size() != m+n)
+            return;
+        
+//         if (m == 0) {
+//             nums1 = nums2;
+//             return;
+//         }
+        
+        int oneIndex = m-1;
+        int twoIndex = n-1;
+        
+        for (int curr = m+n-1; curr >= 0; curr--) {
+            if (twoIndex < 0)
+                break;
+            if (oneIndex >= 0 && nums1[oneIndex] > nums2[twoIndex]) { // Important Line. 
+                swap (nums1[curr], nums1[oneIndex]);
+                oneIndex--;
+            } else {
+                nums1[curr] = nums2[twoIndex];
+                twoIndex--;
+            }
+        }
+        return;
+    }
+};
