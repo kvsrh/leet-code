@@ -1,29 +1,4 @@
-301. Remove Invalid Parentheses
-Hard
-
-Remove the minimum number of invalid parentheses in order to make the input string valid. Return all possible results.
-
-Note: The input string may contain letters other than the parentheses ( and ).
-
-Example 1:
-
-Input: "()())()"
-Output: ["()()()", "(())()"]
-
-Example 2:
-
-Input: "(a)())()"
-Output: ["(a)()()", "(a())()"]
-
-Example 3:
-
-Input: ")("
-Output: [""]
-
-Accepted
-206,201
-Submissions
-479,440
+static auto _ = [] () {ios_base::sync_with_stdio(false);cin.tie(nullptr); cout.tie(nullptr);return 0;}();
 
 class Solution {
 public:
@@ -35,7 +10,7 @@ public:
     int len; 
     string s;
     
-    void dfs (string curr, int index, int left, int right, int used) {
+    void dfs (string & curr, int index, int left, int right, int used) {
         
        // cout << "s - " << s << " curr - " << curr << " index - " << index << " left - " << left << " right - " << right << endl;
         // cout << "r - " << curr << endl;
@@ -54,20 +29,34 @@ public:
         }        
         
         char c = s[index];
-
         
         if (c == '(') {
+            // Don't use this char.
             dfs (curr, index+1, left, right, used);
-            dfs (curr+c, index+1, left+1, right, used+1);
+            // Use this char.
+            curr = curr + c;
+            dfs (curr, index+1, left+1, right, used+1);
+            curr.pop_back();
         } else if (c == ')') {
             if (left > right) {
+                // If we can spare a few close brackets -- 
+                // two options - 
+                // 1) Don't use it.
+                // 2) Use it.
                 dfs (curr, index+1, left, right, used);
-                dfs (curr+c, index+1, left, right+1, used+1);
+                curr = curr + c;
+                dfs (curr, index+1, left, right+1, used+1);
+                curr.pop_back();
             } else {
+                // If the count of the rights are as many as lefts ... 
+                // don't use the current closing bracket.
                 dfs (curr, index+1, left, right, used);
             }
         } else {
-            dfs (curr+c, index+1, left, right, used);
+            // If the curr char isn't '(' or ')' just increase index further. 
+            curr = curr + c;
+            dfs (curr, index+1, left, right, used+1);
+            curr.pop_back();
             
         }
         return; 
@@ -99,10 +88,7 @@ public:
                 extra++;
 		}
 
-		l = r;
-        
-        leftUsed = l;
-        rightUsed = r;
+		leftUsed = rightUsed = r;
     
         len = leftUsed + rightUsed + extra;
         
