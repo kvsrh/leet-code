@@ -43,3 +43,66 @@ public:
         return first;
     }
 };
+
+// Iterative solution 
+
+// class Solution {
+//     public: 
+//     Node * treeToDoublyList (Node * root) {
+        
+//         if (root == NULL) {
+//             return NULL;
+//         }
+        
+        
+//         Node * curr = root; 
+//         Node * next = NULL;
+//         Node * head = NULL;
+//         Node * prev = NULL;
+        
+//         stack<Node *> s;
+        
+//         while (curr->left != NULL) {
+//               s.push(curr);
+//               curr = curr->left;       
+//         }
+        
+//         head = curr;
+        
+//         while (curr != NULL) {
+            
+//             // Iterator code - begin.
+            
+//             next = curr->right;
+            
+//             while (next != NULL) {
+//                 s.push(next);
+//                 next = next->left;
+//             }
+            
+//             if (s.size () > 0) {
+//                 next = s.top();
+//                 s.pop();
+//             }
+            
+//             // Iterator code - end             
+            
+//             if (prev != NULL) {
+//                 prev->right = curr;
+//                 curr->left = prev;
+//             }
+            
+//             prev = curr;
+//             curr = next;
+//         }
+        
+//         // link tail and head. 
+        
+//         prev->right = head;
+//         head->left = prev; 
+        
+//         return head;
+        
+//     }
+// };
+
