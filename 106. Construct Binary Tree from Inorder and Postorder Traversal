@@ -1,0 +1,67 @@
+106. Construct Binary Tree from Inorder and Postorder Traversal
+Medium
+
+Given inorder and postorder traversal of a tree, construct the binary tree.
+
+Note:
+You may assume that duplicates do not exist in the tree.
+
+For example, given
+
+inorder = [9,3,15,20,7]
+postorder = [9,15,7,20,3]
+
+Return the following binary tree:
+
+    3
+   / \
+  9  20
+    /  \
+   15   7
+
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+ * };
+ */
+class Solution {
+public:
+    unordered_map <int,int> map;
+    vector<int> postG;
+    
+    TreeNode * recurse (int start, int end, int & pIndex) {
+        if (start > end)
+            return NULL;
+        if (start == end)
+            return new TreeNode (postG[pIndex--]);
+        TreeNode * root = new TreeNode (postG[pIndex]);
+        int index = map[postG[pIndex]];
+        pIndex--;
+        
+        root->right = recurse (index+1, end, pIndex); // The pIndex order is reversed. So therfore reverse this too. 
+        root->left = recurse (start, index-1, pIndex);
+        return root;
+    }
+    
+    TreeNode* buildTree(vector<int>& inorder, vector<int>& postorder) {
+        // similar to the pre-order index solution only that .. we'll have 
+        // to walk in the reverse .. the postorder vector. 
+        
+        int size = inorder.size();
+        postG = postorder;
+        
+        for (int i = 0; i < size; i++) {
+            map[inorder[i]] = i;
+        }
+        
+        int pIndex = size-1;
+        
+        return recurse (0, size-1, pIndex);
+    }
+};
