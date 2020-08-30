@@ -6,8 +6,6 @@ According to the definition of LCA on Wikipedia: “The lowest common ancestor i
 
 Given the following binary tree:  root = [3,5,1,6,2,0,8,null,null,7,4]
 
- 
-
 Example 1:
 
 Input: root = [3,5,1,6,2,0,8,null,null,7,4], p = 5, q = 1
@@ -20,17 +18,10 @@ Input: root = [3,5,1,6,2,0,8,null,null,7,4], p = 5, q = 4
 Output: 5
 Explanation: The LCA of nodes 5 and 4 is 5, since a node can be a descendant of itself according to the LCA definition.
 
- 
-
 Note:
 
     All of the nodes' values will be unique.
     p and q are different and both values will exist in the binary tree.
-
-Accepted
-465,606
-Submissions
-1,033,308
 
 /*
  * Definition for a binary tree node.
@@ -40,165 +31,6 @@ Submissions
  *     TreeNode *right;
  *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
  * };
- 
-
-bool find (TreeNode * root, int p, vector<TreeNode *> & list) {
-    
-    if (root == NULL) {
-        return false;
-    }
-    
-    if (root->val == p) {
-        list.emplace_back(root);
-        // cout << root->val;
-        return true;
-    }
-    
-    if (find(root->left, p, list)) {
-        list.emplace_back(root);
-        // cout << root->val;
-        return true;
-    }
-    
-    if (find(root->right, p, list)) {
-        list.emplace_back(root);
-        return true;
-    }
-    
-    return false;
-}
-
-
-class Solution {
-public:
-    TreeNode* lowestCommonAncestor(TreeNode* root, TreeNode* p, TreeNode* q) {
-        
-        // TreeNode doesn't have a parent node. 
-        // We'll have to do a left and right tree search on both the sides to check if we can find,
-        // p and q. 
-        
-        vector<TreeNode *> pList;
-        vector<TreeNode *> qList;
-        
-        bool find_p = find(root, p->val, pList);
-        bool find_q = find(root, q->val, qList);
-        
-        //reverse(pList.begin(), pList.end());
-        //reverse(qList.begin(), qList.end());
-        
-        auto pCurr = pList.rbegin();
-        auto qCurr = qList.rbegin();
-        
-        TreeNode * prev = NULL; 
-         
-        while (pCurr != pList.rend() && qCurr != qList.rend()) {
-            int pVal = (*pCurr)->val;
-            int qVal = (*qCurr)->val;
-            
-            if (pVal == qVal) {
-                prev = *pCurr;
-                pCurr++; qCurr++;
-            } else {
-                return prev;
-            }
-        }
-        
-        return prev;
-        
-    }
-};
-*/
-// class Solution {
-// public:
-//     TreeNode* lowestCommonAncestor(TreeNode* root, TreeNode* p, TreeNode* q) {
-//           if( root == NULL ) // to return from boundry cases
-//           	return NULL;
-        
-//           if( root == p || root == q ) // if either p or q if found return root 
-//           	return root;               // this will automatically handle the case when one node is decendent of
-//                                        // other
-        
-//           TreeNode* l = lowestCommonAncestor( root->left , p , q); // check if either p or q is found in left subtree
-//           TreeNode* r = lowestCommonAncestor( root->right , p , q);// check if either p or q is found in right subtree
-          
-//           if( l && r )    // if both l and r are not null it means one node is in left subtree and one node is in right subtree of root node
-//           	return root;   // hence return root
-        
-//           return l ? l : r ;  // if only one of l and r is not null return it. 
-//     }
-    
-// };
-
-
-
-// class Solution {
-//     TreeNode * l;
-//     TreeNode * r;
-//     TreeNode * result = NULL;
-    
-//     public: 
-    
-//     void recurse (TreeNode * root, bool & leftFound, bool & rightFound) {
-        
-//         if (result != NULL)
-//             return;
-            
-            
-//         if (!root)
-//             return;
-        
-//         if (root == l)
-//             leftFound = true;
-//             result = root;
-//             return;
-            
-        
-//         if (root == r)
-//             rightFound = true;
-//             result = root;
-//             return;
-        
-//         if (!leftFound) {
-//             bool rightFoundL = rightFound;
-//             recurse (root->left, leftFound, rightFound);
-//             recurse (root->right, leftFound, rightFound);
-//             if (leftFound && rightFoundL) {
-//                 result = root;
-//                 return;
-//             }
-//         } else if (!rightFound) {
-//             bool leftFoundL = leftFound;
-//             recurse (root->left, leftFound, rightFound);
-//             recurse (root->right, leftFound, rightFound);
-//             if (leftFoundL && rightFound) {
-//                 result = root;
-//                 return;
-//             }
-//         } else {
-//             recurse (root->left, leftFound, rightFound);
-//             recurse (root->right, leftFound, rightFound);
-
-//             if (leftFound && rightFound) {
-//                 result = root;
-//                 return;
-//             }
-//         }
-//     }
-    
-    
-//     TreeNode * lowestCommonAncestor (TreeNode * root, TreeNode * p, TreeNode * q) {
-//         // void recurse (TreeNode* root, bool & foundLeft, bool & foundRight) 
-        
-//         bool foundLeft = false;
-//         bool foundRight = false;
-        
-//         l = p, r = q;
-        
-//         recurse (root, foundLeft, foundRight);
-        
-//         return result; 
-//     }
-// };
 
 class Solution {
     public: 
