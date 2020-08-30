@@ -103,3 +103,56 @@ public:
         
     }
 };
+
+// Boundary sweep works better. 
+// Push all the zero nodes in the queue and then expand in all the directions. 
+// A node closest to the gate will be already filled. If you find a node 
+// with INT_MAX .. it means we haven't reached it in any previous levels. 
+
+class Solution {
+    public: 
+    void wallsAndGates(vector<vector<int>>& rooms) {
+        int rows = rooms.size();
+        if (!rows)
+            return;
+        int cols = rooms[0].size();
+        
+        queue <pair<int,int>> q; 
+        
+        for (int r = 0; r < rows; r++) {
+            for (int c = 0; c < cols; c++) {
+                if (rooms[r][c] == 0) { // gates -- 
+                    q.push ({r,c});
+                }
+            }
+        }
+        
+        vector<int> dirs = {0,1,0,-1,0};
+        
+        int level = 1;
+        
+        while (!q.empty()) {
+            int size = q.size();
+            for (int i = 0; i < size; i++) {
+                auto curr = q.front();
+                q.pop();
+
+                int cr = curr.first;
+                int cc = curr.second;
+                
+                for (int i = 0; i < 4; i++) {
+                    int nr = cr + dirs[i];
+                    int nc = cc + dirs[i+1];
+                    if (nr >= 0 && nr < rows &&
+                        nc >= 0 && nc < cols && 
+                        rooms[nr][nc] == INT_MAX) {
+                        rooms[nr][nc] = level;
+                        q.push ({nr,nc});
+                    }
+                }
+            }
+            level++;
+        }
+        return;
+    }
+};
