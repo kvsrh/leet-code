@@ -1,0 +1,97 @@
+105. Construct Binary Tree from Preorder and Inorder Traversal
+Medium
+
+Given preorder and inorder traversal of a tree, construct the binary tree.
+
+Note:
+You may assume that duplicates do not exist in the tree.
+
+For example, given
+
+preorder = [3,9,20,15,7]
+inorder = [9,3,15,20,7]
+
+Return the following binary tree:
+
+    3
+   / \
+  9  20
+    /  \
+   15   7
+
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+ * };
+ */
+// class Solution {
+// public:
+//     TreeNode* build(vector<int>&pre,int st,int en,int &p,unordered_map<int,int> &m){
+//         if(st>en)return NULL;
+//         if(st==en)
+//             return new TreeNode(pre[p++]);
+//         TreeNode* root=new TreeNode(pre[p]);
+//         int idx=m[pre[p]];
+//         p++;
+//         root->left=build(pre,st,idx-1,p,m);
+//         root->right=build(pre,idx+1,en,p,m);
+//         return root;
+//     }
+//     TreeNode* buildTree(vector<int>& pre, vector<int>& in) {
+//         int n=pre.size();
+//         unordered_map<int,int> m;
+//         for(int i=0;i<n;i++)
+//             m[in[i]]=i;
+//         int p=0;
+//         TreeNode* ans=build(pre,0,n-1,p,m);
+//         return ans;
+//     }
+// };
+
+class Solution {
+    public:
+    vector<int> inG;
+    vector<int> preG;
+    unordered_map <int,int> map;
+    
+    TreeNode * recurse (int start, int end, int & pIndex) {
+        if (start > end) { 
+            return NULL;
+        }
+        
+        if (start == end) {
+            return new TreeNode (preG[pIndex++]);
+        }
+        
+        TreeNode * root = new TreeNode (preG[pIndex]);
+        int index = map[preG[pIndex]];
+        
+        pIndex++;
+        
+        root->left = recurse (start, index-1, pIndex);
+        root->right = recurse (index+1, end, pIndex);
+        
+        return root;
+    }
+    
+    
+    TreeNode * buildTree (vector<int> & pre, vector<int> & in) {
+        if (!pre.size())
+            return NULL;
+        
+        for (int i = 0; i < in.size(); i++) {
+            map[in[i]] = i;
+        }
+        int pIndex = 0;
+        preG = pre;
+        inG = in;
+        
+        return recurse (0, in.size()-1, pIndex);
+    }
+};
