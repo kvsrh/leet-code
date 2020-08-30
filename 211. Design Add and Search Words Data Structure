@@ -7,9 +7,8 @@ Implement the WordDictionary class:
 
     WordDictionary() Initializes the object.
     void addWord(word) adds word to the data structure, it can be matched later.
-    bool search(word) returns true if there is any string in the data structure that matches word or false otherwise. word may contain dots '.' where dots can be matched with any letter.
-
- 
+    bool search(word) returns true if there is any string in the data structure that matches word or false otherwise. word may contain dots '.'
+    where dots can be matched with any letter.
 
 Example:
 
@@ -29,3 +28,71 @@ wordDictionary.search("bad"); // return True
 wordDictionary.search(".ad"); // return True
 wordDictionary.search("b.."); // return True
 
+/**
+ * Your WordDictionary object will be instantiated and called as such:
+ * WordDictionary* obj = new WordDictionary();
+ * obj->addWord(word);
+ * bool param_2 = obj->search(word);
+ */
+
+typedef struct TrieNode {
+    TrieNode *children[26];
+    bool isLeaf;
+} TrieNode;
+
+TrieNode* getNewNode() {
+    TrieNode* root = new TrieNode;
+    root->isLeaf = false;
+    for(int i = 0; i < 26; i++) {
+        root->children[i] = NULL;
+    }
+
+    return root;
+}
+
+class WordDictionary {
+    TrieNode* root;
+public:
+
+    WordDictionary() {
+        root = getNewNode();
+    }
+
+    // Adds a word into the data structure.
+    void addWord(string s) {
+        TrieNode* it = root;
+
+        for(int i = 0; i < s.length(); i++) {
+            if (it->children[s[i] - 'a'] == NULL) {
+                it->children[s[i] - 'a'] = getNewNode();
+            }
+
+            it = it->children[s[i] - 'a'];
+        }
+
+        it->isLeaf = true;
+    }
+
+    // Returns if the word is in the data structure. A word could
+    // contain the dot character '.' to represent any one letter.
+    bool search(string word) {
+        return DFS(root, word, 0);
+    }
+
+    bool DFS(TrieNode *it, string word, int id) {
+        if (it == NULL) {
+            return false;
+        }
+        if (word.length() == id && it->isLeaf == true) {
+            return true;
+        } else if (word[id] == '.') {
+            for(int i = 0; i < 26; i++) {
+                if (DFS(it->children[i], word, id + 1))
+                    return true;
+            }
+            return false;
+        } else {
+            return DFS(it->children[word[id] - 'a'], word, id + 1);
+        }
+    }
+};
