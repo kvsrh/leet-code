@@ -69,3 +69,116 @@ public:
         return count;
     }
 };
+
+class Solution {
+private:
+    class DisjointSetUnion {
+    private:
+        vector<int> parents;
+        
+    public:
+        DisjointSetUnion(int size) : parents(size) {
+            iota(parents.begin(), parents.end(), 0);
+        }
+        
+        int findSet(int value) {
+            if (parents[value] == value) {
+                return value;
+            } else {
+                return parents[value] = findSet(parents[value]);
+            }
+        }
+        
+        void makeUnion(int first, int second) {
+            int set1 = findSet(first);
+            int set2 = findSet(second);
+            parents[set1] = parents[set2];
+        }
+    };
+
+    public:
+    int countComponents(int n, vector<vector<int>>& edges) {
+        DisjointSetUnion disjointSet(n);
+        
+        for (const vector<int>& edge : edges) {
+            disjointSet.makeUnion(edge[0], edge[1]);
+        }
+        
+        set<int> uniqueSets;
+        
+        for (int i = 0; i < n; ++i) {
+            uniqueSets.insert(disjointSet.findSet(i));
+        }
+        
+        return uniqueSets.size();
+    }
+};
+
+// class Solution {
+//     private: 
+//     class unionFind {
+//         public: 
+//         int numComponents;
+//         vector<int> parent;
+//         vector<int> size;
+        
+//         unionFind (int n) {
+//             numComponents = n;
+//             parent = vector<int> (n,0);
+//             iota (parent.begin(), parent.end(), 0);
+//             size = vector<int> (n, 1);
+//         }
+        
+//         int findParent (int n) {
+//             int root = parent[n];
+//             while (root != parent[root]) {
+//                 root = parent[root];
+//             }
+            
+//             // compress the path
+//             while (n != root) {
+//                 int next = parent[n];
+//                 parent[n] = root;
+//                 next = n;
+//             }
+            
+//             return root;
+//         }
+        
+//         void merge (int a, int b) {
+//             int aRoot = findParent (a);
+//             int bRoot = findParent (b);
+            
+//             if (aRoot == bRoot) {
+//                 return;
+//             }
+            
+//             if (size[aRoot] < size[bRoot]) {
+//                 parent[aRoot] = parent[bRoot];
+//                 size[bRoot] += size[aRoot];
+//             } else {
+//                 parent[bRoot] = parent[aRoot];
+//                 size[aRoot] += size[bRoot]; 
+//             }
+            
+//             numComponents--;
+            
+//             return; 
+//         }
+        
+//     };
+//     public: 
+//     int countComponents (int n, vector<vector<int>> & edges) {
+        
+//         if (!edges.size())
+//             return 0; 
+        
+//         unionFind uf (n);
+        
+//         for (auto & edge : edges) {
+//             uf.merge (edge[0], edge[1]);
+//         }
+    
+//         return uf.numComponents; 
+//     }
+// };
