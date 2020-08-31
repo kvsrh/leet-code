@@ -1,0 +1,124 @@
+721. Accounts Merge
+Medium
+
+Given a list accounts, each element accounts[i] is a list of strings, where the first element accounts[i][0] is a name, and the rest of the elements are emails representing emails of the account.
+
+Now, we would like to merge these accounts. Two accounts definitely belong to the same person if there is some email that is common to both accounts. Note that even if two accounts have the same name, they may belong to different people as people could have the same name. A person can have any number of accounts initially, but all of their accounts definitely have the same name.
+
+After merging the accounts, return the accounts in the following format: the first element of each account is the name, and the rest of the elements are emails in sorted order. The accounts themselves can be returned in any order.
+
+Example 1:
+
+Input: 
+accounts = [["John", "johnsmith@mail.com", "john00@mail.com"], ["John", "johnnybravo@mail.com"], ["John", "johnsmith@mail.com", "john_newyork@mail.com"], ["Mary", "mary@mail.com"]]
+Output: [["John", 'john00@mail.com', 'john_newyork@mail.com', 'johnsmith@mail.com'],  ["John", "johnnybravo@mail.com"], ["Mary", "mary@mail.com"]]
+Explanation: 
+The first and third John's are the same person as they have the common email "johnsmith@mail.com".
+The second John and Mary are different people as none of their email addresses are used by other accounts.
+We could return these lists in any order, for example the answer [['Mary', 'mary@mail.com'], ['John', 'johnnybravo@mail.com'], 
+['John', 'john00@mail.com', 'john_newyork@mail.com',a 'johnsmith@mail.com']] would still be accepted.
+
+Note:
+The length of accounts will be in the range [1, 1000].
+The length of accounts[i] will be in the range [1, 10].
+The length of accounts[i][j] will be in the range [1, 30].
+
+
+class Solution {
+public:
+    
+    class DSU {
+        public: 
+        vector<int> parents;
+        DSU (int size) {
+            parents = vector<int> (size,0);
+            iota (parents.begin(), parents.end(), 0);
+        }
+        
+        int findParent (int p) {
+            int root = p;
+            
+            while (parents[root] != root) {
+                root = parents[root];
+            }
+            
+            // compress path
+            
+            int curr = p;
+            
+            while (curr != root) {
+                int next = parents[curr];
+                parents[curr] = root;
+                curr = next;
+            }
+            return root;
+        }
+    
+        void merge (int a, int b) {
+            int aRoot = findParent(a);
+            int bRoot = findParent (b);
+            
+            parents[aRoot] = parents[bRoot]; // can optimize it based on rank or size. 
+            return;
+        }
+    };
+    
+    vector<vector<string>> accountsMerge(vector<vector<string>>& accounts) {
+        // Convert this into a union find problem.
+        // for each string find if a given string is in the email. 
+        
+        int size = accounts.size();
+        
+        vector<pair<int,int>> unions;
+         
+        for (int i = 0; i < size; i++) {
+            unordered_set<string> map (accounts[i].begin()+1, accounts[i].end());
+            for (int j = i+1; j < size; j++) {
+                for (int k = 1; k < accounts[j].size(); k++) {
+                    if (map.count(accounts[j][k]) > 0) {
+                        unions.push_back({i,j});
+                        break;
+                    }
+                }
+            }
+        }
+        
+        // go over the unions and find the sets. 
+        
+        DSU uf (size);
+        
+        for (auto & u : unions) {
+            uf.merge(u.first, u.second);
+        }
+        
+        unordered_map <int, vector<int>> map;
+        
+        for (int i = 0; i < size; i++) {
+            int parent = uf.findParent(i);
+            if (map.find(parent) != map.end()) {
+                map[parent].emplace_back(i);
+            } else {
+                map[parent] = {i};
+            }
+        }
+        
+        vector<vector<string>> results;
+        
+        for (auto & elem : map) {
+            results.push_back({accounts[elem.first][0]});
+            set<string> setL;
+            for (auto & entry : elem.second) {
+                for (int i = 1; i < accounts[entry].size(); i++) {
+                    setL.insert(accounts[entry][i]);
+                }
+            }
+            for (auto & e : setL) {
+                results.back().push_back (e);
+            }
+            
+        }
+        
+        return results;
+        
+    }
+};
