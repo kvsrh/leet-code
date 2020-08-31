@@ -1,0 +1,61 @@
+311. Sparse Matrix Multiplication
+Medium
+
+Given two sparse matrices A and B, return the result of AB.
+
+You may assume that A's column number is equal to B's row number.
+
+Example:
+
+Input:
+
+A = [
+  [ 1, 0, 0],
+  [-1, 0, 3]
+]
+
+B = [
+  [ 7, 0, 0 ],
+  [ 0, 0, 0 ],
+  [ 0, 0, 1 ]
+]
+
+Output:
+
+     |  1 0 0 |   | 7 0 0 |   |  7 0 0 |
+AB = | -1 0 3 | x | 0 0 0 | = | -7 0 3 |
+                  | 0 0 1 |
+
+class Solution {
+public:
+    vector<vector<int>> multiply(vector<vector<int>>& A, 
+                                 vector<vector<int>>& B) {
+        // [1 0 0] * [7 0 0]
+        // use two way pointers for find the the positon where 
+        // the num is not zero. 
+        
+        int Arows = A.size();
+        int Acols = A[0].size();
+        
+        int Brows = B.size();
+        int Bcols = B[0].size();
+        
+        vector<vector<int>> result (Arows, vector<int> (Bcols, 0));
+        
+        for (int ar = 0; ar < Arows; ar++) {
+            for (int ac = 0; ac < Acols; ac++) {
+                if (A[ar][ac] == 0) // If the current row is 0 move on. 
+                    continue;
+                for (int bc = 0; bc < Bcols; bc++) {
+                     result[ar][bc] += A[ar][ac]*B[ac][bc];   
+                }
+            }
+        }
+        
+        return result; 
+        
+    }
+};
+
+// Can be speeden-ed up using two pointer approach -- 
+
