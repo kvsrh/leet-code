@@ -1,0 +1,63 @@
+Read N Characters Given Read4
+
+/**
+ * The read4 API is defined in the parent class Reader4.
+ *     int read4(char *buf);
+ */
+
+class Solution {
+public:
+    /**
+     * @param buf Destination buffer
+     * @param n   Number of characters to read
+     * @return    The number of actual characters read
+     */
+    
+    // a b c d e f
+    //       ^             
+    
+    // int read(char *buf, int n) {
+    //     int readDone = 0;
+    //     int curr = 0;
+    //     int read = n;
+    //     do {
+    //        curr = read4(buf);
+    //        readDone = readDone + curr; // 
+    //        buf = buf + curr;
+    //        n = n - curr;
+    //        // cout << "n - " << n << "curr - " << curr << "readDone - " << readDone << endl;
+    //     } while (n > 0 && curr != 0);
+    //     return min(readDone,read); 
+    // }
+    
+     int read(char *buf, int n) {
+        //read - n > 4 
+        // read - n < 4. 
+        // return the min (readDone, read);
+        // if file len 12 - read 6 .. read(4) + read(2) --> but we read [1...8] -- so pop back the
+        // last two vals. 
+        // second read (5) -- how do we pass filepos to read4 ?? 
+        // We need to maintain an intermediate buffer. 
+        
+        // n > 4 .. 
+        // n < 4 ..
+        
+        int read = 0;
+        int  totalread = 0;
+        while (n > 0) {
+            read = read4(buf);
+            
+            if (read > n) {
+                totalread += n;
+                buf = buf+n;
+            } else {
+                totalread += read;
+                buf = buf+read;
+            }
+            n = n-read;
+            if (read == 0)
+                break;
+        }
+        return totalread;
+     }
+};
