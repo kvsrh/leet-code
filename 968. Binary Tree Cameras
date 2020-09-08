@@ -1,0 +1,82 @@
+968. Binary Tree Cameras
+Hard
+
+Each camera at a node can monitor its parent, itself, and its immediate children.
+
+Calculate the minimum number of cameras needed to monitor all nodes of the tree.
+
+Example 1:
+
+
+Input: [0,0,null,0,0]
+Output: 1
+Explanation: One camera is enough to monitor all nodes if placed as shown.
+Example 2:
+
+
+Input: [0,0,null,0,null,0,null,null,0]
+Output: 2
+Explanation: At least two cameras are needed to monitor all nodes of the tree. The above image shows one of the valid configurations of camera placement.
+
+Note:
+
+The number of nodes in the given tree will be in the range [1, 1000].
+Every node has value 0.
+
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+class Solution {
+private:
+    // camera count
+    int cc;
+    /*
+        this function recursively makes sure all 
+        sub trees are surveilled. It returns the status of 
+        the root:
+            0: root is not under surveillance
+            1: root is under surveillance but doesn't have camera
+            2: root has camera
+    */
+    int dfs(TreeNode *root)
+    {
+        // if root doesn't exist, it is surveilled
+        if(!root) return 1;
+        // ints to store status of children
+        int l = 0, r = 0, prod;
+        // surveil children's subtrees
+        l = dfs(root->left);
+        r = dfs(root->right);
+        // utility varialble to make code shorter
+        prod = l * r;
+        // if none of the children are under surveillance
+        // root must have a camera
+        if(!prod)
+        {
+            ++cc;
+            return 2;
+        }
+        // if both the children are under surveillance
+        // but don't have cameras, root is not under surveillance
+        if(prod == 1) return 0;
+        // at least one of the children has a camera
+        // so root is surveilled and doesn't have camera
+        else return 1;
+    }
+public:
+    Solution() : cc(0) {}
+    int minCameraCover(TreeNode* root) 
+    {
+        // if root is not under surveillance 
+        // need to add camera to root
+        if(!dfs(root)) ++cc;
+        // return number of cameras
+        return cc;
+    }
+};
