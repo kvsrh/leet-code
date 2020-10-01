@@ -1,0 +1,149 @@
+https://leetcode.com/problems/most-profit-assigning-work/
+
+826. Most Profit Assigning Work
+Medium
+
+We have jobs: difficulty[i] is the difficulty of the ith job, and profit[i] is the profit of the ith job. 
+
+Now we have some workers. worker[i] is the ability of the ith worker, which means that this worker can only complete a job with difficulty at most worker[i]. 
+
+Every worker can be assigned at most one job, but one job can be completed multiple times.
+
+For example, if 3 people attempt the same job that pays $1, then the total profit will be $3.  If a worker cannot complete any job, his profit is $0.
+
+What is the most profit we can make?
+
+Example 1:
+
+Input: difficulty = [2,4,6,8,10], profit = [10,20,30,40,50], worker = [4,5,6,7]
+Output: 100 
+Explanation: Workers are assigned jobs of difficulty [4,4,6,6] and they get profit of [20,20,30,30] seperately.
+
+Notes:
+
+    1 <= difficulty.length = profit.length <= 10000
+    1 <= worker.length <= 10000
+    difficulty[i], profit[i], worker[i]  are in range [1, 10^5]
+
+
+// class Solution {
+// public:
+    
+//     vector<int> maxProfit;
+    
+//     void computeMax (vector<int> & profits) {
+        
+//         int maxL = profits[0];
+//         maxProfit[0] = maxL;
+//         for (int i = 1; i< profits.size(); i++) {
+//             if (profits[i] > maxL) {
+//                 maxL = profits[i];
+//             }
+//             maxProfit[i] = maxL;
+//         }
+//         return;
+//     } 
+    
+    
+//     int search (vector<int> & difficulty, 
+//                 vector<int> & profit, 
+//                 int target) {
+        
+//         int left = 0;
+//         int right = difficulty.size()-1;
+        
+//         while (left <= right) {
+//             int mid = left + (right-left)/2;
+//             if (target < difficulty[mid]) {
+//                 right = mid-1;
+//             } else {
+//                 left = mid+1;
+//             }
+//         }
+        
+//         if (right == -1) {
+//             return 0; 
+//         } else {
+//             int result = maxProfit[right];
+//             cout << "target - " << target << "result - " << result << "right - " << right << endl;
+//             return result;
+//         }
+//     }
+    
+//     int maxProfitAssignment(vector<int>& difficulty, 
+//                             vector<int>& profit, 
+//                             vector<int>& worker) {
+//         // Simple logic is to do a binary search and then 
+//         // find the best work a worker can do. 
+        
+//         // [2,4,6,8,10] -->
+//         // 
+        
+//         vector<pair<int,int>> profits;
+        
+//         for (int i = 0; i < difficulty.size(); i++) {
+//             profits.push_back({difficulty[i], profit[i]});  
+//         }
+        
+//         sort (profits.begin(), profits.end(), [] (pair<int,int> & a, pair <int,int> & b) {
+//             if (a.first == b.first) {
+//                 return a.second < b.second;
+//             } else {
+//                 return a.first < b.first;
+//             }
+//         });
+        
+//         for (int i = 0; i < difficulty.size(); i++) {
+//             difficulty[i] = profits[i].first;
+//             profit[i] = profits[i].second;
+//         }
+        
+//         int total_profit = 0;
+        
+//         maxProfit = vector<int> (profit.size(), 0);
+        
+//         computeMax (profit);
+        
+//         for (auto & work : worker) {
+//             total_profit += search (difficulty, profit, work);
+//         }
+//         return total_profit;
+//     }
+// };
+
+// two pointer approach where in we are trying to - 
+// 1) sort the jobs and the workers. 
+
+class Solution {
+    public:
+    int maxProfitAssignment (vector<int> & difficulty,
+                             vector<int> & profit,
+                             vector<int> & worker) {
+        
+        int size = difficulty.size();
+        
+        vector<pair<int,int>> profits;
+        
+        for (int i = 0; i < size; i++) {
+            profits.push_back ({difficulty[i], profit[i]});
+        }
+        
+        sort (profits.begin(), profits.end(), [](pair<int,int> & a, pair<int,int> & b) {
+            return a.first < b.first;
+        });
+        
+        sort (worker.begin(), worker.end());
+        
+        int tProfit = 0;
+        int i = 0;
+        int best = 0;
+        
+        for (auto & skill : worker) {
+            while (i < size && skill >= profits[i].first) {
+                best = max (best, profits[i++].second);
+            }
+            tProfit += best;
+        }
+        return tProfit;
+    }
+};
