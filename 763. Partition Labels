@@ -1,0 +1,74 @@
+https://leetcode.com/problems/partition-labels/
+
+A string S of lowercase English letters is given. We want to partition this string into as many parts as possible so that each letter appears in at most one part, and return a list of integers representing the size of these parts.
+
+ 
+
+Example 1:
+
+Input: S = "ababcbacadefegdehijhklij"
+Output: [9,7,8]
+Explanation:
+The partition is "ababcbaca", "defegde", "hijhklij".
+This is a partition so that each letter appears in at most one part.
+A partition like "ababcbacadefegde", "hijhklij" is incorrect, because it splits S into less parts.
+
+class Solution {
+public:
+    vector<int> partitionLabels(string S) {
+        //  x       x
+        // "ababcbaca defegde hijhklij" --> 
+        
+        // For each character find the first and the last
+        // index where a character was found - then 
+        // merge the intervals. 
+        
+        // Should we merge [5,5] [6,6] -> No since we want to maximize the
+        // labels paritions? 
+        
+        vector<pair<int,int>> indexes (26, {-1,-1});
+        
+        for (int i = 0; i < S.size(); i++) {
+            int index = S[i]-'a';
+            if (indexes[index].first == -1) {
+                indexes[index].first = i;
+                indexes[index].second = i;
+            } else {
+                indexes[index].second = i;
+            }
+        }
+        
+        sort (indexes.begin(), indexes.end());
+        
+        int i = 0;
+        
+        for (; i < 26; i++) {
+            if (indexes[i].first == -1)
+                continue;
+            else
+                break;
+        }
+        
+        vector<int> results;
+        
+        pair<int,int> curr = indexes[i];
+        
+        results.emplace_back (curr.second - curr.first + 1);
+        
+        for (int j = i+1; j < 26; j++) {
+            if (indexes[j].first < curr.second) {
+                if (indexes[j].second < curr.second) {
+                    continue;
+                } else {
+                    curr.second = indexes[j].second;
+                    results.pop_back();
+                    results.emplace_back(curr.second - curr.first + 1);
+                }
+            } else {
+                curr = indexes[j];
+                results.emplace_back(curr.second - curr.first + 1);
+            }
+        }
+        return results;
+    }
+};
