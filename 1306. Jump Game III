@@ -1,0 +1,104 @@
+1306. Jump Game III
+Medium
+
+Given an array of non-negative integers arr, you are initially positioned at start index of the array. When you are at index i, you can jump to i + arr[i] or i - arr[i], check if you can reach to any index with value 0.
+
+Notice that you can not jump outside of the array at any time.
+
+ 
+
+Example 1:
+
+Input: arr = [4,2,3,0,3,1,2], start = 5
+Output: true
+Explanation: 
+All possible ways to reach at index 3 with value 0 are: 
+index 5 -> index 4 -> index 1 -> index 3 
+index 5 -> index 6 -> index 4 -> index 1 -> index 3 
+
+Example 2:
+
+Input: arr = [4,2,3,0,3,1,2], start = 0
+Output: true 
+Explanation: 
+One possible way to reach at index 3 with value 0 is: 
+index 0 -> index 4 -> index 1 -> index 3
+
+Example 3:
+
+Input: arr = [3,0,2,1,2], start = 2
+Output: false
+Explanation: There is no way to reach at index 1 with value 0.
+
+class Solution {
+public:
+    unordered_map <int, vector<int>> map;
+    
+    bool bfs (int start, vector<int> & end) {
+        unordered_set<int> set;
+        unordered_set<int> endSet (end.begin(), end.end());
+        
+        queue<int> q;
+        
+        q.push (start);
+        set.insert(start);
+        
+        while (!q.empty()) {
+            auto & curr = q.front();
+            q.pop();
+            
+            if (endSet.count(curr) > 0)
+                return true;
+            
+            for (auto & next : map[curr]) {
+                if (set.count(next) == 0) {
+                    q.push(next);
+                    set.insert(next);
+                }
+            }
+        }
+        return false;
+    } 
+    
+    bool canReach(vector<int>& arr, int start) {
+        // Find the index where zero is present.  
+        // [4,2,3,0,3,1,2] -- 
+        
+        // 5->4->1->3
+        
+        // Adjancent pairs and check if an index can be reached.
+        
+        vector<int> end;
+        
+        for (int i = 0; i < arr.size(); i++) {
+            if (arr[i] == 0) {
+                end.emplace_back(i);
+                continue;
+            }
+            
+            if (i + arr[i] < arr.size()) {
+                map[i].emplace_back(i+arr[i]);
+            }
+            
+            if (i - arr[i] >= 0) {
+                map[i].emplace_back(i-arr[i]);
+            }
+        }
+        
+        if (end.size() == 0) {
+            return  false;
+        }
+        
+//         for (auto & elem : map) {
+//             cout  << elem.first << " : ";
+//             for (auto & c : elem.second) {
+//                 cout  << c << " ";
+//             }
+//             cout << endl;
+//         }
+        
+//         cout << "start - " << start << " end - " << end << endl;
+        
+        return bfs (start, end);
+    }
+};
