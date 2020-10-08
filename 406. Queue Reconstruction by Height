@@ -87,3 +87,33 @@ public:
         
     }
 };
+
+class Solution {
+    public:
+    vector<vector<int>> reconstructQueue (vector<vector<int>> & people) {
+        if (people.size() == 0)
+            return {};
+    
+        sort (people.begin(), people.end(), [](vector<int> & a, vector<int> & b) {
+            return a[0] == b[0] ? a[1] < b[1] : a[0] < b[0];
+        });
+        
+        int size = people.size();
+        
+        vector<vector<int>> result (size,vector<int> (2, -1));
+        
+        for (int i = 0; i < size; i++) {
+            int pos = people[i][1]; int height = people[i][0];
+            for (int j = 0; j < size; j++) {
+                if (result[j][0] == -1 || result[j][0] >= height)
+                    pos--;
+                if (pos < 0) {
+                    result[j][0] = people[i][0];
+                    result[j][1] = people[i][1];
+                    break;
+                }
+            }
+        }
+        return result;
+    }
+};
