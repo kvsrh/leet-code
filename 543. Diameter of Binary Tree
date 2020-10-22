@@ -179,3 +179,24 @@ class Solution {
                                       // length between two nodes is 1. 
     }
 };
+
+lass Solution {
+    public:
+    int diameter = 0;
+    
+    int helper (TreeNode * root) {
+        if (root == NULL)
+            return 0;
+         
+        int left = helper(root->left);
+        int right = helper(root->right);
+        
+        diameter = max (diameter, left+right+1);
+        return max(left,right)+1;
+    }
+    
+    int diameterOfBinaryTree(TreeNode * root) {
+        (void) helper(root);
+        return diameter > 0 ? diameter-1 : 0;
+    }
+};
