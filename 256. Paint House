@@ -46,6 +46,9 @@ public:
                 }
             } else {
                 for (int c = 0; c < colors; c++) {
+                    // crux is you find the best you can do by coloring the current house with a color 
+                    // and then picking a min of the cost of painting the previous house with a color other
+                    // than the current color. 
                     dp[r][c] = min (dp[r-1][(c+1)%colors], dp[r-1][(c+2)%colors]) + costs[r][c];
                     // Wow we get a beautiful line too ... 
                 }
