@@ -27,39 +27,60 @@ Accepted
 Submissions
 293,823
 
+// class Solution {
+// public:
+//     vector<int> sortArrayByParity(vector<int>& A) {
+        
+//         //  o    
+//         // [5,3,1,2,4] -- 
+//         // 
+        
+//         int size = A.size();
+//         int oddp = -1;
+        
+//         for (int i = 0; i < size; i++) {
+//             if (A[i]%2 == 1) {
+//                 if (oddp == -1) {
+//                     oddp = i;
+//                 }
+//             } else if (A[i]%2 == 0) {
+//                 if (oddp != -1) {
+//                     swap (A[oddp], A[i]);
+//                     while (oddp <= i) {
+//                         if (A[++oddp]%2 == 0) {
+//                             continue;
+//                         } else {
+//                             break;
+//                         }
+//                     }
+//                     if (oddp == i+1) { // important line .. 2 pointer method. 
+//                         oddp = -1;
+//                     }
+//                 }
+//             }
+//         }
+        
+//         return A;
+//     }
+// };
+
+// keep two pointers .. odd and even, and move the two indexes such that the even
+// and odd numbers are sorted. 
+
 class Solution {
-public:
-    vector<int> sortArrayByParity(vector<int>& A) {
+    public: 
+    vector<int> sortArrayByParity (vector<int> &  A) {
+        int even = 0;
+        int odd = A.size()-1;
         
-        //  o    
-        // [5,3,1,2,4] -- 
-        // 
-        
-        int size = A.size();
-        int oddp = -1;
-        
-        for (int i = 0; i < size; i++) {
-            if (A[i]%2 == 1) {
-                if (oddp == -1) {
-                    oddp = i;
-                }
-            } else if (A[i]%2 == 0) {
-                if (oddp != -1) {
-                    swap (A[oddp], A[i]);
-                    while (oddp <= i) {
-                        if (A[++oddp]%2 == 0) {
-                            continue;
-                        } else {
-                            break;
-                        }
-                    }
-                    if (oddp == i+1) { // important line .. 2 pointer method. 
-                        oddp = -1;
-                    }
-                }
+        while (even < odd) {
+            if (A[even]%2 == 0) {
+                even++;
+            } else {
+                swap (A[even], A[odd]);
+                odd--;
             }
         }
-        
         return A;
     }
 };
